@@ -1,3 +1,4 @@
+import type { GLTFResult } from "@/components/three/models/generated/FcuDoubleShaft.gen";
 import type { claims } from "./claims";
 
 // ---------------------------------------------------------------- Claims
@@ -98,16 +99,11 @@ export type PartId =
   | "mounting-stand";
 
 /**
- * Mesh node names in the optimised GLB, after Phase 04's rename map. Written
- * by hand until gltfjsx emits `GLTFResult`; Phase 05 swaps this for
- * `keyof GLTFResult["nodes"]`, so any drift becomes a type error there.
+ * Mesh node names in the optimised GLB, typed from the gltfjsx output, so a
+ * part renamed or dropped by the pipeline is a type error in parts data.
  * Windings are three meshes so the end turns can separate in the explode.
  */
-export type ModelNodeName =
-  | Exclude<PartId, "windings">
-  | "winding-slot"
-  | "winding-end-front"
-  | "winding-end-rear";
+export type ModelNodeName = keyof GLTFResult["nodes"];
 
 /** Surface finishes for parts. Phase 04 defines one preset per id. */
 export type MaterialPresetId =

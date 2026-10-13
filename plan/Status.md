@@ -1,8 +1,8 @@
 # Infintin Redesign — Status
 
 **Last updated:** 2026-10-13
-**Current phase:** 04 in progress
-**Overall:** 4 / 12 active phases completed (Phase 12 deferred)
+**Current phase:** 05 in progress
+**Overall:** 5 / 12 active phases completed (Phase 12 deferred)
 
 ## Rules
 
@@ -20,8 +20,8 @@
 | 01 | Project foundation | [phase-01-foundation.md](phase-01-foundation.md) | 00.3 | COMPLETED | 6 / 6 |
 | 02 | Global design system | [phase-02-design-system.md](phase-02-design-system.md) | 00, 01 | COMPLETED | 10 / 10 |
 | 03 | Static content layer & claim gating | [phase-03-content-layer.md](phase-03-content-layer.md) | 00.2, 01 | COMPLETED | 8 / 8 |
-| 04 | 3D asset pipeline, materials & lighting | [phase-04-3d-pipeline.md](phase-04-3d-pipeline.md) | 00.4, 01 | IN_PROGRESS | 7 / 7 (04.7 deferred) |
-| 05 | 3D core: canvas, stage, model, quality | [phase-05-3d-core.md](phase-05-3d-core.md) | 02, 04 | NOT_STARTED | 0 / 8 |
+| 04 | 3D asset pipeline, materials & lighting | [phase-04-3d-pipeline.md](phase-04-3d-pipeline.md) | 00.4, 01 | COMPLETED | 7 / 7 (04.7 moved to 05) |
+| 05 | 3D core: canvas, stage, model, quality | [phase-05-3d-core.md](phase-05-3d-core.md) | 02, 04 | IN_PROGRESS | 8 / 8 (device checks open) |
 | 06 | Product explorer | [phase-06-product-explorer.md](phase-06-product-explorer.md) | 03.5, 05 | NOT_STARTED | 0 / 9 |
 | 07 | Site shell & motion primitives | [phase-07-shell-motion.md](phase-07-shell-motion.md) | 02, 03 | NOT_STARTED | 0 / 9 |
 | 08 | Home: Hero & Blueprint | [phase-08-home-hero.md](phase-08-home-hero.md) | 05, 06.2, 07 | NOT_STARTED | 0 / 6 |
@@ -34,7 +34,7 @@ Parallelisable after Phase 01: 02, 03 and 04 can run side by side; 07 can start 
 
 ## In progress
 
-Phase 04 — 3D asset pipeline. 04.7 (posters) deferred to the end of Phase 05.
+Phase 05 — 3D core. All subtasks built; open validation: fps on a mid-range Android phone, touch/pen drag on a real device, laptop rotate fps ≈53 (target 60).
 
 ## Blockers
 
@@ -69,6 +69,9 @@ None for Phases 00–11. Several claims and content items are pending client app
 | 2026-10-13 | Phase 04: 04.7 posters deferred to the end of Phase 05 (captured from the real `LabStage`, no headless renderer package). Model checks run on a dev-only `/system/model` page until Phase 05 replaces it. | Client |
 | 2026-10-13 | Generated model component narrows `useGLTF` output with a runtime guard (`components/three/models/checkFcuModel.ts`: every part slug must be a Mesh) instead of `as GLTFResult`, which fails TS2352. No casts. | Client |
 | 2026-10-13 | Part node names and material preset ids are literal unions in `data/types.ts` until Phase 04/05 generate them; winding meshes named `winding-slot`, `winding-end-front`, `winding-end-rear`. | Client |
+| 2026-10-13 | Phase 05: initial tier from device hints only (no `detect-gpu`, which fetches benchmark tables from a CDN); runtime step-down via our own frame monitor, since drei `PerformanceMonitor` misreads `frameloop="demand"` idle time as low fps. | Client + Phase 05 |
+| 2026-10-13 | Phase 05: explorer/explode/section store state deferred to Phase 06; zoom is a `SceneView` opt-in used only on the dev bench. Posters (04.7) captured from the live stage on `/system/model`. | Client |
+| 2026-10-13 | Tier data lives in `design/quality-tiers.ts` (re-exported from `three-presets.ts`) so the root layout never bundles three.js. | Phase 05 |
 
 ## Open questions (client)
 
@@ -102,3 +105,4 @@ See `spec/content-guardrails.md` §3. Highest priority before Phase 03 content e
 - 2026-10-13 — **Phase 03 COMPLETED**: typed content in `data/`, 70-claim register (2 approved), `ClaimText`, `claims:report` and `claims:check`. Leak check not negatively tested (forcing a leak was blocked); typo ids fail typecheck.
 - 2026-10-13 — Phase 04: 04.1–04.6 completed. High GLB 263 KB / 51,794 tris, LOD1 117 KB / 19,022 tris, deterministic, parity (names + transforms) checked. Presets in `design/three-presets.ts`; dev-only `/system/model` loads both GLBs with no console errors (only R3F's `THREE.Clock` deprecation warning). Lamination shader compiles but is hidden inside the housing until explode exists (Phase 06), so not yet judged by eye.
 - 2026-10-13 — 04.8 completed: runtime guard replaces the cast; models:optimize deterministic, typecheck, lint, build and claims:check pass.
+- 2026-10-13 — Phase 05: 05.1–05.8 built, plus 04.7 posters. One canvas with 4 views, 0 idle frames, no-WebGL posters, mouse drag with inertia, wheel zoom clamp, `<Activity>` hide/show all verified on `/system/model`. Rotate ≈53 fps on Intel Raptor Lake-P iGPU (1440×900, 1×). Android fps and real touch/pen drag not yet measured. Phase 04 marked COMPLETED.

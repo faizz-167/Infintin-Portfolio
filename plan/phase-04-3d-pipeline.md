@@ -1,6 +1,6 @@
 # Phase 04 — 3D Asset Pipeline, Materials & Lighting Presets
 
-**Status:** IN_PROGRESS (all active subtasks done; awaiting commit, 04.7 deferred)
+**Status:** COMPLETED (04.7 moved to Phase 05)
 **Depends on:** Phase 00 (00.4), Phase 01
 **Outputs:** `scripts/optimize-models.mjs`, `public/models/*.glb`, `components/three/models/generated/FcuDoubleShaft.gen.tsx`, `design/three-presets.ts`, `plan/spec/model-report.md`, `public/posters/*`
 
@@ -70,4 +70,4 @@ Convert the CAD export into fast, web-ready, part-addressable models, and define
 - [x] Every part has a material preset; no source CAD materials are rendered.
 - [x] Generated component typechecks; `GLTFResult["nodes"]` contains all part slugs; rerunning the script produces no diff.
 - [x] Node-parity check passes for high and LOD1.
-- [ ] `model-report.md` committed. Status.md updated.
+- [x] `model-report.md` committed. Status.md updated.
