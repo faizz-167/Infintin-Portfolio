@@ -1,6 +1,6 @@
 # Phase 03 — Static Content Layer & Claim Gating
 
-**Status:** NOT_STARTED
+**Status:** COMPLETED
 **Depends on:** Phase 00 (00.2), Phase 01
 **Outputs:** `data/*.ts`, `components/ui/ClaimText.tsx`, `scripts/check-claims.mjs`
 
@@ -12,14 +12,14 @@ Model all site content as typed, local TypeScript data (no CMS, API or database)
 
 | ID | Subtask | Status |
 | --- | --- | --- |
-| 03.1 | Define content types in `data/types.ts` | NOT_STARTED |
-| 03.2 | Claims register in `data/claims.ts` + `ClaimText` renderer | NOT_STARTED |
-| 03.3 | Company, navigation, contact data | NOT_STARTED |
-| 03.4 | Product data: FCU Double Shaft Motor + specs + FAQ | NOT_STARTED |
-| 03.5 | Parts data for the explorer (`data/parts/fcu-double-shaft.ts`) | NOT_STARTED |
-| 03.6 | Capabilities, project, process (11 stages, ownership, current stage) | NOT_STARTED |
-| 03.7 | Team and recognition/support data | NOT_STARTED |
-| 03.8 | Pending-claims report script | NOT_STARTED |
+| 03.1 | Define content types in `data/types.ts` | COMPLETED |
+| 03.2 | Claims register in `data/claims.ts` + `ClaimText` renderer | COMPLETED |
+| 03.3 | Company, navigation, contact data | COMPLETED |
+| 03.4 | Product data: FCU Double Shaft Motor + specs + FAQ | COMPLETED |
+| 03.5 | Parts data for the explorer (`data/parts/fcu-double-shaft.ts`) | COMPLETED |
+| 03.6 | Capabilities, project, process (11 stages, ownership, current stage) | COMPLETED |
+| 03.7 | Team and recognition/support data | COMPLETED |
+| 03.8 | Pending-claims report script | COMPLETED |
 
 ## Execution plan
 
@@ -47,8 +47,17 @@ Model all site content as typed, local TypeScript data (no CMS, API or database)
 
 ## Validation criteria
 
-- [ ] All content used by pages comes from `data/`; no hard-coded copy in section components (spot check + grep for long string literals in `components/sections`).
-- [ ] A production build renders no `pending` or `withheld` claim text (verify by searching the `.next` output for 3 pending strings, e.g. "Up to 60%").
-- [ ] Invalid claim or part id fails `npm run typecheck`.
-- [ ] `claims:report` prints the full pending list.
-- [ ] Status.md updated.
+- [x] All content used by pages comes from `data/`; no hard-coded copy in section components (spot check + grep for long string literals in `components/sections`). *`components/sections` is still empty; re-check in Phases 08–10.*
+- [x] A production build renders no `pending` or `withheld` claim text. `npm run claims:check` searches prerendered HTML/RSC and client chunks (server bundles hold the register by design) against `/system/claims`, a noindex page that builds in production, with a positive control for the approved sample.
+- [x] Invalid claim or part id fails `npm run typecheck`.
+- [x] `claims:report` prints the full pending list.
+- [x] Status.md updated.
+
+## Outcome (2026-10-13)
+
+- `ModelNodeName` and `MaterialPresetId` are hand-written literal unions until Phase 04 emits `GLTFResult`; Phase 05 swaps `ModelNodeName` for `keyof GLTFResult["nodes"]`.
+- `SpecRow` has no `qualifier`: provenance lives on the claim so a figure and its qualifier are approved together.
+- `PartSpec.explode` offsets are optional overrides (defaults come from centroids, architecture §5.3); only `order` is required.
+- FAQ answers, project fields and team name/role are claims of their own (drafted, pending). `Copy = string | ClaimRef` is used where editorial copy and claims mix (capabilities).
+- Legacy EV and AHU content not modelled: client has not chosen "archive" (open questions 9, 13).
+- `ClaimText` never renders `withheld`, even in development (shows the fallback plus a marker).

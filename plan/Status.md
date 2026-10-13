@@ -1,8 +1,8 @@
 # Infintin Redesign — Status
 
 **Last updated:** 2026-10-13
-**Current phase:** 02 completed — Phase 03 next (03 and 04 can run in parallel)
-**Overall:** 3 / 12 active phases completed (Phase 12 deferred)
+**Current phase:** 03 completed — Phase 04 next
+**Overall:** 4 / 12 active phases completed (Phase 12 deferred)
 
 ## Rules
 
@@ -19,7 +19,7 @@
 | 00 | Discovery, reference study & asset audit | [phase-00-discovery.md](phase-00-discovery.md) | — | COMPLETED | 5 / 5 |
 | 01 | Project foundation | [phase-01-foundation.md](phase-01-foundation.md) | 00.3 | COMPLETED | 6 / 6 |
 | 02 | Global design system | [phase-02-design-system.md](phase-02-design-system.md) | 00, 01 | COMPLETED | 10 / 10 |
-| 03 | Static content layer & claim gating | [phase-03-content-layer.md](phase-03-content-layer.md) | 00.2, 01 | NOT_STARTED | 0 / 8 |
+| 03 | Static content layer & claim gating | [phase-03-content-layer.md](phase-03-content-layer.md) | 00.2, 01 | COMPLETED | 8 / 8 |
 | 04 | 3D asset pipeline, materials & lighting | [phase-04-3d-pipeline.md](phase-04-3d-pipeline.md) | 00.4, 01 | NOT_STARTED | 0 / 8 |
 | 05 | 3D core: canvas, stage, model, quality | [phase-05-3d-core.md](phase-05-3d-core.md) | 02, 04 | NOT_STARTED | 0 / 8 |
 | 06 | Product explorer | [phase-06-product-explorer.md](phase-06-product-explorer.md) | 03.5, 05 | NOT_STARTED | 0 / 9 |
@@ -65,6 +65,9 @@ None for Phases 00–11. Several claims and content items are pending client app
 | 2026-10-13 | Sheet ground changed to `#FAFAFA` (from `#EDF4FE`). `paper-deep` and the blue-grey secondary inks unchanged; all pairs still pass AA. | Client |
 | 2026-10-13 | Light palette made neutral: `paper-deep` `#EDEDED`, `lead` `#5C5C5C`, increased-contrast `lead-strong` `#404040`. All 20 contrast pairs pass on `/system`. Lab-side inks unchanged. | Client |
 
+| 2026-10-13 | Claim gating check searches rendered output and client chunks only, against a production-built noindex page `/system/claims`; server bundles hold the register by design. | Client |
+| 2026-10-13 | Part node names and material preset ids are literal unions in `data/types.ts` until Phase 04/05 generate them; winding meshes named `winding-slot`, `winding-end-front`, `winding-end-rear`. | Client |
+
 ## Open questions (client)
 
 See `spec/content-guardrails.md` §3. Highest priority before Phase 03 content entry: rare-earth wording (model contains a magnet part; site uses three different terms), approved specs/dimensions, public part names, team degrees, recognition wording/logo permissions, AHU product status, legacy EV decision.
@@ -94,3 +97,4 @@ See `spec/content-guardrails.md` §3. Highest priority before Phase 03 content e
 - 2026-10-13 — Palette changed to cool paper `#EDF4FE` / graphite `#14151A`; secondary inks re-tuned; design-direction §1, §3, §6, §8 and phases 04/06 updated.
 - 2026-10-13 — Dev CSS bug fixed: switched Tailwind to `@tailwindcss/postcss`, removed the `turbopack.rules` CSS loader; `globals.css` edits now hot-update in dev.
 - 2026-10-13 — Light palette neutral: paper `#FAFAFA`, paper-deep `#EDEDED`, lead `#5C5C5C`, lead-strong `#404040`; contrast verified on `/system`.
+- 2026-10-13 — **Phase 03 COMPLETED**: typed content in `data/`, 70-claim register (2 approved), `ClaimText`, `claims:report` and `claims:check`. Leak check not negatively tested (forcing a leak was blocked); typo ids fail typecheck.

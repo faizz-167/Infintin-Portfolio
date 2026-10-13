@@ -24,7 +24,7 @@ Convert the CAD export into fast, web-ready, part-addressable models, and define
 ## Execution plan
 
 ### 04.1 Optimisation script
-1. Mapping table (source → slug): `F&B cover-3` → `end-cover-front`, `F&B cover-2` → `end-cover-rear`, `mid cover-2` → `mid-cover`, `stator1-1` → `stator`, `coil assembly` (+ 3 coil children) → `windings` group, `rotor1-1` → `rotor`, `magnet-1` → `rotor-magnet`, `shaft-1` → `shaft`, `turbine-1/-2` → `blower-wheel-front/rear`, `new clip-6/-7` → `retaining-clip-front/rear`, `new stand-2` → `mounting-stand`. Front = +Z, confirmed from world bounds in `spec/model-audit.md` §3; final naming pending engineering.
+1. Mapping table (source → slug): `F&B cover-3` → `end-cover-front`, `F&B cover-2` → `end-cover-rear`, `mid cover-2` → `mid-cover`, `stator1-1` → `stator`, `coil assembly` → `windings` group with children `coil for max1-1` → `winding-slot`, `coil for max2-2` → `winding-end-front`, `coil for max3-2` → `winding-end-rear` (names fixed by `ModelNodeName` in `data/types.ts`), `rotor1-1` → `rotor`, `magnet-1` → `rotor-magnet`, `shaft-1` → `shaft`, `turbine-1/-2` → `blower-wheel-front/rear`, `new clip-6/-7` → `retaining-clip-front/rear`, `new stand-2` → `mounting-stand`. Front = +Z, confirmed from world bounds in `spec/model-audit.md` §3; final naming pending engineering.
 2. gltf-transform pipeline: rename → remove `current camera` (store transform in presets) → `dedup` → `instance` mirrored duplicates if beneficial → `weld` → `prune` → merge buffers → `reorder` → `quantize` → `meshopt` → write `.glb`.
 3. Never join meshes; part addressability is required.
 4. Emit `model-report.md`: size, triangles per part, bbox per part.
