@@ -134,9 +134,10 @@ After optimisation, the script runs gltfjsx on the high-tier GLB to generate a d
 
 ```bash
 npx gltfjsx public/models/fcu-double-shaft.glb --types --keepnames --keepgroups \
-  --root /models/ --output components/three/models/generated/FcuDoubleShaft.gen.tsx
+  --precision 6 --root public --output components/three/models/generated/FcuDoubleShaft.gen.tsx
 ```
 
+- `--root` is the filesystem directory the URL is computed from (`public` → `/models/…`). `--precision 6` because node transforms carry quantisation scales and sub-millimetre offsets; the default 3 digits misplaces nested parts. The script patches the output for React 19 types (no global `JSX`) and exports `GLTFResult`, failing if gltfjsx output changes shape.
 - **Codegen only: never `--transform`.** gltfjsx's transform joins compatible meshes and palette-joins materials by default (which would destroy part addressability) and compresses with Draco. Optimisation stays in the gltf-transform step with meshopt.
 - `--keepnames` keeps our slug names, so the generated `GLTFResult` type has `nodes["rotor"]`, `nodes["stator"]` etc. as literal keys. A renamed or missing part becomes a type error.
 - `--keepgroups` preserves the `windings` group (3 coil meshes).

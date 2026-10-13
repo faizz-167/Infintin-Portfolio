@@ -1,6 +1,6 @@
 # Phase 04 — 3D Asset Pipeline, Materials & Lighting Presets
 
-**Status:** NOT_STARTED
+**Status:** IN_PROGRESS (all active subtasks done; awaiting commit, 04.7 deferred)
 **Depends on:** Phase 00 (00.4), Phase 01
 **Outputs:** `scripts/optimize-models.mjs`, `public/models/*.glb`, `components/three/models/generated/FcuDoubleShaft.gen.tsx`, `design/three-presets.ts`, `plan/spec/model-report.md`, `public/posters/*`
 
@@ -12,14 +12,14 @@ Convert the CAD export into fast, web-ready, part-addressable models, and define
 
 | ID | Subtask | Status |
 | --- | --- | --- |
-| 04.1 | Node rename map + optimisation script (meshopt, quantise, single buffer) | NOT_STARTED |
-| 04.2 | LOD1 generation for low tier | NOT_STARTED |
-| 04.3 | Material presets (product + technical modes) | NOT_STARTED |
-| 04.4 | Lighting rigs: Sheet and Lab environments via Lightformers | NOT_STARTED |
-| 04.5 | Camera shot presets (hero, explode, section, isolate per part) | NOT_STARTED |
-| 04.6 | Quality tier definitions | NOT_STARTED |
-| 04.7 | Pre-rendered poster stills for fallback | NOT_STARTED |
-| 04.8 | gltfjsx codegen: typed R3F component + node-parity check | NOT_STARTED |
+| 04.1 | Node rename map + optimisation script (meshopt, quantise, single buffer) | COMPLETED |
+| 04.2 | LOD1 generation for low tier | COMPLETED |
+| 04.3 | Material presets (product + technical modes) | COMPLETED |
+| 04.4 | Lighting rigs: Sheet and Lab environments via Lightformers | COMPLETED |
+| 04.5 | Camera shot presets (hero, explode, section, isolate per part) | COMPLETED |
+| 04.6 | Quality tier definitions | COMPLETED |
+| 04.7 | Pre-rendered poster stills for fallback | DEFERRED |
+| 04.8 | gltfjsx codegen: typed R3F component + node-parity check | COMPLETED |
 
 ## Execution plan
 
@@ -52,6 +52,8 @@ Convert the CAD export into fast, web-ready, part-addressable models, and define
 1. Encode the tier table from `architecture.md` §5.6 as data.
 
 ### 04.7 Posters
+**Deferred to the end of Phase 05** (client, 2026-10-13): captured from the real `LabStage` via Chrome DevTools, no headless renderer package.
+
 1. Render hero, exploded and section stills (headless three script or manual capture from the Phase 05 stage) at 1x/2x, AVIF + WebP, for `poster` tier and OG images. Label as renders.
 
 ### 04.8 gltfjsx codegen
@@ -62,10 +64,10 @@ Convert the CAD export into fast, web-ready, part-addressable models, and define
 
 ## Validation criteria
 
-- [ ] `npm run models:optimize` is deterministic and produces both GLBs from the untouched source.
-- [ ] High GLB < 600 KB; LOD1 < 250 KB and ≤ 20k triangles; all 13 part slugs present as separate nodes in both.
-- [ ] Model loads with drei `useGLTF` + meshopt decoder without console errors.
-- [ ] Every part has a material preset; no source CAD materials are rendered.
-- [ ] Generated component typechecks; `GLTFResult["nodes"]` contains all part slugs; rerunning the script produces no diff.
-- [ ] Node-parity check passes for high and LOD1.
+- [x] `npm run models:optimize` is deterministic and produces both GLBs from the untouched source.
+- [x] High GLB < 600 KB; LOD1 < 250 KB and ≤ 20k triangles; all 13 part slugs present as separate nodes in both.
+- [x] Model loads with drei `useGLTF` + meshopt decoder without console errors.
+- [x] Every part has a material preset; no source CAD materials are rendered.
+- [x] Generated component typechecks; `GLTFResult["nodes"]` contains all part slugs; rerunning the script produces no diff.
+- [x] Node-parity check passes for high and LOD1.
 - [ ] `model-report.md` committed. Status.md updated.
