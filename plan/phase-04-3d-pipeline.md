@@ -36,12 +36,12 @@ Convert the CAD export into fast, web-ready, part-addressable models, and define
 ### 04.3 Materials
 1. `MeshPhysicalMaterial` presets in `design/three-presets.ts` (`design-direction.md` §8): colour, metalness, roughness, clearcoat, anisotropy where relevant.
 2. Lamination stack detail on stator/rotor: small tiling procedural normal (generated texture or shader chunk); no large texture downloads. If textures are added later, use KTX2.
-3. Technical presets: `drawingSurface` (flat vellum + `Edges` in ink), `xrayGhost` (fresnel, transparent, depthWrite off), `sectionCap` (stencil cap with 45° hatch shader).
+3. Technical presets: `drawingSurface` (flat paper + `Edges` in ink), `xrayGhost` (fresnel, transparent, depthWrite off), `sectionCap` (stencil cap with 45° hatch shader).
 4. Part → preset map lives in parts data (Phase 03.5), not in components.
 
 ### 04.4 Lighting
 1. Lab rig: dark ground, key softbox (large rect Lightformer, upper left), top strip, two thin rim strips behind; AgX tone mapping; exposure token.
-2. Sheet rig: same layout, higher ambient, lower contrast so the model reads against vellum.
+2. Sheet rig: same layout, higher ambient, lower contrast so the model reads against the paper ground.
 3. Rigs are data (positions, intensities, scales) consumed by one `LabStage` component.
 
 ### 04.5 Cameras

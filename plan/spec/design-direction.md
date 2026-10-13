@@ -13,8 +13,8 @@ What makes it unmistakable:
 - Wide, horizontal, symmetrical compositions built around a shaft axis, instead of the usual centred "object floating over gradient".
 - Real engineering notation used only where it carries information: part balloons that reference a parts list, dimension lines with real (approved) values, section hatching where a cut is actually shown, a title block that shows sheet number and revision/status.
 - Two alternating environments create the "cuts" between scenes:
-  - **Sheet** (light): warm drafting-vellum ground, graphite ink, line drawings, editorial text.
-  - **Lab** (dark): graphite ground, the physical rendered motor under controlled studio light.
+  - **Sheet** (light): neutral paper ground (`#FAFAFA`), graphite ink, line drawings, editorial text.
+  - **Lab** (dark): graphite ground (`#14151A`), the physical rendered motor under controlled studio light.
   The transition between them is a scroll-driven section cut (a clipping plane sweeping across the viewport), not a fade.
 
 ## 2. Things we explicitly will not do
@@ -34,18 +34,20 @@ Small, opinionated palette. One accent, taken from the object itself: enamelled 
 
 | Token | Role | Proposed value |
 | --- | --- | --- |
-| `--color-vellum` | Sheet ground | `#ECEAE3` |
-| `--color-vellum-deep` | Alternate sheet surface, table zebra | `#E2DFD6` |
-| `--color-graphite` | Ink on sheet / lab ground | `#141517` |
-| `--color-graphite-raised` | Lab surface, panels | `#1D1F22` |
-| `--color-lead` | Secondary ink, construction lines | `#6B6C6A` |
-| `--color-rule` | Hairlines on sheet | `rgb(20 21 23 / 0.18)` |
-| `--color-rule-lab` | Hairlines on lab | `rgb(236 234 227 / 0.14)` |
-| `--color-copper` | The only accent: active state, live annotations, primary CTA | `#B5542C` |
+| `--color-paper` | Sheet ground; also ink on lab and text on copper *(client, 2026-10-13: cream `#ECEAE3` → `#EDF4FE` → `#FAFAFA`)* | `#FAFAFA` |
+| `--color-paper-deep` | Alternate sheet surface, table zebra | `#EDEDED` |
+| `--color-graphite` | Ink on sheet / lab ground *(client)* | `#14151A` |
+| `--color-graphite-raised` | Lab surface, panels | `#1C1E25` |
+| `--color-lead` | Secondary ink on sheet, construction lines (neutral, 6.41:1 on paper, 5.71:1 on paper-deep) | `#5C5C5C` |
+| `--color-lead-lit` | Secondary ink on lab (7.71:1 on graphite) | `#A2A9B6` |
+| `--color-rule` | Hairlines on sheet | `rgb(20 21 26 / 0.18)` |
+| `--color-rule-lab` | Hairlines on lab | `rgb(250 250 250 / 0.14)` |
+| `--color-copper` | The only accent: active state, live annotations, primary CTA *(02: was `#B5542C`, 4.09:1 failed AA)* | `#9C4522` |
 | `--color-copper-lit` | Copper on dark ground (contrast-tuned) | `#D9774A` |
-| `--color-status` | Prototype / lab-testing status mark (always paired with text) | `#C9A227` |
+| `--color-status` | Status mark on sheet (always paired with text) *(02: darkened for 3:1 UI contrast)* | `#8A6A0C` |
+| `--color-status-lit` | Status mark on lab | `#C9A227` |
 
-Rules: copper is used for state (active part, current process stage, focus, primary action), never for decoration. All text combinations must meet WCAG AA; final values verified in Phase 02.
+Rules: copper is used for state (active part, current process stage, focus, primary action), never for decoration. All text combinations meet WCAG AA (verified in Phase 02; measured ratios on the `/system` specimen). Increased-contrast mode (`prefers-contrast: more`) makes rules solid and raises secondary ink to ≥ 7:1 (`#404040` on sheet, `#C8CED9` on lab).
 
 ## 4. Typography
 
@@ -56,6 +58,8 @@ One strong family plus one text face.
 - Numerals: Archivo with `font-variant-numeric: tabular-nums` and `slashed-zero` in specification contexts.
 
 Loaded through `next/font/google` as variable fonts with explicit axes. If the client later licenses a commercial face, only the font tokens change.
+
+Type is tuned by size *(02, Apple-design)*: tracking tightens and leading closes up as size grows (display −0.03 to −0.015 em, leading 0.9–1.05; body 0 em, 1.5; small condensed labels +0.01 to +0.02 em). Weight, size and leading are set together per style, never size alone. Sizes and type-related spacing are in `rem`, so the reader's browser text size scales them; display styles break a word only when it alone can't fit the line.
 
 Scale (fluid, `clamp()`, ratio ≈1.333 on mobile to ≈1.5 on desktop):
 
@@ -82,7 +86,7 @@ Headlines are active elements: set in two or three deliberate lines, broken by m
 ## 6. Components (visual language)
 
 - **Rules** carry structure: 1 px hairlines, a 2 px "object line" for emphasis, dashed "centre lines" (long-short) for axes.
-- **Buttons**: rectangular, 0–2 px radius, hairline border. Primary = copper fill, vellum text. Secondary = ink outline. Hover: a fill wipes along the baseline; arrows translate along the shaft axis. Minimum 44×44 px target.
+- **Buttons**: rectangular, 0–2 px radius, hairline border. Primary = copper fill, paper text. Secondary = ink outline. Hover: a fill wipes along the baseline; arrows translate along the shaft axis. Minimum 44×44 px target.
 - **Links**: underline as a 1 px rule offset 0.2em; on hover the rule is redrawn left to right.
 - **Annotations / balloons**: circle + leader line + condensed label, anchored to a 3D part in screen space. Number = parts-list item number.
 - **Status tag**: hatched swatch + text ("Prototype — under laboratory testing"). Never colour alone.
@@ -91,7 +95,7 @@ Headlines are active elements: set in two or three deliberate lines, broken by m
 ## 7. Motion language
 
 - Character: precise, weighted, mechanical. Things move like machined parts: fast acceleration, firm, damped stops, no bounce, no elastic.
-- Easings (tokens): `ease-machine` `cubic-bezier(0.7, 0, 0.2, 1)`, `ease-settle` `cubic-bezier(0.16, 1, 0.3, 1)`, `ease-draw` `cubic-bezier(0.45, 0, 0.15, 1)`; springs for 3D damping only (critically damped).
+- Easings (tokens): `ease-machine` `cubic-bezier(0.7, 0, 0.2, 1)`, `ease-settle` `cubic-bezier(0.16, 1, 0.3, 1)`, `ease-draw` `cubic-bezier(0.45, 0, 0.15, 1)`; used for authored choreography (scroll scenes, line draws), where scroll is itself the interruption. Every reversible curve has a mirrored return curve.
 - Durations (tokens): `instant 120ms`, `quick 240ms`, `base 480ms`, `scene 900ms`, `assembly 1600ms`.
 - Signature moves:
   1. **Assembly lock** — hero: parts arrive along the shaft axis in assembly order and seat with a hard stop; the headline machines in sync.
@@ -112,8 +116,20 @@ Headlines are active elements: set in two or three deliberate lines, broken by m
 - **Mobile keeps the idea.** Live 3D (LOD1) and the staggered headline remain on phones; scenes get shorter, not replaced. Display type ≈0.42× at 360 px, body never below 17 px, margins never below 16 px.
 - **UI vs scene timing.** UI transitions ≤ 240 ms with `ease-settle`; only scenes use `scene` / `assembly` durations. No spring overshoot anywhere.
 
+### 7.2 Behaviour, folded in from Apple's design principles *(02)*
+
+The look above is unchanged; these rules govern how things respond.
+
+- **Response.** Every control acknowledges a press on pointer-down, within one frame; release commits, dragging off cancels. No artificial delays on the input path.
+- **Springs for UI state.** Menus, disclosures, tabs, sheets and part selection use springs defined by damping ratio and response: `press` 0.15 s, `ui` 0.3 s, `move` 0.4 s. Damping ratio is 1 everywhere, including after a flick: parts seat with a hard, damped stop. Easings stay for choreography only.
+- **Interruptibility.** Any UI transition can be reversed mid-flight; it continues from its current on-screen value and carries its velocity, so it never jumps and input is never locked out.
+- **Spatial consistency.** Things leave the way they came; menus and popovers grow from the control that opened them.
+- **Feedback.** Status, completion, warning and error each have one treatment (text plus icon or hatch, never colour alone). Fields validate when the user leaves them and clear the moment the value becomes valid; errors never shift the layout.
+- **Reduced motion** keeps feedback and removes travel: transforms jump to their end state, opacity cross-fades in ≤ 200 ms, press feedback is an ink change instead of a scale.
+- **Not adopted:** translucent or frosted materials, system font as the primary face, bounce, rounded cards and pills (all conflict with §2).
+
 ## 8. 3D look
 
 - Look of a well-lit product photograph in a lab, not a game render: neutral studio light, real-world PBR values, soft contact shadow, no coloured lights.
 - Material presets (replace CAD placeholder materials): cast aluminium covers (bead-blasted, rough 0.45), silicon-steel laminations (dark grey, slight anisotropy stack lines), enamelled copper windings (physical material + clearcoat), polished steel shaft, magnet (neutral dark grey, coating finish — no material claim), black glass-filled polymer for clips and stand, blower wheels in galvanised steel.
-- Technical modes share one visual language with the 2D sheets: **Drawing** (vellum-coloured flat surfaces + ink edges), **X-ray** (fresnel ghost + copper edges on the isolated part), **Section** (clipping plane with hatched cap).
+- Technical modes share one visual language with the 2D sheets: **Drawing** (paper-coloured flat surfaces + ink edges), **X-ray** (fresnel ghost + copper edges on the isolated part), **Section** (clipping plane with hatched cap).

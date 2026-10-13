@@ -1,6 +1,6 @@
 # Phase 01 — Project Foundation
 
-**Status:** IN_PROGRESS
+**Status:** COMPLETED (2026-10-13)
 **Depends on:** Phase 00 (00.3)
 **Outputs:** dependencies installed, directory skeleton, smooth-scroll + GSAP runtime, fonts, base layout
 
@@ -13,11 +13,11 @@ Turn the Create Next App starter into the skeleton defined in `architecture.md`:
 | ID | Subtask | Status |
 | --- | --- | --- |
 | 01.1 | Install and pin dependencies | COMPLETED |
-| 01.2 | Create directory skeleton and path aliases | BLOCKED |
+| 01.2 | Create directory skeleton and path aliases | COMPLETED |
 | 01.3 | Replace starter fonts with Archivo + Source Serif 4 (variable) | COMPLETED |
 | 01.4 | GSAP registration module + Lenis `SmoothScroll` provider | COMPLETED |
 | 01.5 | Root layout: providers, metadata base, skip link, landmarks | COMPLETED |
-| 01.6 | Scripts (`typecheck`, `models:optimize`); remove starter assets | BLOCKED |
+| 01.6 | Scripts (`typecheck`, `models:optimize`); remove starter assets | COMPLETED |
 
 ## Execution plan
 
@@ -60,8 +60,8 @@ Turn the Create Next App starter into the skeleton defined in `architecture.md`:
 
 ## Notes (2026-10-13)
 
-- 01.2.3 blocked: moving `final_assembly-v1/` to `assets-src/fcu-double-shaft/` was refused by the agent's permission guard (untracked source, not recoverable from git). Needs to be done by hand, plus the commit vs `.gitignore` decision.
-- 01.6.2 blocked: deleting the starter SVGs in `public/` was refused by the same guard. Needs to be done by hand.
+- 01.2.3: model source moved by hand, committed, then renamed to `assets-src/fcu-double-shaft/` with `git mv`. Committed to the repo (2.3 MB, no LFS).
+- 01.6.2: starter SVGs deleted by hand.
 - In-page anchors use Lenis's built-in `anchors: true` option, which routes `#hash` clicks through `lenis.scrollTo`.
 - The Source Serif CSS variable is `--font-source-serif`, not `--font-serif`, because Tailwind's `--font-serif` theme token would otherwise reference itself.
 - Reduced-motion check done by stubbing `matchMedia` in the page (DevTools MCP cannot emulate the media feature): no Lenis instance, native scroll.

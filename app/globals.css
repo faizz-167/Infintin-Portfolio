@@ -1,20 +1,329 @@
 @import "tailwindcss";
 @import "lenis/dist/lenis.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/*
+ * Design tokens. Raw colour values live only here. Motion, breakpoint and
+ * z-index values mirror `design/tokens.ts`, which is the source of truth.
+ *
+ * Tailwind's default palette, type sizes, spacing multiplier, radii and
+ * breakpoints are cleared so the tokens below are the only way to style.
+ */
+@theme {
+  --color-*: initial;
+  --text-*: initial;
+  --spacing-*: initial;
+  --radius-*: initial;
+  --breakpoint-*: initial;
+  --ease-*: initial;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  /* Palette (design-direction §3). Client-set grounds: paper #FAFAFA
+     and graphite #14151A; light-side secondary inks are neutral; all tuned for
+     WCAG AA (ratios on /system). */
+  --color-paper: #fafafa;
+  --color-paper-deep: #ededed;
+  --color-graphite: #14151a;
+  --color-graphite-raised: #1c1e25;
+  --color-lead: #5c5c5c;
+  --color-lead-lit: #a2a9b6;
+  --color-copper: #9c4522;
+  --color-copper-lit: #d9774a;
+  --color-status: #8a6a0c;
+  --color-status-lit: #c9a227;
+
+  /* Increased-contrast variants (prefers-contrast: more). */
+  --color-lead-strong: #404040;
+  --color-lead-lit-strong: #c8ced9;
+
   --font-sans: var(--font-archivo), system-ui, sans-serif;
   --font-serif: var(--font-source-serif), Georgia, serif;
+
+  /* 8 px base scale, in rem so it grows with the reader's text size. */
+  --spacing-0: 0;
+  --spacing-px: 1px;
+  --spacing-1: 0.5rem;
+  --spacing-2: 1rem;
+  --spacing-3: 1.5rem;
+  --spacing-4: 2rem;
+  --spacing-5: 3rem;
+  --spacing-6: 4rem;
+  --spacing-7: 5rem;
+  --spacing-8: 6rem;
+  --spacing-9: 8rem;
+  --spacing-10: 10rem;
+  --spacing-11: 12rem;
+  --spacing-12: 16rem;
+  /* Semantic spacing. Margin never drops below 16 px. */
+  --spacing-margin: clamp(1rem, 0.6rem + 1.8vw, 4rem);
+  --spacing-gutter: clamp(1rem, 0.8rem + 0.9vw, 2rem);
+  --spacing-scene: clamp(6rem, 3.5rem + 11vw, 16rem);
+  /* Minimum touch target (44 px). */
+  --spacing-target: 2.75rem;
+
+  --container-page: 100rem;
+  --container-measure: 68ch;
+
+  --breakpoint-sm: 30rem;
+  --breakpoint-md: 48rem;
+  --breakpoint-lg: 64rem;
+  --breakpoint-xl: 90rem;
+  --breakpoint-2xl: 120rem;
+
+  --radius-xs: 2px;
+
+  --ease-machine: cubic-bezier(0.7, 0, 0.2, 1);
+  --ease-settle: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-draw: cubic-bezier(0.45, 0, 0.15, 1);
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
+/* Environment aliases: a section switches between Sheet and Lab with one
+   attribute; components only ever use these semantic names. */
+@theme inline {
+  --color-ground: var(--ground);
+  --color-ground-raised: var(--ground-raised);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-rule: var(--rule);
+  --color-accent: var(--accent);
+  --color-on-accent: var(--on-accent);
+  --color-status-mark: var(--status-mark);
+}
+
+:root {
+  --duration-instant: 120ms;
+  --duration-quick: 240ms;
+  --duration-base: 480ms;
+  --duration-scene: 900ms;
+  --duration-assembly: 1600ms;
+
+  --z-canvas: 0;
+  --z-content: 10;
+  --z-annotations: 20;
+  --z-header: 30;
+  --z-menu: 40;
+  --z-toast: 50;
+
+  --rule-hairline: 1px;
+  --rule-object: 2px;
+}
+
+:root,
+[data-env="sheet"] {
+  --ground: var(--color-paper);
+  --ground-raised: var(--color-paper-deep);
+  --ink: var(--color-graphite);
+  --ink-muted: var(--color-lead);
+  --rule: rgb(20 21 26 / 0.18);
+  --accent: var(--color-copper);
+  --on-accent: var(--color-paper);
+  --status-mark: var(--color-status);
+}
+
+[data-env="lab"] {
+  --ground: var(--color-graphite);
+  --ground-raised: var(--color-graphite-raised);
+  --ink: var(--color-paper);
+  --ink-muted: var(--color-lead-lit);
+  --rule: rgb(250 250 250 / 0.14);
+  --accent: var(--color-copper-lit);
+  --on-accent: var(--color-graphite);
+  --status-mark: var(--color-status-lit);
+}
+
+/* Increased contrast: solid rules, stronger secondary ink (≥ 7:1). */
+@media (prefers-contrast: more) {
+  :root,
+  [data-env="sheet"] {
+    --ink-muted: var(--color-lead-strong);
+    --rule: var(--color-lead);
+  }
+
+  [data-env="lab"] {
+    --ink-muted: var(--color-lead-lit-strong);
+    --rule: var(--color-lead-lit);
+  }
+}
+
+[data-env] {
+  background-color: var(--ground);
+  color: var(--ink);
+}
+
+@layer base {
+  html {
+    background-color: var(--ground);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Removes the double-tap-zoom delay so presses register immediately. */
+  a,
+  button,
+  input,
+  select,
+  textarea,
+  label {
+    touch-action: manipulation;
+  }
+
+  /* Focus appears instantly and reads on both grounds. */
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+}
+
+/*
+ * Display styles break a word only when it alone is wider than the line
+ * (narrow screen plus enlarged browser text); text must reflow, never clip.
+ *
+ * Text styles. Each sets family, axes, weight, size, leading and tracking as
+ * one set: tracking tightens and leading closes up as size grows. Sizes are
+ * fluid from 360 to 1600 px with rem bounds, so browser text size scales them.
+ */
+@utility type-display-xl {
   font-family: var(--font-sans);
+  font-stretch: 118%;
+  font-weight: 500;
+  font-size: clamp(3.375rem, 2.0323rem + 5.9677vw, 8rem);
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+  overflow-wrap: break-word;
+}
+
+@utility type-display-l {
+  font-family: var(--font-sans);
+  font-stretch: 106%;
+  font-weight: 500;
+  font-size: clamp(2.25rem, 1.4516rem + 3.5484vw, 5rem);
+  line-height: 0.98;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+  overflow-wrap: break-word;
+}
+
+@utility type-display-m {
+  font-family: var(--font-sans);
+  font-stretch: 100%;
+  font-weight: 500;
+  font-size: clamp(1.75rem, 1.3871rem + 1.6129vw, 3rem);
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+  overflow-wrap: break-word;
+}
+
+@utility type-lede {
+  font-family: var(--font-serif);
+  font-variation-settings: "opsz" 36;
+  font-weight: 380;
+  font-size: clamp(1.25rem, 1.1048rem + 0.6452vw, 1.75rem);
+  line-height: 1.4;
+  letter-spacing: 0;
+  text-wrap: pretty;
+}
+
+@utility type-body {
+  font-family: var(--font-serif);
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-size: clamp(1.0625rem, 1.0262rem + 0.1613vw, 1.1875rem);
+  line-height: 1.5;
+  letter-spacing: 0;
+  text-wrap: pretty;
+}
+
+@utility type-caption {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-variation-settings: "opsz" 10;
+  font-weight: 400;
+  font-size: clamp(0.875rem, 0.8569rem + 0.0806vw, 0.9375rem);
+  line-height: 1.4;
+  letter-spacing: 0.005em;
+}
+
+@utility type-annotation {
+  font-family: var(--font-sans);
+  font-stretch: 75%;
+  font-weight: 500;
+  font-size: clamp(0.875rem, 0.8569rem + 0.0806vw, 0.9375rem);
+  line-height: 1.25;
+  letter-spacing: 0.015em;
+}
+
+@utility type-data {
+  font-family: var(--font-sans);
+  font-stretch: 87%;
+  font-weight: 450;
+  font-size: clamp(0.9375rem, 0.9194rem + 0.0806vw, 1rem);
+  line-height: 1.3;
+  letter-spacing: 0.01em;
+  font-variant-numeric: tabular-nums slashed-zero;
+}
+
+@utility measure {
+  max-inline-size: var(--container-measure);
+}
+
+@utility rule-hairline {
+  border-width: 0;
+  border-block-start: var(--rule-hairline) solid var(--rule);
+}
+
+@utility rule-object {
+  border-width: 0;
+  border-block-start: var(--rule-object) solid var(--ink);
+}
+
+@utility z-canvas {
+  z-index: var(--z-canvas);
+}
+@utility z-content {
+  z-index: var(--z-content);
+}
+@utility z-annotations {
+  z-index: var(--z-annotations);
+}
+@utility z-header {
+  z-index: var(--z-header);
+}
+@utility z-menu {
+  z-index: var(--z-menu);
+}
+@utility z-toast {
+  z-index: var(--z-toast);
+}
+
+/*
+ * Hover wipes (button fill, link underline) are CSS transitions: they are
+ * hover-only, never dragged or toggled. They grow from the start edge and
+ * retract back to it. Reduced motion swaps the scale for a cross-fade.
+ */
+@utility wipe-y {
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform var(--duration-quick) var(--ease-settle);
+  @media (prefers-reduced-motion: reduce) {
+    transform: none;
+    opacity: 0;
+    transition: opacity var(--duration-quick) var(--ease-settle);
+  }
+}
+
+@utility wipe-x {
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--duration-quick) var(--ease-settle);
+  @media (prefers-reduced-motion: reduce) {
+    transform: none;
+    opacity: 0;
+    transition: opacity var(--duration-quick) var(--ease-settle);
+  }
+}
+
+@utility wipe-on {
+  transform: none;
+  opacity: 1;
 }
