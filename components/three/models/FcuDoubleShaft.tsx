@@ -163,6 +163,7 @@ export function FcuDoubleShaft({
         ))}
       </Bvh>
       <ExplodedView
+        viewId={viewId}
         registry={registry}
         layout={layout}
         exploded={explorer.exploded}

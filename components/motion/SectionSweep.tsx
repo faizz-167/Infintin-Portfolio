@@ -20,7 +20,7 @@ type SectionSweepProps = {
 };
 
 /** Turns a view's section on or off; the reducer only has a toggle. */
-function setSection(viewId: string, on: boolean, t: number) {
+export function setSection(viewId: string, on: boolean, t: number) {
   const { views, dispatch } = useSceneStore.getState();
   const view = views[viewId];
   if (!view) return;

@@ -39,6 +39,8 @@ export function SplitHeadline({
   const lines = useRef<Element[]>([]);
   const lockRef = useRef(lock);
   lockRef.current = lock;
+  // Machining plays once; later re-splits (resize) keep the final width.
+  const widened = useRef(false);
 
   const { contextSafe } = useGSAP(
     (_, contextSafe) => {
@@ -61,8 +63,12 @@ export function SplitHeadline({
                 lines.current = self.lines;
                 // Narrowed per line, never on the heading: re-splits measure
                 // the heading, which must stay at its final width.
-                if (lockRef.current === false)
+                if (lockRef.current !== undefined && !widened.current) {
                   gsap.set(self.lines, { fontStretch: CONDENSED });
+                  // The lock can arrive before the fonts do (a fast model
+                  // load); it machines from here instead.
+                  if (lockRef.current) machine(el, self.lines);
+                }
                 return gsap.from(self.lines, {
                   yPercent: 110,
                   duration: duration.scene,
@@ -88,14 +94,20 @@ export function SplitHeadline({
     { scope: ref },
   );
 
-  const widen = contextSafe(() => {
-    const el = ref.current;
-    if (!el || lines.current.length === 0) return;
-    gsap.to(lines.current, {
+  const machine = (el: HTMLElement, targets: Element[]) => {
+    widened.current = true;
+    gsap.to(targets, {
       fontStretch: getComputedStyle(el).fontStretch,
       duration: duration.assembly,
       ease: "machine",
     });
+  };
+
+  const widen = contextSafe(() => {
+    const el = ref.current;
+    // Not split yet: the split machines when it happens.
+    if (!el || lines.current.length === 0 || widened.current) return;
+    machine(el, lines.current);
   });
 
   // Runs on the flip to true only; `widen` is a fresh function each render.

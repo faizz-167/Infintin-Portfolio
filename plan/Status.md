@@ -1,8 +1,8 @@
 # Infintin Redesign — Status
 
-**Last updated:** 2026-10-13
-**Current phase:** 07 completed (05 device checks and 06 screen-reader check still open)
-**Overall:** 6 / 12 active phases completed (Phase 12 deferred)
+**Last updated:** 2026-10-14
+**Current phase:** 08 completed (05 device checks and 06 screen-reader check still open)
+**Overall:** 7 / 12 active phases completed (Phase 12 deferred)
 
 ## Rules
 
@@ -24,7 +24,7 @@
 | 05 | 3D core: canvas, stage, model, quality | [phase-05-3d-core.md](phase-05-3d-core.md) | 02, 04 | IN_PROGRESS | 8 / 8 (device checks open) |
 | 06 | Product explorer | [phase-06-product-explorer.md](phase-06-product-explorer.md) | 03.5, 05 | IN_PROGRESS | 9 / 9 (screen-reader check open) |
 | 07 | Site shell & motion primitives | [phase-07-shell-motion.md](phase-07-shell-motion.md) | 02, 03 | COMPLETED | 9 / 9 |
-| 08 | Home: Hero & Blueprint | [phase-08-home-hero.md](phase-08-home-hero.md) | 05, 06.2, 07 | NOT_STARTED | 0 / 6 |
+| 08 | Home: Hero & Blueprint | [phase-08-home-hero.md](phase-08-home-hero.md) | 05, 06.2, 07 | COMPLETED | 6 / 6 |
 | 09 | Home: remaining scenes | [phase-09-home-scenes.md](phase-09-home-scenes.md) | 06, 08 | NOT_STARTED | 0 / 9 |
 | 10 | Product route & contact page (UI) | [phase-10-product-contact.md](phase-10-product-contact.md) | 03, 06, 07 | NOT_STARTED | 0 / 7 |
 | 11 | A11y, responsive, performance, SEO, launch QA | [phase-11-quality-launch.md](phase-11-quality-launch.md) | 08, 09, 10 | NOT_STARTED | 0 / 8 |
@@ -86,6 +86,14 @@ None for Phases 00–11. Several claims and content items are pending client app
 | 2026-10-14 | Socials: empty typed list in `data/contact.ts`, footer hides it until the client supplies profiles. | Client |
 | 2026-10-14 | `SectionSweep` drives a view's 3D section (`viewId`) as well as the 2D clip; Phase 09 tunes timing. | Client |
 | 2026-10-14 | All internal links go through `RouteLink`, which derives `nav-forward`/`nav-back` from the route order home → product → contact. | Phase 07 |
+| 2026-10-14 | Hero H1 copy is claim `home.headline`, approved as a placeholder; client supplies final copy. | Client |
+| 2026-10-14 | Elevation drawing generated from the GLB (`npm run drawings:elevation`, hidden-line removal, no new package); typecheck ties it to the `elevation` shot. | Client |
+| 2026-10-14 | Hero CTAs link to `/contact` and `/products/fcu-double-shaft`, which 404 until Phase 10. | Client |
+| 2026-10-14 | Lab scenes with a live view set `data-ground="canvas"` so `[data-env]` stops painting over the canvas; the stage paints the ground. | Client |
+| 2026-10-14 | The model never occludes the H1 (one fixed canvas under the page); the shaft passes behind the last lines. | Client |
+| 2026-10-14 | Timelines drive explode progress directly via `lib/explodeDrive` (assembly lock, peek); `SceneView` gains `ownLoading` and `fixedShot`. | Phase 08 |
+| 2026-10-14 | Home hero gets its own `home` shot: desktop as `hero`, phones roll the camera so the whole motor runs corner to corner. `hero.mobile` unchanged. Shots gain an optional `roll`. | Client |
+| 2026-10-14 | Hero H1 is `display-l` from `lg` up so the headline sets in two lines at 1440; phones keep `display-xl`. | Client |
 | 2026-10-14 | Menu uses springs (§7.2) rather than `ease-settle` tweens; headline width machining ends at the style's own width, not a fixed 112. | Phase 07 |
 
 ## Open questions (client)
@@ -123,3 +131,5 @@ See `spec/content-guardrails.md` §3. Highest priority before Phase 03 content e
 - 2026-10-13 — Phase 05: 05.1–05.8 built, plus 04.7 posters. One canvas with 4 views, 0 idle frames, no-WebGL posters, mouse drag with inertia, wheel zoom clamp, `<Activity>` hide/show all verified on `/system/model`. Rotate ≈53 fps on Intel Raptor Lake-P iGPU (1440×900, 1×). Android fps and real touch/pen drag not yet measured. Phase 04 marked COMPLETED.
 - 2026-10-13 — Phase 06: 06.1–06.9 built. Verified on `/system/explorer`: reducer tests (7), explode/assemble with smooth interrupted reversal, isolate with ghosting, camera and inspection frame, shaded/drawing/X-ray with no shader relinks after first use, section with hatched cap at 5 cut positions and a draggable handle, occlusion-aware balloons on a rail, parts list linked both ways, keyboard shortcuts, reduced motion, phone layout. Screen-reader check pending (client). Found a pre-existing `Button` hydration mismatch for reduced-motion users (not fixed).
 - 2026-10-14 — **Phase 07 COMPLETED**: header + menu, sheet frame with live title block, footer, `ScrollScene`, `SplitHeadline`, `DrawPath`, `Reveal`, `SectionSweep`, route wipe + product-name morph. Verified on `/system/motion`: stable trigger counts over 5 round trips, menu closed after back/forward, reduced-motion end states, CLS 0.00. Build, typecheck, lint, tests and claims:check pass. Found: scene views are hidden under `[data-env]` backgrounds (Phase 09 decision).
+- 2026-10-14 — Phase 08: 08.1–08.5 built on `/`: assembly lock out of the generated elevation drawing, drag/hold/E peek, pinned elevation + section sweep into the Sheet with the drawing aligned to the 3D (≈1 px), Blueprint text. LCP = H1 (476 ms, Fast 4G + 4× CPU); sequence 1.51 s after model ready; poster and reduced-motion variants checked. Build, typecheck, lint, tests and claims:check pass. 08.6 open: phone framing.
+- 2026-10-14 — **Phase 08 COMPLETED**: phone `home` shot (whole motor on a diagonal), "Drag to rotate" hint on phones, H1 two lines at 1440 (`display-l` from `lg`). Build, typecheck, lint, tests and claims:check pass. Real-device touch drag still unchecked.

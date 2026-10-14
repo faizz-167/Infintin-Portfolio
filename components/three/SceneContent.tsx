@@ -21,6 +21,7 @@ interface SceneContentProps {
   zoom: boolean;
   /** Full explorer: pick parts, drag the section handle, show balloons. */
   explore: boolean;
+  fixedShot: boolean;
 }
 
 /**
@@ -34,6 +35,7 @@ export default function SceneContent({
   rotate,
   zoom,
   explore,
+  fixedShot,
 }: SceneContentProps) {
   const visible = useSceneStore((s) => s.views[id]?.visible ?? false);
   const dispatch = useSceneStore((s) => s.dispatch);
@@ -67,7 +69,7 @@ export default function SceneContent({
     <>
       <View className="absolute inset-0" visible={visible}>
         <LabStage env={env}>
-          <CameraRig viewId={id} runtime={runtime} />
+          <CameraRig viewId={id} runtime={runtime} fixedShot={fixedShot} />
           <Suspense fallback={null}>
             <RotateGroup state={runtime.rotation}>
               <FcuDoubleShaft

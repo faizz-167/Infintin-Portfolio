@@ -1,6 +1,6 @@
 # Phase 08 — Home: Hero & Engineering Blueprint Scenes
 
-**Status:** NOT_STARTED
+**Status:** COMPLETED
 **Depends on:** Phase 05, Phase 06 (06.2), Phase 07
 **Outputs:** `components/sections/{Hero,Blueprint}.tsx`, scroll choreography for sheets 01–02
 
@@ -12,12 +12,12 @@ Create the first impression: an immediately interactive, cinematic 3D moment of 
 
 | ID | Subtask | Status |
 | --- | --- | --- |
-| 08.1 | Hero layout: shaft-axis composition, H1, lede, CTAs, status tag | NOT_STARTED |
-| 08.2 | "Assembly lock" entrance (3D parts seat along shaft + headline machining) | NOT_STARTED |
-| 08.3 | Hero interaction: drag-to-rotate, hint affordance, explode peek on hold | NOT_STARTED |
-| 08.4 | Hero → Blueprint section sweep (Lab → Sheet) | NOT_STARTED |
-| 08.5 | Blueprint scene: elevation line drawing aligned to 3D, positioning text | NOT_STARTED |
-| 08.6 | Mobile + reduced-motion variants | NOT_STARTED |
+| 08.1 | Hero layout: shaft-axis composition, H1, lede, CTAs, status tag | COMPLETED |
+| 08.2 | "Assembly lock" entrance (3D parts seat along shaft + headline machining) | COMPLETED |
+| 08.3 | Hero interaction: drag-to-rotate, hint affordance, explode peek on hold | COMPLETED |
+| 08.4 | Hero → Blueprint section sweep (Lab → Sheet) | COMPLETED |
+| 08.5 | Blueprint scene: elevation line drawing aligned to 3D, positioning text | COMPLETED |
+| 08.6 | Mobile + reduced-motion variants | COMPLETED |
 
 ## Execution plan
 
@@ -49,9 +49,19 @@ Create the first impression: an immediately interactive, cinematic 3D moment of 
 
 ## Validation criteria
 
-- [ ] First screen states HVAC/FCU focus, prototype status and both CTAs at 390 × 844 and 1440 × 900 without scrolling.
-- [ ] LCP element is the H1; LCP < 2.5 s on throttled "Fast 4G" mobile profile.
-- [ ] Assembly sequence completes ≤ 2 s after model ready and never blocks scrolling or CTA clicks.
-- [ ] 3D model and SVG elevation align within 4 px at handoff on desktop.
-- [ ] Reduced-motion and poster-tier variants verified.
-- [ ] Status.md updated.
+- [x] First screen states HVAC/FCU focus, prototype status and both CTAs at 390 × 844 and 1440 × 900 without scrolling.
+- [x] LCP element is the H1; LCP < 2.5 s on throttled "Fast 4G" mobile profile. (476 ms, Fast 4G + 4× CPU, production build on localhost.)
+- [x] Assembly sequence completes ≤ 2 s after model ready and never blocks scrolling or CTA clicks. (1.51 s; CTAs hit-test through.)
+- [x] 3D model and SVG elevation align within 4 px at handoff on desktop. (≈1 px at both ends, 1440 × 900.)
+- [x] Reduced-motion and poster-tier variants verified. (Reduced motion via headless `--force-prefers-reduced-motion` and DOM checks; DevTools cannot emulate it.)
+- [x] Status.md updated.
+
+## Notes
+
+- Elevation drawing is generated: `npm run drawings:elevation` projects the high GLB through the desktop `elevation` camera with hidden-line removal. The drawing component fails typecheck if the shot changes without a rerun.
+- Model and headline can't occlude each other: the canvas is one fixed layer under the page, so the H1 always draws over the model (client decision).
+- The hero's Lab ground is painted by the canvas once the live view is up (`data-ground="canvas"`); Phase 09 can reuse it for Lab scenes with a live model.
+- `home.headline` is a placeholder marked approved so the H1 renders in production; client to supply final copy.
+- H1 is `display-l` from `lg` up (client: two lines at 1440); `display-xl` set this copy in 3–4 lines at any width. Phones keep `display-xl`. At two lines the H1 sits clear of the motor on desktop, so the shaft no longer crosses its last line.
+- Phones use their own `home` shot (whole motor corner to corner, camera roll −38°); the shared `hero.mobile` shot is unchanged. The "Drag to rotate" hint shows on phones; the hold/E line is desktop only (phones have "Look inside").
+- Not checked: touch drag on a real device.

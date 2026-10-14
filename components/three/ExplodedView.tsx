@@ -6,6 +6,7 @@ import { useEffect, useRef } from "react";
 import { Box3, Matrix4, Quaternion, Vector3 } from "three";
 import { fcuDoubleShaftParts } from "@/data/parts/fcu-double-shaft";
 import type { PartId, PartSpec } from "@/data/types";
+import { drivenExplode, onExplodeDriven } from "@/lib/explodeDrive";
 import type { GLTFResult } from "./models/generated/FcuDoubleShaft.gen";
 import type { PartRegistry } from "./PartMesh";
 import { prefersReducedMotion } from "./reducedMotion";
@@ -110,14 +111,17 @@ const MAX_DELTA = 1 / 30;
 
 /**
  * Drives every part group from one explode value, damped towards 0 or 1.
- * Scroll timelines and buttons both only set the target.
+ * Buttons only set the target; a timeline that needs exact progress (the
+ * hero assembly) drives the value directly through `lib/explodeDrive`.
  */
 export function ExplodedView({
+  viewId,
   registry,
   layout,
   exploded,
   onSettle,
 }: {
+  viewId: string;
   registry: PartRegistry;
   layout: Map<PartId, PartLayout>;
   exploded: boolean;
@@ -126,8 +130,11 @@ export function ExplodedView({
 }) {
   const progress = useRef({ value: exploded ? 1 : 0 });
   const settled = useRef(exploded);
+  const wasDriven = useRef(false);
   const offset = useRef(new Vector3());
   const invalidate = useThree((s) => s.invalidate);
+
+  useEffect(() => onExplodeDriven(viewId, invalidate), [viewId, invalidate]);
 
   // A new target starts the loop; the frame callback keeps it going.
   useEffect(() => {
@@ -137,8 +144,14 @@ export function ExplodedView({
   useFrame((state, rawDelta) => {
     const target = exploded ? 1 : 0;
     const p = progress.current;
+    const driven = drivenExplode(viewId);
     let still: boolean;
-    if (prefersReducedMotion()) {
+    if (driven !== undefined) {
+      // The driver asks for each frame it needs.
+      p.value = driven;
+      wasDriven.current = true;
+      still = true;
+    } else if (prefersReducedMotion()) {
       p.value = target;
       still = true;
     } else {
@@ -157,9 +170,12 @@ export function ExplodedView({
         group.position.copy(displacementAt(part, p.value, offset.current));
     }
 
+    if (driven !== undefined) return;
     if (!still) {
       state.invalidate();
-    } else if (settled.current !== exploded) {
+    } else if (settled.current !== exploded || wasDriven.current) {
+      // Settling after a drive re-bakes the contact shadow too.
+      wasDriven.current = false;
       settled.current = exploded;
       onSettle(exploded);
     }

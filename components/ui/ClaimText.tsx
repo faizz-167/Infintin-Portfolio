@@ -38,3 +38,16 @@ export function ClaimText({ id, fallback = null }: ClaimTextProps) {
 
   return fallback;
 }
+
+/**
+ * A claim as a plain string, for components that need one (a split
+ * headline). Same rules as `ClaimText`, minus the development marker:
+ * `null` wherever `ClaimText` would render nothing.
+ */
+export function claimString(id: ClaimId): string | null {
+  const claim = getClaim(id);
+  if (claim.status === "approved") return claim.text;
+  if (process.env.NODE_ENV === "development" && claim.status === "pending")
+    return claim.text;
+  return null;
+}

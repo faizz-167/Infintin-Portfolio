@@ -363,6 +363,8 @@ interface Framing {
   target: Vec3;
   /** Vertical field of view, degrees. */
   fov: number;
+  /** Turn of the picture about the view axis, degrees (counter-clockwise). */
+  roll?: number;
 }
 
 export interface CameraShot extends Framing {
@@ -370,7 +372,7 @@ export interface CameraShot extends Framing {
   mobile?: Framing;
 }
 
-export type ShotId = "hero" | "elevation" | "explode" | "section";
+export type ShotId = "hero" | "home" | "elevation" | "explode" | "section";
 
 /**
  * The CAD export's own camera (orthographic, dropped from the GLB): a
@@ -390,6 +392,20 @@ export const cameraShots = {
     target: [0, -0.01, 0],
     fov: 35,
     mobile: { position: [0.42, 0.14, 0.42], target: [0, -0.01, 0], fov: 45 },
+  },
+  // The home page hero. Desktop as `hero`; phones roll the picture so the
+  // whole assembly runs corner to corner of the portrait screen, where
+  // `hero.mobile` crops to the motor body.
+  home: {
+    position: [0.78, 0.12, 0.62],
+    target: [0, -0.01, 0],
+    fov: 35,
+    mobile: {
+      position: [1.25, 0.42, 1.05],
+      target: [0, 0, 0],
+      fov: 40,
+      roll: -38,
+    },
   },
   // Side view along X: near-orthographic for alignment with 2D elevations.
   elevation: {

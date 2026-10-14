@@ -4,7 +4,7 @@ import { PerspectiveCamera } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 import { easing } from "maath";
 import { useEffect, useRef } from "react";
-import { type PerspectiveCamera as Camera, Vector3 } from "three";
+import { type PerspectiveCamera as Camera, MathUtils, Vector3 } from "three";
 import {
   type CameraShot,
   cameraShots,
@@ -61,16 +61,21 @@ function focusShot({ center, radius }: { center: Vector3; radius: number }) {
 export function CameraRig({
   viewId,
   runtime,
+  fixedShot = false,
 }: {
   viewId: string;
   runtime: ViewRuntime;
+  /** Hold the view's own shot whatever the explorer state (scroll scenes). */
+  fixedShot?: boolean;
 }) {
   const camera = useRef<Camera>(null);
   const target = useRef(new Vector3());
+  const roll = useRef({ value: 0 });
   const goal = useRef({ position: new Vector3(), target: new Vector3() });
   const placed = useRef(false);
   const shot = useSceneStore((s) => {
     const view = s.views[viewId];
+    if (view && fixedShot) return view.shot;
     return view
       ? shotFor({
           shot: view.shot,
@@ -112,8 +117,10 @@ export function CameraRig({
       cam.position.copy(goal.current.position);
       target.current.copy(goal.current.target);
       cam.fov = framing.fov;
+      roll.current.value = framing.roll ?? 0;
       cam.updateProjectionMatrix();
       cam.lookAt(target.current);
+      cam.rotateZ(MathUtils.degToRad(roll.current.value));
       return;
     }
 
@@ -132,9 +139,17 @@ export function CameraRig({
       delta,
     );
     const fov = easing.damp(cam, "fov", framing.fov, SMOOTH_TIME, delta);
+    const turn = easing.damp(
+      roll.current,
+      "value",
+      framing.roll ?? 0,
+      SMOOTH_TIME,
+      delta,
+    );
     cam.updateProjectionMatrix();
     cam.lookAt(target.current);
-    if (position || aim || fov) state.invalidate();
+    cam.rotateZ(MathUtils.degToRad(roll.current.value));
+    if (position || aim || fov || turn) state.invalidate();
   }, AFTER_FOCUS);
 
   return <PerspectiveCamera ref={camera} makeDefault near={0.01} far={20} />;

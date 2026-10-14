@@ -31,6 +31,16 @@ interface SceneViewProps {
   sizes?: string;
   /** Above the fold: load the poster eagerly, it is likely the LCP. */
   eager?: boolean;
+  /**
+   * The page draws its own loading state (the hero's elevation drawing), so
+   * the poster appears only on the `poster` tier, never while loading.
+   */
+  ownLoading?: boolean;
+  /**
+   * The camera holds `shot` even while exploded or sectioned: a scroll scene
+   * that cuts or opens the model owns the framing itself.
+   */
+  fixedShot?: boolean;
 }
 
 /**
@@ -51,10 +61,13 @@ export function SceneView({
   className = "",
   sizes = "100vw",
   eager = false,
+  ownLoading = false,
+  fixedShot = false,
 }: SceneViewProps) {
   const element = useRef<HTMLDivElement>(null);
   const shotRef = useRef(shot);
-  const live = useSceneStore((s) => s.tier !== null && s.tier !== "poster");
+  const tier = useSceneStore((s) => s.tier);
+  const live = tier !== null && tier !== "poster";
   const ready = useSceneStore((s) => s.views[id]?.ready ?? false);
   const registerView = useSceneStore((s) => s.registerView);
   const unregisterView = useSceneStore((s) => s.unregisterView);
@@ -101,7 +114,7 @@ export function SceneView({
           }
         : { "aria-hidden": true })}
     >
-      {(!live || !ready) && (
+      {(ownLoading ? tier === "poster" : !live || !ready) && (
         <PosterFallback poster={poster} env={env} sizes={sizes} eager={eager} />
       )}
       {live && (
@@ -112,6 +125,7 @@ export function SceneView({
           rotate={rotate}
           zoom={zoom}
           explore={explore}
+          fixedShot={fixedShot}
         />
       )}
     </div>

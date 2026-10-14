@@ -129,6 +129,14 @@ export const claims = {
     source: "Drafted from PRD §8.7, §12",
   },
 
+  // ------------------------------------------------------------ Home
+  "home.headline": {
+    text: "Motors and controllers, engineered for fan coil units",
+    status: "approved",
+    source:
+      "Placeholder approved 2026-10-14 to unblock Phase 08; client to supply final copy",
+  },
+
   // ------------------------------------------------------------ Company
   "company.positioning": {
     text: "Infintin designs motor and controller solutions for HVAC applications, beginning with fan coil unit motors. Its engineering approach combines application-specific design with locally sourced materials and local manufacturing partners to reduce dependence on imported components and improve supply-chain responsiveness.",
