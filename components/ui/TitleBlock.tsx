@@ -1,10 +1,11 @@
+import type { ReactNode } from "react";
 import { StatusTag } from "./StatusTag";
 
 type TitleBlockProps = {
   sheetName: string;
   sheet: number;
   sheetCount: number;
-  status: string;
+  status: ReactNode;
   className?: string;
 };
 

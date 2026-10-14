@@ -1,5 +1,5 @@
-import Link from "next/link";
 import type { ReactNode } from "react";
+import { RouteLink } from "./RouteLink";
 
 type TextLinkProps = {
   href: string;
@@ -46,18 +46,29 @@ export function TextLink({
 
   const classes = `group inline ${className ?? ""}`;
 
-  return isExternal ? (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className={classes}
-    >
+  if (isExternal)
+    return (
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={classes}
+      >
+        {content}
+      </a>
+    );
+
+  // mailto:, tel: and other schemes are for the browser, not the router.
+  if (!href.startsWith("/") && !href.startsWith("#"))
+    return (
+      <a href={href} className={classes}>
+        {content}
+      </a>
+    );
+
+  return (
+    <RouteLink href={href} className={classes}>
       {content}
-    </a>
-  ) : (
-    <Link href={href} className={classes}>
-      {content}
-    </Link>
+    </RouteLink>
   );
 }

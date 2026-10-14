@@ -205,6 +205,11 @@ export interface ContactChannel {
   value: ClaimId;
 }
 
+export interface SocialLink {
+  label: string;
+  href: string;
+}
+
 export interface EnquiryType {
   id: string;
   label: string;

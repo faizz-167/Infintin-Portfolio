@@ -43,7 +43,13 @@ export default function CanvasRoot() {
           gl.localClippingEnabled = true;
         }}
         className="z-canvas"
-        style={{ position: "fixed", inset: 0, pointerEvents: "none" }}
+        style={{
+          position: "fixed",
+          inset: 0,
+          pointerEvents: "none",
+          // Frozen during route wipes (globals.css): never snapshotted.
+          viewTransitionName: "site-canvas",
+        }}
       >
         <View.Port />
         <QualityTier />

@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
 import { Archivo, Source_Serif_4 } from "next/font/google";
+import { SheetFrame } from "@/components/layout/SheetFrame";
+import { SiteFooter } from "@/components/layout/SiteFooter";
+import { SiteHeader } from "@/components/layout/SiteHeader";
 import { SmoothScroll } from "@/components/motion/SmoothScroll";
 import { SiteCanvas } from "@/components/three/SiteCanvas";
+import { ClaimText } from "@/components/ui/ClaimText";
 import "./globals.css";
 
 // Variable fonts: next/font only ships the wght axis unless extra axes are
@@ -42,11 +46,14 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           Skip to content
         </a>
         <SmoothScroll>
+          <SiteHeader />
           {/* Positioned above the fixed canvas (z-canvas), which shows through
               wherever the page leaves a scene view's placeholder unpainted. */}
           <main id="content" className="relative z-content">
             {children}
           </main>
+          <SiteFooter />
+          <SheetFrame status={<ClaimText id="product.status" />} />
         </SmoothScroll>
         <SiteCanvas />
       </body>

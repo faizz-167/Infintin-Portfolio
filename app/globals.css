@@ -58,6 +58,8 @@
   --spacing-scene: clamp(6rem, 3.5rem + 11vw, 16rem);
   /* Minimum touch target (44 px). */
   --spacing-target: 2.75rem;
+  /* Fixed site header: a target plus breathing room. */
+  --spacing-header: 3.5rem;
 
   --container-page: 100rem;
   --container-measure: 68ch;
@@ -154,6 +156,11 @@
     color: var(--ink);
     font-family: var(--font-sans);
     -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Scroll lock while the menu is open (set by MenuOverlay). */
+  html[data-menu-open] {
+    overflow: hidden;
   }
 
   /* Removes the double-tap-zoom delay so presses register immediately. */
@@ -326,4 +333,105 @@
 @utility wipe-on {
   transform: none;
   opacity: 1;
+}
+
+/*
+ * Route transitions (React <ViewTransition>, see PageTransition). The new
+ * page wipes in along the shaft axis over the old one, which holds still:
+ * from the right going forward (home → product → contact), from the left
+ * going back. Header, sheet frame and the 3D canvas are named and frozen so
+ * they are never snapshotted into the wipe.
+ */
+::view-transition {
+  /* Clicks during the wipe reach the live page. */
+  pointer-events: none;
+}
+
+::view-transition-group(site-header),
+::view-transition-group(site-frame),
+::view-transition-group(site-canvas) {
+  animation: none;
+}
+/* Stacking during a wipe: old page, new page (1), morphing name (2), then
+   the fixed chrome on top (3). */
+::view-transition-group(site-header),
+::view-transition-group(site-frame) {
+  z-index: 3;
+}
+::view-transition-old(site-header),
+::view-transition-old(site-frame),
+::view-transition-old(site-canvas) {
+  display: none;
+}
+::view-transition-new(site-header),
+::view-transition-new(site-frame),
+::view-transition-new(site-canvas) {
+  animation: none;
+}
+
+/* The outgoing page stays put for the length of the wipe, underneath. */
+::view-transition-old(.page-exit) {
+  animation: page-hold var(--duration-base) linear both;
+}
+
+::view-transition-group(.page-enter-forward),
+::view-transition-group(.page-enter-back) {
+  z-index: 1;
+}
+::view-transition-new(.page-enter-forward) {
+  animation: page-wipe-from-right var(--duration-base) var(--ease-machine) both;
+}
+::view-transition-new(.page-enter-back) {
+  animation: page-wipe-from-left var(--duration-base) var(--ease-machine) both;
+}
+
+@keyframes page-hold {
+  from,
+  to {
+    opacity: 1;
+  }
+}
+@keyframes page-wipe-from-right {
+  from {
+    clip-path: inset(0 0 0 100%);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+@keyframes page-wipe-from-left {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+/* The product name morphs; a direct move, no blur, no overshoot. */
+::view-transition-group(.morph) {
+  z-index: 2;
+  animation-duration: var(--duration-base);
+  animation-timing-function: var(--ease-machine);
+}
+
+/* Reduced motion: no travel. The new page cross-fades in (≤ 200 ms) and the
+   product name jumps to its new place. */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(.page-exit) {
+    animation-duration: 200ms;
+  }
+  ::view-transition-new(.page-enter-forward),
+  ::view-transition-new(.page-enter-back) {
+    animation: page-fade-in 200ms linear both;
+  }
+  ::view-transition-group(.morph) {
+    animation-duration: 0s;
+  }
+}
+
+@keyframes page-fade-in {
+  from {
+    opacity: 0;
+  }
 }

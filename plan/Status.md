@@ -1,8 +1,8 @@
 # Infintin Redesign — Status
 
 **Last updated:** 2026-10-13
-**Current phase:** 06 in progress (05 device checks and 06 screen-reader check open)
-**Overall:** 5 / 12 active phases completed (Phase 12 deferred)
+**Current phase:** 07 completed (05 device checks and 06 screen-reader check still open)
+**Overall:** 6 / 12 active phases completed (Phase 12 deferred)
 
 ## Rules
 
@@ -23,7 +23,7 @@
 | 04 | 3D asset pipeline, materials & lighting | [phase-04-3d-pipeline.md](phase-04-3d-pipeline.md) | 00.4, 01 | COMPLETED | 7 / 7 (04.7 moved to 05) |
 | 05 | 3D core: canvas, stage, model, quality | [phase-05-3d-core.md](phase-05-3d-core.md) | 02, 04 | IN_PROGRESS | 8 / 8 (device checks open) |
 | 06 | Product explorer | [phase-06-product-explorer.md](phase-06-product-explorer.md) | 03.5, 05 | IN_PROGRESS | 9 / 9 (screen-reader check open) |
-| 07 | Site shell & motion primitives | [phase-07-shell-motion.md](phase-07-shell-motion.md) | 02, 03 | NOT_STARTED | 0 / 9 |
+| 07 | Site shell & motion primitives | [phase-07-shell-motion.md](phase-07-shell-motion.md) | 02, 03 | COMPLETED | 9 / 9 |
 | 08 | Home: Hero & Blueprint | [phase-08-home-hero.md](phase-08-home-hero.md) | 05, 06.2, 07 | NOT_STARTED | 0 / 6 |
 | 09 | Home: remaining scenes | [phase-09-home-scenes.md](phase-09-home-scenes.md) | 06, 08 | NOT_STARTED | 0 / 9 |
 | 10 | Product route & contact page (UI) | [phase-10-product-contact.md](phase-10-product-contact.md) | 03, 06, 07 | NOT_STARTED | 0 / 7 |
@@ -37,6 +37,8 @@ Parallelisable after Phase 01: 02, 03 and 04 can run side by side; 07 can start 
 Phase 05 — 3D core. All subtasks built; open validation: fps on a mid-range Android phone, touch/pen drag on a real device, laptop rotate fps ≈53 (target 60).
 
 Phase 06 — Product explorer. All subtasks built and checked on `/system/explorer`; open: NVDA or VoiceOver pass over the parts list and announcements.
+
+Phase 07 — completed on the dev bench `/system/motion` (+ `/b`). Open for Phase 09: scene views are hidden under `[data-env]` backgrounds (see phase file notes).
 
 ## Blockers
 
@@ -79,6 +81,12 @@ None for Phases 00–11. Several claims and content items are pending client app
 | 2026-10-13 | Unapproved part names show as "Item N" in production. | Client |
 | 2026-10-13 | `ProductExplorer` is a standalone component on dev-only `/system/explorer`; Phase 10 mounts it on the product route. | Client |
 | 2026-10-13 | Section uses one shared stencil cap and per-material clipping; picking is our own raycast from DOM events. | Phase 06 |
+| 2026-10-14 | Phase 07 tested on dev-only `/system/motion` and `/system/motion/b`; no stub product/contact routes. | Client |
+| 2026-10-14 | Title block data comes from `ScrollScene` registration (name per scene, N = scenes on the page); no scenes data file until Phase 09. | Client |
+| 2026-10-14 | Socials: empty typed list in `data/contact.ts`, footer hides it until the client supplies profiles. | Client |
+| 2026-10-14 | `SectionSweep` drives a view's 3D section (`viewId`) as well as the 2D clip; Phase 09 tunes timing. | Client |
+| 2026-10-14 | All internal links go through `RouteLink`, which derives `nav-forward`/`nav-back` from the route order home → product → contact. | Phase 07 |
+| 2026-10-14 | Menu uses springs (§7.2) rather than `ease-settle` tweens; headline width machining ends at the style's own width, not a fixed 112. | Phase 07 |
 
 ## Open questions (client)
 
@@ -114,3 +122,4 @@ See `spec/content-guardrails.md` §3. Highest priority before Phase 03 content e
 - 2026-10-13 — 04.8 completed: runtime guard replaces the cast; models:optimize deterministic, typecheck, lint, build and claims:check pass.
 - 2026-10-13 — Phase 05: 05.1–05.8 built, plus 04.7 posters. One canvas with 4 views, 0 idle frames, no-WebGL posters, mouse drag with inertia, wheel zoom clamp, `<Activity>` hide/show all verified on `/system/model`. Rotate ≈53 fps on Intel Raptor Lake-P iGPU (1440×900, 1×). Android fps and real touch/pen drag not yet measured. Phase 04 marked COMPLETED.
 - 2026-10-13 — Phase 06: 06.1–06.9 built. Verified on `/system/explorer`: reducer tests (7), explode/assemble with smooth interrupted reversal, isolate with ghosting, camera and inspection frame, shaded/drawing/X-ray with no shader relinks after first use, section with hatched cap at 5 cut positions and a draggable handle, occlusion-aware balloons on a rail, parts list linked both ways, keyboard shortcuts, reduced motion, phone layout. Screen-reader check pending (client). Found a pre-existing `Button` hydration mismatch for reduced-motion users (not fixed).
+- 2026-10-14 — **Phase 07 COMPLETED**: header + menu, sheet frame with live title block, footer, `ScrollScene`, `SplitHeadline`, `DrawPath`, `Reveal`, `SectionSweep`, route wipe + product-name morph. Verified on `/system/motion`: stable trigger counts over 5 round trips, menu closed after back/forward, reduced-motion end states, CLS 0.00. Build, typecheck, lint, tests and claims:check pass. Found: scene views are hidden under `[data-env]` backgrounds (Phase 09 decision).

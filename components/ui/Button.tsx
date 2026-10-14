@@ -1,11 +1,11 @@
 "use client";
 
 import { motion } from "motion/react";
-import Link from "next/link";
 import type { MouseEventHandler, ReactNode } from "react";
 import { useMotionPreference } from "@/components/motion/useMotionPreference";
+import { RouteLink } from "./RouteLink";
 
-const MotionLink = motion.create(Link);
+const MotionLink = motion.create(RouteLink);
 
 type Variant = "primary" | "secondary" | "text";
 type Size = "md" | "lg";
