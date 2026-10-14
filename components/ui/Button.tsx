@@ -2,6 +2,7 @@
 
 import { motion } from "motion/react";
 import type { MouseEventHandler, ReactNode } from "react";
+import { LetterSwap } from "@/components/motion/LetterSwap";
 import { useMotionPreference } from "@/components/motion/useMotionPreference";
 import { RouteLink } from "./RouteLink";
 
@@ -91,7 +92,14 @@ export function Button(props: ButtonProps) {
           className={variant === "text" ? underlineClasses : fillClasses}
         />
       )}
-      <span className="relative">{children}</span>
+      <span className="relative">
+        {/* Plain-text labels roll on hover; anything richer stays put. */}
+        {typeof children === "string" && !disabled ? (
+          <LetterSwap label={children} />
+        ) : (
+          children
+        )}
+      </span>
       {arrow && (
         <span
           aria-hidden="true"

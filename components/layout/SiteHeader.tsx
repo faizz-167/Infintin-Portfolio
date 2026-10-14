@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { useRef } from "react";
+import { LetterSwap } from "@/components/motion/LetterSwap";
 import { Button } from "@/components/ui/Button";
 import { RouteLink } from "@/components/ui/RouteLink";
 import { company } from "@/data/company";
@@ -57,7 +58,7 @@ export function SiteHeader() {
                   }
                   className="group relative flex min-h-target items-center type-annotation text-ink"
                 >
-                  {item.label}
+                  <LetterSwap label={item.label} />
                   <span
                     aria-hidden="true"
                     className="wipe-x absolute inset-x-0 bottom-2 h-px bg-accent group-hover:wipe-on group-aria-[current=page]:wipe-on"

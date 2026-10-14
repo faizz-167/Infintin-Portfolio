@@ -112,7 +112,7 @@ Headlines are active elements: set in two or three deliberate lines, broken by m
 - **Direction change = new chapter.** On desktop, the development-process timeline and the axial explode scrub travel horizontally along the centre line; everything else scrolls vertically.
 - **Headlines staggered on the grid.** Display lines sit in different real column spans (e.g. line 1 at columns 1–8, line 2 at 4–12), never centred.
 - **Pinned scenes have one stable caption**: the title block and the active parts-list entry. No floating step cards.
-- **Preloader is a drawing.** While the model loads, the hero draws the motor's elevation (centre line, outline, construction lines); the 3D takes over from it when ready.
+- **Preloader is a staircase.** *(Revised, Phase 13; was a drawing of the elevation.)* On the first load of a session a Lab-coloured cover draws the copper centre line; once the model has drawn, the cover splits along that line and leaves as a double staircase (upper columns up, lower columns down, staggered from opposite sides). Return visits, reduced motion and no-JS never see it.
 - **Mobile keeps the idea.** Live 3D (LOD1) and the staggered headline remain on phones; scenes get shorter, not replaced. Display type ≈0.42× at 360 px, body never below 17 px, margins never below 16 px.
 - **UI vs scene timing.** UI transitions ≤ 240 ms with `ease-settle`; only scenes use `scene` / `assembly` durations. No spring overshoot anywhere.
 

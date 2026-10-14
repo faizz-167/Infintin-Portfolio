@@ -30,7 +30,6 @@ export function Hero() {
           </Button>
         </>
       }
-      drawing={<FcuElevation className="size-full" />}
       sheetDrawing={<FcuElevation className="size-full" />}
     />
   );

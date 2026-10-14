@@ -103,6 +103,7 @@
   --z-header: 30;
   --z-menu: 40;
   --z-toast: 50;
+  --z-preloader: 60;
 
   --rule-hairline: 1px;
   --rule-object: 2px;
@@ -320,6 +321,9 @@
 @utility z-toast {
   z-index: var(--z-toast);
 }
+@utility z-preloader {
+  z-index: var(--z-preloader);
+}
 
 /*
  * Hover wipes (button fill, link underline) are CSS transitions: they are
@@ -451,5 +455,30 @@
 @keyframes page-fade-in {
   from {
     opacity: 0;
+  }
+}
+
+/* Preloader (Phase 13). Hidden unless the <head> decision script marked this
+   load; the centre line draws in CSS so it moves before any script runs. */
+.preloader {
+  display: none;
+}
+
+html[data-preload] {
+  overflow: hidden;
+
+  & .preloader {
+    display: block;
+  }
+}
+
+.preloader-line {
+  transform-origin: left center;
+  animation: preloader-draw 0.8s var(--ease-draw) both;
+}
+
+@keyframes preloader-draw {
+  from {
+    transform: scaleX(0);
   }
 }

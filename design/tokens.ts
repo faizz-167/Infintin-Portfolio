@@ -122,4 +122,5 @@ export const zIndex = {
   header: 30,
   menu: 40,
   toast: 50,
+  preloader: 60,
 } as const;

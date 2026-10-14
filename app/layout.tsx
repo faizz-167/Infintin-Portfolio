@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import { Archivo, Source_Serif_4 } from "next/font/google";
+import { Preloader } from "@/components/layout/Preloader";
 import { SheetFrame } from "@/components/layout/SheetFrame";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { SmoothScroll } from "@/components/motion/SmoothScroll";
 import { SiteCanvas } from "@/components/three/SiteCanvas";
 import { ClaimText } from "@/components/ui/ClaimText";
+import { preloadDecisionScript } from "@/lib/preloader";
 import "./globals.css";
 
 // Variable fonts: next/font only ships the wght axis unless extra axes are
@@ -37,7 +39,17 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html
       lang="en-IN"
       className={`${archivo.variable} ${sourceSerif.variable} antialiased`}
+      // The preload decision script may add an attribute before hydration.
+      suppressHydrationWarning
     >
+      <head>
+        {/* Must run before the body paints: decides whether the preloader
+            covers this load, so it is either there from frame one or never. */}
+        <script
+          // biome-ignore lint/security/noDangerouslySetInnerHtml: static, first-party string
+          dangerouslySetInnerHTML={{ __html: preloadDecisionScript }}
+        />
+      </head>
       <body>
         <a
           href="#content"
@@ -46,6 +58,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           Skip to content
         </a>
         <SmoothScroll>
+          <Preloader />
           <SiteHeader />
           {/* Positioned above the fixed canvas (z-canvas), which shows through
               wherever the page leaves a scene view's placeholder unpainted. */}

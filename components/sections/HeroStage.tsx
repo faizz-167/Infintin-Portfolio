@@ -10,7 +10,6 @@ import {
   useState,
   useSyncExternalStore,
 } from "react";
-import { DrawPath } from "@/components/motion/DrawPath";
 import { type SceneBuild, ScrollScene } from "@/components/motion/ScrollScene";
 import { setSection } from "@/components/motion/SectionSweep";
 import { SplitHeadline } from "@/components/motion/SplitHeadline";
@@ -20,11 +19,12 @@ import { Button } from "@/components/ui/Button";
 import { breakpoint, duration } from "@/design/tokens";
 import { driveExplode } from "@/lib/explodeDrive";
 import { gsap } from "@/lib/gsap";
+import { usePreloader } from "@/lib/preloader";
 import { useSceneStore } from "@/lib/store";
 
 const VIEW = "hero";
-// The model is given this long to arrive before the drawing simply hands
-// over to it, with no assembly sequence (08.2).
+// The model is given this long (after any preloader lifts) to arrive before
+// it simply appears, with no assembly sequence (08.2).
 const LATE_MS = 2500;
 // How far a peek opens the assembly (0–1 of the full explode).
 const PEEK = 0.35;
@@ -36,7 +36,7 @@ const HOLD_SLOP = 6;
 const SWEEP_START = 0.15;
 const SWEEP_LENGTH = 0.7;
 
-type Phase = "drawing" | "assembling" | "assembled";
+type Phase = "waiting" | "assembling" | "assembled";
 
 const desktopQuery = `(min-width: ${breakpoint.lg}px)`;
 function useDesktop(): boolean {
@@ -56,15 +56,14 @@ type HeroStageProps = {
   lede: ReactNode;
   status: ReactNode;
   actions: ReactNode;
-  /** The elevation drawing; rendered twice (preloader, and the Sheet side). */
-  drawing: ReactNode;
+  /** The elevation drawing on the Sheet side of the section sweep. */
   sheetDrawing: ReactNode;
 };
 
 /**
  * Sheet 01. The Lab: the motor on its shaft axis, the headline above it.
- * The model arrives by seating its parts along the shaft out of the
- * elevation drawing (assembly lock); scrolling pins the scene while the
+ * The model arrives by seating its parts along the shaft (assembly lock),
+ * as the preloader parts on a first visit; scrolling pins the scene while the
  * camera turns to the elevation and a section sweep crosses into the Sheet,
  * where the same drawing lies exactly over the 3D.
  */
@@ -73,7 +72,6 @@ export function HeroStage({
   lede,
   status,
   actions,
-  drawing,
   sheetDrawing,
 }: HeroStageProps) {
   const tier = useSceneStore((s) => s.tier);
@@ -81,8 +79,10 @@ export function HeroStage({
   const live = tier !== null && tier !== "poster";
   const { reduced } = useMotionPreference();
   const desktop = useDesktop();
+  // Effects only: the server never knows, and the markup doesn't depend on it.
+  const covered = usePreloader((s) => s.state === "covering");
 
-  const [phase, setPhase] = useState<Phase>("drawing");
+  const [phase, setPhase] = useState<Phase>("waiting");
   const [late, setLate] = useState(false);
   const [swept, setSwept] = useState(false);
   const [peeking, setPeeking] = useState(false);
@@ -92,12 +92,15 @@ export function HeroStage({
   // model is up they seat along the shaft and the headline machines to width.
   useEffect(() => {
     if (!reduced) driveExplode(VIEW, 1);
-    const timer = setTimeout(() => setLate(true), LATE_MS);
-    return () => {
-      clearTimeout(timer);
-      driveExplode(VIEW, null);
-    };
+    return () => driveExplode(VIEW, null);
   }, [reduced]);
+
+  // The late clock starts once nothing covers the hero.
+  useEffect(() => {
+    if (covered) return;
+    const timer = setTimeout(() => setLate(true), LATE_MS);
+    return () => clearTimeout(timer);
+  }, [covered]);
 
   const assembled = phase === "assembled";
   useEffect(() => {
@@ -106,7 +109,8 @@ export function HeroStage({
       setPhase("assembled");
       return;
     }
-    if (!ready) return;
+    // Held until the preloader starts to lift, so the sequence is seen.
+    if (!ready || covered) return;
     if (reduced || late) {
       driveExplode(VIEW, null);
       setPhase("assembled");
@@ -127,7 +131,7 @@ export function HeroStage({
     return () => {
       tween.kill();
     };
-  }, [assembled, tier, ready, reduced, late]);
+  }, [assembled, tier, ready, covered, reduced, late]);
 
   // Peek: a partial explode while held. Starts from wherever the last peek
   // was, so a quick re-press reverses smoothly.
@@ -234,7 +238,6 @@ export function HeroStage({
   // Phones keep the diagonal hero framing throughout: the elevation of a
   // 5.7 : 1 assembly is a sliver in portrait.
   const shot = desktop && (!assembled || swept) ? "elevation" : "home";
-  const showDrawing = tier !== "poster" && !(ready && assembled);
 
   return (
     <ScrollScene
@@ -276,25 +279,13 @@ export function HeroStage({
           />
         </div>
 
-        <div
-          aria-hidden="true"
-          className={`pointer-events-none absolute inset-0 text-ink transition-opacity duration-(--duration-base) ease-settle ${
-            !showDrawing
-              ? "opacity-0"
-              : phase === "assembling"
-                ? "opacity-25"
-                : "opacity-100"
-          }`}
-        >
-          <DrawPath className="size-full">{drawing}</DrawPath>
-        </div>
-
         <div className="pointer-events-none relative flex h-full flex-col justify-between px-margin pt-[calc(var(--spacing-header)+var(--spacing-4))] pb-5">
           <SplitHeadline
             as="h1"
             // Widens over the same duration as the assembly, so the last line
             // reaches full width as the last part seats.
-            lock={reduced ? undefined : phase !== "drawing"}
+            lock={reduced ? undefined : phase !== "waiting"}
+            proximity
             className="type-display-xl text-ink lg:type-display-l lg:indent-[calc((100%+var(--spacing-gutter))/12*2)] lg:[&>*]:indent-0 lg:[&>*:first-child]:indent-[calc((100%+var(--spacing-gutter))/12*2)]"
           >
             {headline}

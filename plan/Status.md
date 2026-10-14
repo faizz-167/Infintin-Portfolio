@@ -1,7 +1,7 @@
 # Infintin Redesign — Status
 
 **Last updated:** 2026-10-14
-**Current phase:** 10 completed (05 device checks and 06 screen-reader check still open)
+**Current phase:** 13 in progress (inserted before 11); (05 device checks and 06 screen-reader check still open)
 **Overall:** 8 / 12 active phases completed (Phase 12 deferred)
 
 ## Rules
@@ -139,3 +139,4 @@ See `spec/content-guardrails.md` §3. Highest priority before Phase 03 content e
 - 2026-10-14 — **Phase 08 COMPLETED**: phone `home` shot (whole motor on a diagonal), "Drag to rotate" hint on phones, H1 two lines at 1440 (`display-l` from `lg`). Build, typecheck, lint, tests and claims:check pass. Real-device touch drag still unchecked.
 - 2026-10-14 — Phase 09: 09.1–09.9 built on `/`: Portfolio (pinned scroll explode on desktop), Engineering (approach isolates, comparison, capabilities), Process (pinned horizontal travel), Project, Leadership, Recognition, Inquiry. Scenes without approved content are dropped in production (today: Project, Leadership, Recognition). Sweep reworked so live views show in Lab scenes. ≈59 fps full scroll, CLS 0. Build, typecheck, lint, tests and claims:check pass. Open: CTA targets (`/contact`, product route) arrive in Phase 10.
 - 2026-10-14 — **Phase 10 COMPLETED**: `/products/fcu-double-shaft` (static, full-height explorer with URL-synced deep links, overview, spec sheet, controller, FAQ, CTAs) and `/contact` (channels, topics, enquiry form behind `EnquiryTransport`, not-connected transport). Unknown slug 404s. Keyboard-only form completion, error summary focus, preserved values and not-connected state checked on the production build; Lighthouse a11y 100 on both pages. Phase 09 CTA targets now resolve. Build, typecheck, lint, tests (11) and claims:check pass.
+- 2026-10-14 — Phase 13 (inserted before 11, client request): letter swap on buttons and header links, cursor-proximity weight on the hero H1, stairs preloader on the first load of a session (lifts on model ready, held 0.8 s to 4 s, skipped for reduced motion). The hero elevation drawing is no longer the loading state; design-direction §7.1 revised. Build, typecheck, lint, tests (11) and claims:check pass. Reduced motion and no-JS were not checked in a browser.
