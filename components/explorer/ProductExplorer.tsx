@@ -70,10 +70,17 @@ export function ProductExplorer({
   id,
   env,
   names,
+  fill = false,
 }: {
   id: string;
   env: EnvironmentId;
   names: readonly PartName[];
+  /**
+   * Take the height the parent gives it (from `md` up) instead of a fixed
+   * aspect ratio; the parts list scrolls inside. For a full-viewport Lab
+   * scene, where the view also paints the ground around itself.
+   */
+  fill?: boolean;
 }) {
   const state = useSceneStore(
     (s) => s.views[id]?.explorer ?? initialExplorerState,
@@ -114,9 +121,11 @@ export function ProductExplorer({
     <section
       aria-label="Product explorer"
       onKeyDown={onKeyDown}
-      className="flex flex-col gap-3"
+      className={`flex flex-col gap-3 ${fill ? "md:min-h-0 md:flex-1" : ""}`}
     >
-      <div className="grid gap-3 md:grid-cols-[1fr_18rem]">
+      <div
+        className={`grid gap-3 md:grid-cols-[1fr_18rem] ${fill ? "md:min-h-0 md:flex-1 md:grid-rows-[minmax(0,1fr)]" : ""}`}
+      >
         <SceneView
           id={id}
           shot="hero"
@@ -127,9 +136,16 @@ export function ProductExplorer({
           eager
           label="3D view of the motor assembly. Drag or use the arrow keys to turn it; the parts list below describes each part."
           sizes="(min-width: 48rem) 75vw, 100vw"
-          className="aspect-[4/3] w-full md:aspect-video"
+          className={
+            fill
+              ? "ground-hole aspect-[4/3] w-full md:aspect-auto md:h-full"
+              : "aspect-[4/3] w-full md:aspect-video"
+          }
         />
-        <div className="hidden md:block">
+        <div
+          data-lenis-prevent={fill ? "" : undefined}
+          className={`hidden md:block ${fill ? "md:min-h-0 md:overflow-y-auto" : ""}`}
+        >
           <PartsList viewId={id} names={names} />
         </div>
       </div>

@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-export type Provenance = "target" | "simulated" | "lab result";
+export type Provenance = "target" | "estimate" | "simulated" | "lab result";
 
 export type SpecRow = {
   term: string;

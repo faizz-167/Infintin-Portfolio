@@ -78,6 +78,8 @@ export interface Product {
   faq: readonly FaqItem[];
   modelRef: ProductSlug;
   posterRefs: readonly PosterShot[];
+  /** Path under `public/`, set only once the client approves the file. */
+  datasheet?: string;
   cta: { primary: CtaLink; secondary: CtaLink };
 }
 

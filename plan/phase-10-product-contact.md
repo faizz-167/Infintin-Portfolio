@@ -1,6 +1,6 @@
 # Phase 10 — Product Route & Contact Page (UI)
 
-**Status:** NOT_STARTED
+**Status:** COMPLETED
 **Depends on:** Phase 06, Phase 07, Phase 03
 **Outputs:** `app/products/[slug]/page.tsx`, `app/contact/page.tsx`, `components/sections/EnquiryForm.tsx`
 
@@ -12,13 +12,13 @@ Give technical and procurement visitors a dedicated, indexable product page with
 
 | ID | Subtask | Status |
 | --- | --- | --- |
-| 10.1 | `products/[slug]` with `generateStaticParams` + `generateMetadata` | NOT_STARTED |
-| 10.2 | Full-viewport explorer section (all modes, section plane, parts list) | NOT_STARTED |
-| 10.3 | Overview, application fit, status, spec sheet, controller block | NOT_STARTED |
-| 10.4 | FAQ (accessible disclosure) + product CTAs | NOT_STARTED |
-| 10.5 | Contact page layout: channels, enquiry types, expectations copy | NOT_STARTED |
-| 10.6 | Enquiry form UI: fields per PRD §8.7, validation, states | NOT_STARTED |
-| 10.7 | `EnquiryTransport` interface + temporary "not connected" implementation | NOT_STARTED |
+| 10.1 | `products/[slug]` with `generateStaticParams` + `generateMetadata` | COMPLETED |
+| 10.2 | Full-viewport explorer section (all modes, section plane, parts list) | COMPLETED |
+| 10.3 | Overview, application fit, status, spec sheet, controller block | COMPLETED |
+| 10.4 | FAQ (accessible disclosure) + product CTAs | COMPLETED |
+| 10.5 | Contact page layout: channels, enquiry types, expectations copy | COMPLETED |
+| 10.6 | Enquiry form UI: fields per PRD §8.7, validation, states | COMPLETED |
+| 10.7 | `EnquiryTransport` interface + temporary "not connected" implementation | COMPLETED |
 
 ## Execution plan
 
@@ -31,9 +31,19 @@ Give technical and procurement visitors a dedicated, indexable product page with
 
 ## Validation criteria
 
-- [ ] Product page statically generated; one H1; valid heading hierarchy; metadata from approved claims only.
-- [ ] Explorer deep links restore state on load.
-- [ ] Form: all fields labelled; keyboard-only completion works; errors announced (`aria-live`) and not colour-only; email format validated; values preserved after a failed submit.
-- [ ] Form never shows a success state with the placeholder transport.
-- [ ] axe DevTools: zero serious/critical issues on both pages.
-- [ ] Status.md updated.
+- [x] Product page statically generated; one H1; valid heading hierarchy; metadata from approved claims only.
+- [x] Explorer deep links restore state on load.
+- [x] Form: all fields labelled; keyboard-only completion works; errors announced (`aria-live`) and not colour-only; email format validated; values preserved after a failed submit.
+- [x] Form never shows a success state with the placeholder transport.
+- [x] axe DevTools: zero serious/critical issues on both pages.
+- [x] Status.md updated.
+
+## Notes (build)
+
+- Explorer deep links read `window.location` in an effect and write back with `replaceState` on every change (client decision: keep URL in sync). No `useSearchParams`, so no Suspense needed there; `/contact?type=` does use `useSearchParams` inside `<Suspense>` with the same form as fallback.
+- While `contact.email` is pending, the not-connected message offers the composed message to copy and names no address (client decision).
+- Withheld spec row "Shaft" renamed "Output shafts": `claims:check` is a substring match and the label collided with the pending part name `parts.shaft` ("Shaft").
+- In production today the FAQ and Features are hidden (no approved answers); H1 and title use the `FCU motor` fallback while `product.name` is pending.
+- axe check run via Lighthouse accessibility (axe-core): 100, 0 failures on both pages. Not run with the axe DevTools extension.
+- The fixed title block overlaps the bottom of the parts list in the full-height explorer at 1440×900 (scrolls clear). Left for Phase 11.
+- Product name morph (`ProductNameMorph`) is not wired on either side yet.

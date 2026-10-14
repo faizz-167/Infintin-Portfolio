@@ -13,8 +13,11 @@ export type Validate = (value: string) => string | null;
 export function useFieldValidation(
   validate: Validate | undefined,
   formError: string | undefined,
+  /** A fixed id, for forms that link to the field (an error summary). */
+  fixedId?: string,
 ) {
-  const id = useId();
+  const generatedId = useId();
+  const id = fixedId ?? generatedId;
   // undefined = not yet checked locally; null = checked and valid.
   const [localError, setLocalError] = useState<string | null | undefined>(
     undefined,

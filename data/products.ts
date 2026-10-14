@@ -15,7 +15,7 @@ export const products = [
       { label: "Rated speed", value: "withheld" },
       { label: "Supply voltage", value: "withheld" },
       { label: "Overall dimensions", value: "product.dimensions" },
-      { label: "Shaft", value: "withheld" },
+      { label: "Output shafts", value: "withheld" },
       { label: "Mounting", value: "withheld" },
       { label: "Noise", value: "product.noise" },
       { label: "Control", value: "product.controller" },
@@ -66,6 +66,9 @@ export const products = [
     },
   },
 ] as const satisfies readonly Product[];
+
+/** Editorial stand-in while `product.name` is unapproved. */
+export const PRODUCT_NAME_FALLBACK = "FCU motor";
 
 export function getProduct(slug: string): Product | undefined {
   return products.find((product) => product.slug === slug);

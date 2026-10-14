@@ -3,7 +3,7 @@
 import { Checkbox } from "@/components/ui/Checkbox";
 import { Field } from "@/components/ui/Field";
 import { Select } from "@/components/ui/Select";
-import { emailRule } from "./validators";
+import { emailRule } from "@/lib/enquiry";
 
 // Client component because validation rules are functions, which can't be
 // passed from a Server Component.

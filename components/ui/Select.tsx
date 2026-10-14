@@ -14,6 +14,8 @@ type SelectProps = {
   help?: string;
   validate?: Validate;
   error?: string;
+  /** Fixed control id; generated when omitted. */
+  id?: string;
   className?: string;
 };
 
@@ -28,9 +30,10 @@ export function Select({
   help,
   validate,
   error: formError,
+  id,
   className,
 }: SelectProps) {
-  const v = useFieldValidation(validate, formError);
+  const v = useFieldValidation(validate, formError, id);
 
   return (
     <div className={`flex flex-col gap-1 ${className ?? ""}`}>

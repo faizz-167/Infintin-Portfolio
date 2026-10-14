@@ -13,6 +13,8 @@ type CheckboxProps = {
   /** Message shown when a required box is left unchecked. */
   requiredMessage?: string;
   error?: string;
+  /** Fixed control id; generated when omitted. */
+  id?: string;
   className?: string;
 };
 
@@ -25,12 +27,14 @@ export function Checkbox({
   help,
   requiredMessage = "Please tick this box to continue.",
   error: formError,
+  id,
   className,
 }: CheckboxProps) {
   // Checkbox state is mapped to "on" / "" so it shares the text-field rule.
   const v = useFieldValidation(
     required ? (value) => (value === "on" ? null : requiredMessage) : undefined,
     formError,
+    id,
   );
   const value = (checked: boolean) => (checked ? "on" : "");
 

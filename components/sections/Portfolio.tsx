@@ -2,7 +2,7 @@ import { partNames } from "@/components/explorer/partNames";
 import { ClaimText, claimString } from "@/components/ui/ClaimText";
 import { type SpecRow, SpecTable } from "@/components/ui/SpecTable";
 import { StatusTag } from "@/components/ui/StatusTag";
-import { products } from "@/data/products";
+import { PRODUCT_NAME_FALLBACK, products } from "@/data/products";
 import type { ClaimId } from "@/data/types";
 import { PortfolioStage } from "./PortfolioStage";
 
@@ -20,7 +20,7 @@ export function Portfolio() {
   const product = products[0];
   return (
     <PortfolioStage
-      name={claimString(product.name) ?? "FCU motor"}
+      name={claimString(product.name) ?? PRODUCT_NAME_FALLBACK}
       overview={<ClaimText id={product.overview} />}
       status={
         <StatusTag>

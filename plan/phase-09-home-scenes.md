@@ -1,6 +1,6 @@
 # Phase 09 — Home: Portfolio, Technical Edge, Process, Leadership, Ecosystem, Inquiry
 
-**Status:** IN_PROGRESS
+**Status:** COMPLETED
 **Depends on:** Phase 06, Phase 08
 **Outputs:** `components/sections/{Portfolio,TechnicalEdge,Process,Leadership,Ecosystem,Inquiry}.tsx`, completed `app/page.tsx`
 
@@ -58,7 +58,7 @@ Complete the home scene sequence (sheets 03–08), each a distinct "cut" with rh
 ## Validation criteria
 
 - [x] Home order matches: Hero → Blueprint → Portfolio → Technical edge → Process/Project → Leadership → Ecosystem → Inquiry.
-- [ ] Every CTA reaches `/contact` (or product page) and works without JavaScript. *(Plain links, but `/contact` and the product route arrive in Phase 10; open until then.)*
+- [x] Every CTA reaches `/contact` (or product page) and works without JavaScript. *(Plain links in the prerendered HTML; both routes prerendered in Phase 10.)*
 - [x] No pending/withheld claim visible in a production build; no numeric performance claim on the page.
 - [x] Numbering appears only in process stages and parts balloons.
 - [x] Full home scroll stays ≥ 55 fps on desktop reference machine; no layout shift during pins.

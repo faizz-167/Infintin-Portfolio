@@ -1,8 +1,8 @@
 # Infintin Redesign — Status
 
 **Last updated:** 2026-10-14
-**Current phase:** 09 built (CTA targets wait for Phase 10; 05 device checks and 06 screen-reader check still open)
-**Overall:** 7 / 12 active phases completed (Phase 12 deferred)
+**Current phase:** 10 completed (05 device checks and 06 screen-reader check still open)
+**Overall:** 8 / 12 active phases completed (Phase 12 deferred)
 
 ## Rules
 
@@ -25,8 +25,8 @@
 | 06 | Product explorer | [phase-06-product-explorer.md](phase-06-product-explorer.md) | 03.5, 05 | IN_PROGRESS | 9 / 9 (screen-reader check open) |
 | 07 | Site shell & motion primitives | [phase-07-shell-motion.md](phase-07-shell-motion.md) | 02, 03 | COMPLETED | 9 / 9 |
 | 08 | Home: Hero & Blueprint | [phase-08-home-hero.md](phase-08-home-hero.md) | 05, 06.2, 07 | COMPLETED | 6 / 6 |
-| 09 | Home: remaining scenes | [phase-09-home-scenes.md](phase-09-home-scenes.md) | 06, 08 | IN_PROGRESS | 9 / 9 (CTA targets open until Phase 10) |
-| 10 | Product route & contact page (UI) | [phase-10-product-contact.md](phase-10-product-contact.md) | 03, 06, 07 | NOT_STARTED | 0 / 7 |
+| 09 | Home: remaining scenes | [phase-09-home-scenes.md](phase-09-home-scenes.md) | 06, 08 | COMPLETED | 9 / 9 |
+| 10 | Product route & contact page (UI) | [phase-10-product-contact.md](phase-10-product-contact.md) | 03, 06, 07 | COMPLETED | 7 / 7 |
 | 11 | A11y, responsive, performance, SEO, launch QA | [phase-11-quality-launch.md](phase-11-quality-launch.md) | 08, 09, 10 | NOT_STARTED | 0 / 8 |
 | 12 | Enquiry delivery integration | [phase-12-enquiry-delivery.md](phase-12-enquiry-delivery.md) | 10.7 + client | DEFERRED | 0 / 5 |
 
@@ -94,6 +94,10 @@ None for Phases 00–11. Several claims and content items are pending client app
 | 2026-10-14 | Timelines drive explode progress directly via `lib/explodeDrive` (assembly lock, peek); `SceneView` gains `ownLoading` and `fixedShot`. | Phase 08 |
 | 2026-10-14 | Home hero gets its own `home` shot: desktop as `hero`, phones roll the camera so the whole motor runs corner to corner. `hero.mobile` unchanged. Shots gain an optional `roll`. | Client |
 | 2026-10-14 | Hero H1 is `display-l` from `lg` up so the headline sets in two lines at 1440; phones keep `display-xl`. | Client |
+| 2026-10-14 | Explorer deep links: URL kept in sync with `replaceState` on every change, not only read on load. | Client |
+| 2026-10-14 | While `contact.email` is pending, the not-connected form message offers copy only, no address. | Client |
+| 2026-10-14 | Spec row label "Shaft" renamed "Output shafts" (collided with pending claim text in `claims:check`). | Phase 10 |
+| 2026-10-14 | Claims approved per PRD: all except energy saving, payback, rare-earth wording, dimensions, converter efficiency and IP67 (pending), and "100% indigenously designed" (withheld; PRD §5 forbids absolute claims). 76 approved, 6 pending, 1 withheld. | Client |
 | 2026-10-14 | Menu uses springs (§7.2) rather than `ease-settle` tweens; headline width machining ends at the style's own width, not a fixed 112. | Phase 07 |
 
 ## Open questions (client)
@@ -134,3 +138,4 @@ See `spec/content-guardrails.md` §3. Highest priority before Phase 03 content e
 - 2026-10-14 — Phase 08: 08.1–08.5 built on `/`: assembly lock out of the generated elevation drawing, drag/hold/E peek, pinned elevation + section sweep into the Sheet with the drawing aligned to the 3D (≈1 px), Blueprint text. LCP = H1 (476 ms, Fast 4G + 4× CPU); sequence 1.51 s after model ready; poster and reduced-motion variants checked. Build, typecheck, lint, tests and claims:check pass. 08.6 open: phone framing.
 - 2026-10-14 — **Phase 08 COMPLETED**: phone `home` shot (whole motor on a diagonal), "Drag to rotate" hint on phones, H1 two lines at 1440 (`display-l` from `lg`). Build, typecheck, lint, tests and claims:check pass. Real-device touch drag still unchecked.
 - 2026-10-14 — Phase 09: 09.1–09.9 built on `/`: Portfolio (pinned scroll explode on desktop), Engineering (approach isolates, comparison, capabilities), Process (pinned horizontal travel), Project, Leadership, Recognition, Inquiry. Scenes without approved content are dropped in production (today: Project, Leadership, Recognition). Sweep reworked so live views show in Lab scenes. ≈59 fps full scroll, CLS 0. Build, typecheck, lint, tests and claims:check pass. Open: CTA targets (`/contact`, product route) arrive in Phase 10.
+- 2026-10-14 — **Phase 10 COMPLETED**: `/products/fcu-double-shaft` (static, full-height explorer with URL-synced deep links, overview, spec sheet, controller, FAQ, CTAs) and `/contact` (channels, topics, enquiry form behind `EnquiryTransport`, not-connected transport). Unknown slug 404s. Keyboard-only form completion, error summary focus, preserved values and not-connected state checked on the production build; Lighthouse a11y 100 on both pages. Phase 09 CTA targets now resolve. Build, typecheck, lint, tests (11) and claims:check pass.

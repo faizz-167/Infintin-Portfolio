@@ -17,6 +17,8 @@ type FieldProps = {
   validate?: Validate;
   /** Error supplied by the form, e.g. after a failed submit. */
   error?: string;
+  /** Fixed control id; generated when omitted. */
+  id?: string;
   className?: string;
 };
 
@@ -35,9 +37,10 @@ export function Field({
   help,
   validate,
   error: formError,
+  id,
   className,
 }: FieldProps) {
-  const v = useFieldValidation(validate, formError);
+  const v = useFieldValidation(validate, formError, id);
   const shared = {
     id: v.id,
     name,
