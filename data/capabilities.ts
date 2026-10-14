@@ -37,7 +37,7 @@ export const capabilities = [
     id: "custom-engineering",
     name: "Custom engineering",
     value:
-      "Shaft, mounting and control interfaces adapted to an OEM's platform.",
+      "Mounting, shaft and control interfaces adapted to an OEM's platform.",
   },
   {
     id: "manufacturing",

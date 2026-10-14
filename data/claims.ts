@@ -187,6 +187,71 @@ export const claims = {
     status: "pending",
     source: "PRD §8.4; magnet wording tied to product.rare-earth",
   },
+  // The approach claim above, one statement per part of the motor (09.2).
+  "edge.magnet": {
+    text: "Magnet material selected to reduce permanent-magnet use where applicable.",
+    status: "pending",
+    source: "PRD §8.4; wording tied to product.rare-earth",
+  },
+  "edge.laminations": {
+    text: "Electrical laminations chosen for low core loss.",
+    status: "pending",
+    source: "PRD §8.4",
+  },
+  "edge.copper-fill": {
+    text: "A higher copper fill factor in the windings, to cut copper loss.",
+    status: "pending",
+    source: "PRD §8.4",
+  },
+  "edge.controller": {
+    text: "A controller tuned against data from the testbed.",
+    status: "pending",
+    source: "PRD §8.4",
+  },
+
+  // Qualitative comparison (09.2). No figures; PRD §11 requires comparable
+  // data for any comparison, so every row needs client sign-off.
+  "compare.supply-chain.typical": {
+    text: "Motors and controllers sourced from import markets",
+    status: "pending",
+    source: "PRD §8.4 context",
+  },
+  "compare.supply-chain.infintin": {
+    text: "Designed locally, with locally sourced materials and manufacturing partners",
+    status: "pending",
+    source: "PRD positioning statement",
+  },
+  "compare.lead-time.typical": {
+    text: "Set by overseas production and shipping",
+    status: "pending",
+    source: "Drafted; client to confirm",
+  },
+  "compare.lead-time.infintin": {
+    text: "Short lead times from local design and production",
+    status: "pending",
+    source: "PRD §9 supply value; lead-time assumptions to confirm",
+  },
+  "compare.serviceability.typical": {
+    text: "Service and spares through the import channel",
+    status: "pending",
+    source: "Drafted; client to confirm",
+  },
+  "compare.serviceability.infintin": {
+    text: "Serviceable construction",
+    status: "pending",
+    source: "PRD §9 supply value; service model to confirm",
+  },
+  "compare.application.typical": {
+    text: "General-purpose designs fitted to the unit",
+    status: "pending",
+    source: "Drafted; client to confirm",
+  },
+  "compare.application.infintin": {
+    text: "Motor and controller designed for the fan coil unit's duty",
+    status: "pending",
+    source: "PRD §8.1 'application-specific motor and controller design'",
+  },
+
   "process.ownership": {
     text: "Internal and external stage split",
     status: "pending",

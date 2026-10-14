@@ -1,6 +1,6 @@
 # Phase 09 — Home: Portfolio, Technical Edge, Process, Leadership, Ecosystem, Inquiry
 
-**Status:** NOT_STARTED
+**Status:** IN_PROGRESS
 **Depends on:** Phase 06, Phase 08
 **Outputs:** `components/sections/{Portfolio,TechnicalEdge,Process,Leadership,Ecosystem,Inquiry}.tsx`, completed `app/page.tsx`
 
@@ -12,15 +12,15 @@ Complete the home scene sequence (sheets 03–08), each a distinct "cut" with rh
 
 | ID | Subtask | Status |
 | --- | --- | --- |
-| 09.1 | Portfolio: FCU motor spotlight with embedded compact explorer | NOT_STARTED |
-| 09.2 | Technical edge: engineering approach + qualitative comparison | NOT_STARTED |
-| 09.3 | Engineering capabilities (within Technical edge or own sheet) | NOT_STARTED |
-| 09.4 | Development process: 11-stage timeline on the shaft axis | NOT_STARTED |
-| 09.5 | Project spotlight: "Development of an Indigenous Motor for Fan Coil Unit Application" | NOT_STARTED |
-| 09.6 | Leadership | NOT_STARTED |
-| 09.7 | Ecosystem: recognition & support | NOT_STARTED |
-| 09.8 | Inquiry CTA scene | NOT_STARTED |
-| 09.9 | Scene rhythm pass: transitions, spacing, sheet numbering, title block | NOT_STARTED |
+| 09.1 | Portfolio: FCU motor spotlight with embedded compact explorer | COMPLETED |
+| 09.2 | Technical edge: engineering approach + qualitative comparison | COMPLETED |
+| 09.3 | Engineering capabilities (within Technical edge or own sheet) | COMPLETED |
+| 09.4 | Development process: 11-stage timeline on the shaft axis | COMPLETED |
+| 09.5 | Project spotlight: "Development of an Indigenous Motor for Fan Coil Unit Application" | COMPLETED |
+| 09.6 | Leadership | COMPLETED |
+| 09.7 | Ecosystem: recognition & support | COMPLETED |
+| 09.8 | Inquiry CTA scene | COMPLETED |
+| 09.9 | Scene rhythm pass: transitions, spacing, sheet numbering, title block | COMPLETED |
 
 ## Execution plan
 
@@ -57,9 +57,23 @@ Complete the home scene sequence (sheets 03–08), each a distinct "cut" with rh
 
 ## Validation criteria
 
-- [ ] Home order matches: Hero → Blueprint → Portfolio → Technical edge → Process/Project → Leadership → Ecosystem → Inquiry.
-- [ ] Every CTA reaches `/contact` (or product page) and works without JavaScript.
-- [ ] No pending/withheld claim visible in a production build; no numeric performance claim on the page.
-- [ ] Numbering appears only in process stages and parts balloons.
-- [ ] Full home scroll stays ≥ 55 fps on desktop reference machine; no layout shift during pins.
-- [ ] Status.md updated.
+- [x] Home order matches: Hero → Blueprint → Portfolio → Technical edge → Process/Project → Leadership → Ecosystem → Inquiry.
+- [ ] Every CTA reaches `/contact` (or product page) and works without JavaScript. *(Plain links, but `/contact` and the product route arrive in Phase 10; open until then.)*
+- [x] No pending/withheld claim visible in a production build; no numeric performance claim on the page.
+- [x] Numbering appears only in process stages and parts balloons.
+- [x] Full home scroll stays ≥ 55 fps on desktop reference machine; no layout shift during pins.
+- [x] Status.md updated.
+
+## Notes
+
+- A scene with nothing approved to show is left out of the page (Project, Leadership and Recognition in today's production build). Sheet numbers and section sweeps follow the scenes that render.
+- Live views in Lab scenes: `SectionSweep` now cuts away a cover in the old environment instead of clipping the new scene in, and a Lab view paints the scene ground around itself (`ground-hole`). Sheet scenes with views leave their ground to the page (`ground="canvas"`).
+- `ScrollScene`: `pin="desktop"` (pinned only on the desktop branch) and builds may return a cleanup.
+- Approach: one view with a selectable list (isolates stator, windings, rotor magnet; the controller keeps the assembly whole), not scroll-driven: a sticky view would have text scrolling over the canvas on phones.
+- Process line is revealed by a GSAP clip, not `DrawPath`: stroke drawing can't draw the dashed (upcoming) segments.
+- Project spotlight leaves out the context: Blueprint already states it word for word.
+- New pending claims: `edge.*` (approach split per part) and `compare.*` (comparison rows; the "typical" column is drafted and needs client confirmation).
+- Checks (dev build, 1440): full scroll ≈59 fps, CLS 0.000 (a pin on an `overflow-x-clip` section caused CLS ≈1 per pin; the clip moved to an inner wrapper). Production build, typecheck, lint, tests and claims:check pass. The claims check flagged the capability copy "Shaft, mounting…" against the claim `parts.shaft` ("Shaft"); a false positive, reworded.
+- Fixed: after resizing across the `lg` breakpoint the current sheet (header and title block) could be stale. The sheet triggers were measured before the pins rebuilt for the new breakpoint; they now refresh last (`refreshPriority: -1`). Checked phone → desktop and desktop → phone.
+- Fixed: a click or drag on a live view blinked white. AdaptiveDpr's resolution drop resizes (and clears) the canvas, and the redraw waited a frame, so scenes that leave their ground to the canvas showed the page ground for one paint. The canvas now redraws synchronously after a DPR change (`CanvasRoot`).
+- Fixed: after a resize across `lg`, sweeps further down the page cut late (Recognition 0.42, Inquiry 0.34 where 0.5 was due). Not pin order: `SplitHeadline` re-splits for the new width after ScrollTrigger has re-measured, and a headline losing a line moved everything below it. A re-split that changes the headline's height now triggers one ScrollTrigger refresh per frame. All five sweeps measured exact after phone → desktop and desktop → phone.

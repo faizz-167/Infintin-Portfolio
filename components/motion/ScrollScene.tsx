@@ -13,18 +13,29 @@ export type SceneConditions = {
   reduce: boolean;
 };
 
+/** May return a cleanup, run when the scene's media branch is reverted. */
 export type SceneBuild = (
   tl: gsap.core.Timeline,
   ctx: { conditions: SceneConditions; root: HTMLElement },
-) => void;
+  // biome-ignore lint/suspicious/noConfusingVoidType: `void` lets builds without a cleanup omit the return; `undefined` would make every one return.
+) => void | (() => void);
 
 type ScrollSceneProps = {
   id: string;
   /** Sheet name for the title block. Omit for scenes that aren't a sheet. */
   sheet?: string;
   env?: EnvironmentId;
-  /** Pin the scene while its timeline plays. */
-  pin?: boolean;
+  /**
+   * The scene holds live views and leaves its ground to the canvas (and the
+   * page ground behind it); see `ground-hole` in globals.css for Lab scenes.
+   */
+  ground?: "canvas";
+  /**
+   * Pin the scene while its timeline plays. `"desktop"` pins only on the
+   * desktop branch: scenes whose desktop choreography needs the scroll held
+   * (a horizontal travel, a scrubbed explode) but read top to bottom on phones.
+   */
+  pin?: boolean | "desktop";
   /** Tie the timeline to scroll position; otherwise it plays on entry. */
   scrub?: boolean;
   /** ScrollTrigger `end`; the scroll distance a pinned scene holds for. */
@@ -54,6 +65,7 @@ export function ScrollScene({
   id,
   sheet,
   env,
+  ground,
   pin = false,
   scrub = false,
   end = "bottom top",
@@ -89,6 +101,11 @@ export function ScrollScene({
           trigger: element,
           start: "top center",
           end: "max",
+          // Measured after every scene trigger: pins rebuilt when the media
+          // branch changes are created later, and their spacing must already
+          // be in place when this start is read (otherwise a resize across
+          // the desktop breakpoint leaves the current sheet stale).
+          refreshPriority: -1,
           // Enter/leave-back, not isActive: at the very bottom of the page
           // the range ends and isActive drops, but the sheet is still passed.
           onEnter: () => setPassed(id, true),
@@ -109,22 +126,24 @@ export function ScrollScene({
 
           if (conditions.reduce) {
             const tl = gsap.timeline({ paused: true });
-            current(tl, { conditions, root: element });
+            const cleanup = current(tl, { conditions, root: element });
             tl.progress(1);
-            return;
+            return cleanup;
           }
 
+          const pinned =
+            pin === true || (pin === "desktop" && conditions.desktop);
           const tl = gsap.timeline({
             scrollTrigger: {
               trigger: element,
-              start: pin ? "top top" : "top 75%",
+              start: pinned ? "top top" : "top 75%",
               end,
-              pin,
+              pin: pinned,
               scrub,
               toggleActions: scrub ? undefined : "play none none reverse",
             },
           });
-          current(tl, { conditions, root: element });
+          return current(tl, { conditions, root: element });
         },
         element,
       );
@@ -133,7 +152,13 @@ export function ScrollScene({
   );
 
   return (
-    <section ref={root} id={id} data-env={env} className={className}>
+    <section
+      ref={root}
+      id={id}
+      data-env={env}
+      data-ground={ground}
+      className={className}
+    >
       {children}
     </section>
   );

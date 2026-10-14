@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { duration } from "@/design/tokens";
-import { gsap, SplitText, useGSAP } from "@/lib/gsap";
+import { gsap, ScrollTrigger, SplitText, useGSAP } from "@/lib/gsap";
 
 type SplitHeadlineProps = {
   as?: "h1" | "h2" | "h3";
@@ -17,6 +17,20 @@ type SplitHeadlineProps = {
 };
 
 const CONDENSED = "75%";
+
+// A re-split on resize lands after ScrollTrigger has re-measured the page, so
+// a headline that gains or loses a line leaves every trigger below it off by
+// that line (section sweeps visibly). One refresh per frame, however many
+// headlines re-split together.
+let refreshQueued = false;
+function refreshAfterReflow() {
+  if (refreshQueued) return;
+  refreshQueued = true;
+  requestAnimationFrame(() => {
+    refreshQueued = false;
+    ScrollTrigger.refresh();
+  });
+}
 
 /**
  * Headline whose lines rise from behind their baseline in sequence (GSAP
@@ -41,6 +55,8 @@ export function SplitHeadline({
   lockRef.current = lock;
   // Machining plays once; later re-splits (resize) keep the final width.
   const widened = useRef(false);
+  // Height at the last split; `null` until the first one.
+  const splitHeight = useRef<number | null>(null);
 
   const { contextSafe } = useGSAP(
     (_, contextSafe) => {
@@ -61,6 +77,13 @@ export function SplitHeadline({
               aria: "auto",
               onSplit: (self) => {
                 lines.current = self.lines;
+                const height = el.offsetHeight;
+                if (
+                  splitHeight.current !== null &&
+                  splitHeight.current !== height
+                )
+                  refreshAfterReflow();
+                splitHeight.current = height;
                 // Narrowed per line, never on the heading: re-splits measure
                 // the heading, which must stay at its final width.
                 if (lockRef.current !== undefined && !widened.current) {

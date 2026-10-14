@@ -146,10 +146,11 @@ export function MotionChecks() {
         />
       </section>
 
-      <SectionSweep from="sheet" to="lab" viewId="bench-sweep-view">
+      <SectionSweep from="sheet" viewId="bench-sweep-view">
         <ScrollScene
           id="bench-pinned"
           sheet="Section"
+          env="lab"
           pin
           scrub
           end="+=150%"
@@ -161,10 +162,11 @@ export function MotionChecks() {
         </ScrollScene>
       </SectionSweep>
 
-      <SectionSweep from="lab" to="sheet">
+      <SectionSweep from="lab">
         <ScrollScene
           id="bench-outro"
           sheet="Notes"
+          env="sheet"
           className="flex min-h-screen flex-col justify-center gap-4 px-margin py-8"
         >
           <h2 className="type-display-l">Back on the Sheet</h2>

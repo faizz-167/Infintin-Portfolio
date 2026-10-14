@@ -8,15 +8,13 @@ import { useSceneStore } from "@/lib/store";
 type SectionSweepProps = {
   /** Environment of the scene above, shown where the cut hasn't passed. */
   from: EnvironmentId;
-  /** Environment of the incoming scene (the children). */
-  to: EnvironmentId;
   /**
    * A scene view whose 3D section plane follows the sweep, so the 2D cut
    * across the page and the cut through the motor read as one gesture.
    */
   viewId?: string;
+  /** The incoming scene; it paints its own environment. */
   children: ReactNode;
-  className?: string;
 };
 
 /** Turns a view's section on or off; the reducer only has a toggle. */
@@ -36,17 +34,16 @@ export function setSection(viewId: string, on: boolean, t: number) {
  * behind it. GSAP owns the clip and the line; the 3D cut only receives the
  * progress through the store.
  *
- * Reduced motion: no clip, no cut; the new environment is simply there.
+ * The old environment is a layer laid over the incoming scene and cut away,
+ * rather than the new scene being clipped in over the old ground: a ground
+ * painted underneath would cover the canvas, so a live view in the incoming
+ * scene would never show (phase 07 finding).
+ *
+ * Reduced motion: no layer, no cut; the new environment is simply there.
  */
-export function SectionSweep({
-  from,
-  to,
-  viewId,
-  children,
-  className,
-}: SectionSweepProps) {
+export function SectionSweep({ from, viewId, children }: SectionSweepProps) {
   const root = useRef<HTMLDivElement>(null);
-  const scene = useRef<HTMLDivElement>(null);
+  const cover = useRef<HTMLDivElement>(null);
   const line = useRef<HTMLSpanElement>(null);
 
   useGSAP(
@@ -69,9 +66,9 @@ export function SectionSweep({
             },
           })
           .fromTo(
-            scene.current,
-            { clipPath: "inset(0% 100% 0% 0%)" },
+            cover.current,
             { clipPath: "inset(0% 0% 0% 0%)" },
+            { clipPath: "inset(0% 0% 0% 100%)" },
             0,
           )
           .fromTo(line.current, { left: "0%" }, { left: "100%" }, 0);
@@ -87,14 +84,19 @@ export function SectionSweep({
 
   return (
     // Clipped sideways: the cut line ends a pixel past the right edge.
-    <div ref={root} data-env={from} className="relative overflow-x-clip">
-      <div ref={scene} data-env={to} className={className}>
-        {children}
-      </div>
+    <div ref={root} className="relative overflow-x-clip">
+      {children}
+      <div
+        ref={cover}
+        aria-hidden="true"
+        data-env={from}
+        className="pointer-events-none absolute inset-0 z-content motion-reduce:hidden"
+        style={{ clipPath: "inset(0% 100% 0% 0%)" }}
+      />
       <span
         ref={line}
         aria-hidden="true"
-        className="pointer-events-none invisible absolute inset-y-0 w-px bg-accent"
+        className="pointer-events-none invisible absolute inset-y-0 z-content w-px bg-accent"
       />
     </div>
   );

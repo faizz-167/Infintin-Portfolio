@@ -156,6 +156,18 @@
   background-color: transparent;
 }
 
+/* A live view inside a Lab scene that the canvas doesn't fill: the scene
+   leaves its ground unpainted (data-ground="canvas") and the view paints it
+   instead, as a spread shadow around its own box. The view's box stays a
+   hole onto the canvas, which draws the same ground behind the model. The
+   scene clips the shadow and isolates it below its own content. Sheet scenes
+   don't need this: the page ground behind the canvas is already paper. */
+@utility ground-hole {
+  position: relative;
+  z-index: -1;
+  box-shadow: 0 0 0 100vmax var(--ground);
+}
+
 @layer base {
   html {
     background-color: var(--ground);

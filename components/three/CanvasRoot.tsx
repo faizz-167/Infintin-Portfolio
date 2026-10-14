@@ -1,7 +1,7 @@
 "use client";
 
 import { AdaptiveDpr, View } from "@react-three/drei";
-import { Canvas, invalidate, useThree } from "@react-three/fiber";
+import { advance, Canvas, invalidate, useStore } from "@react-three/fiber";
 import { Component, type ReactNode, useEffect } from "react";
 import { qualityTiers } from "@/design/three-presets";
 import { rememberTier } from "@/lib/quality";
@@ -54,19 +54,32 @@ export default function CanvasRoot() {
         <View.Port />
         <QualityTier />
         <AdaptiveDpr />
-        <InvalidateOnDpr />
+        <RedrawOnDpr />
       </Canvas>
     </CanvasErrorBoundary>
   );
 }
 
-/** A DPR change resizes (and clears) the drawing buffer; draw it again. */
-function InvalidateOnDpr() {
-  const dpr = useThree((s) => s.viewport.dpr);
-  const redraw = useThree((s) => s.invalidate);
-  useEffect(() => {
-    if (dpr > 0) redraw();
-  }, [dpr, redraw]);
+/**
+ * A DPR change (AdaptiveDpr drops resolution while the model is dragged)
+ * resizes the drawing buffer, which clears it. Waiting for the next frame
+ * leaves a blank canvas on screen for one paint, and scenes that leave their
+ * ground to the canvas blink white through it. So the frame is drawn at once,
+ * from a store subscriber that runs right after R3F's own resize.
+ */
+function RedrawOnDpr() {
+  const store = useStore();
+  useEffect(
+    () =>
+      store.subscribe((state, previous) => {
+        if (
+          state.viewport.dpr !== previous.viewport.dpr &&
+          state.viewport.dpr > 0
+        )
+          advance(performance.now());
+      }),
+    [store],
+  );
   return null;
 }
 

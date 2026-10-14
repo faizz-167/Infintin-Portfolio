@@ -2,7 +2,7 @@
 
 Spec driven. Nothing gets built without a spec.
 
-- `plan/specs/phase-NN-phase_name.md` — one per phase, written just before it starts.
+- `plan/phase-NN-*.md` — one per phase, written just before it starts.
   Behaviour and an acceptance check, never filenames.
 - This file — always true, read on every prompt.
 
@@ -10,7 +10,7 @@ Spec driven. Nothing gets built without a spec.
 asks and stop.
 
 **Dropped into a fresh context and don't know where we are?** Look at which
-files exist in `plan/specs/`, then the git log. The last commit is the last
+phase files exist in `plan/` (and `plan/Status.md`), then the git log. The last commit is the last
 phase that passed. Tell me what you've worked out before building on it.
 
 **When a phase comes out wrong, I reset rather than patch.** Prompting on top of

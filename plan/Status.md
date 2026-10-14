@@ -1,7 +1,7 @@
 # Infintin Redesign — Status
 
 **Last updated:** 2026-10-14
-**Current phase:** 08 completed (05 device checks and 06 screen-reader check still open)
+**Current phase:** 09 built (CTA targets wait for Phase 10; 05 device checks and 06 screen-reader check still open)
 **Overall:** 7 / 12 active phases completed (Phase 12 deferred)
 
 ## Rules
@@ -25,7 +25,7 @@
 | 06 | Product explorer | [phase-06-product-explorer.md](phase-06-product-explorer.md) | 03.5, 05 | IN_PROGRESS | 9 / 9 (screen-reader check open) |
 | 07 | Site shell & motion primitives | [phase-07-shell-motion.md](phase-07-shell-motion.md) | 02, 03 | COMPLETED | 9 / 9 |
 | 08 | Home: Hero & Blueprint | [phase-08-home-hero.md](phase-08-home-hero.md) | 05, 06.2, 07 | COMPLETED | 6 / 6 |
-| 09 | Home: remaining scenes | [phase-09-home-scenes.md](phase-09-home-scenes.md) | 06, 08 | NOT_STARTED | 0 / 9 |
+| 09 | Home: remaining scenes | [phase-09-home-scenes.md](phase-09-home-scenes.md) | 06, 08 | IN_PROGRESS | 9 / 9 (CTA targets open until Phase 10) |
 | 10 | Product route & contact page (UI) | [phase-10-product-contact.md](phase-10-product-contact.md) | 03, 06, 07 | NOT_STARTED | 0 / 7 |
 | 11 | A11y, responsive, performance, SEO, launch QA | [phase-11-quality-launch.md](phase-11-quality-launch.md) | 08, 09, 10 | NOT_STARTED | 0 / 8 |
 | 12 | Enquiry delivery integration | [phase-12-enquiry-delivery.md](phase-12-enquiry-delivery.md) | 10.7 + client | DEFERRED | 0 / 5 |
@@ -133,3 +133,4 @@ See `spec/content-guardrails.md` §3. Highest priority before Phase 03 content e
 - 2026-10-14 — **Phase 07 COMPLETED**: header + menu, sheet frame with live title block, footer, `ScrollScene`, `SplitHeadline`, `DrawPath`, `Reveal`, `SectionSweep`, route wipe + product-name morph. Verified on `/system/motion`: stable trigger counts over 5 round trips, menu closed after back/forward, reduced-motion end states, CLS 0.00. Build, typecheck, lint, tests and claims:check pass. Found: scene views are hidden under `[data-env]` backgrounds (Phase 09 decision).
 - 2026-10-14 — Phase 08: 08.1–08.5 built on `/`: assembly lock out of the generated elevation drawing, drag/hold/E peek, pinned elevation + section sweep into the Sheet with the drawing aligned to the 3D (≈1 px), Blueprint text. LCP = H1 (476 ms, Fast 4G + 4× CPU); sequence 1.51 s after model ready; poster and reduced-motion variants checked. Build, typecheck, lint, tests and claims:check pass. 08.6 open: phone framing.
 - 2026-10-14 — **Phase 08 COMPLETED**: phone `home` shot (whole motor on a diagonal), "Drag to rotate" hint on phones, H1 two lines at 1440 (`display-l` from `lg`). Build, typecheck, lint, tests and claims:check pass. Real-device touch drag still unchecked.
+- 2026-10-14 — Phase 09: 09.1–09.9 built on `/`: Portfolio (pinned scroll explode on desktop), Engineering (approach isolates, comparison, capabilities), Process (pinned horizontal travel), Project, Leadership, Recognition, Inquiry. Scenes without approved content are dropped in production (today: Project, Leadership, Recognition). Sweep reworked so live views show in Lab scenes. ≈59 fps full scroll, CLS 0. Build, typecheck, lint, tests and claims:check pass. Open: CTA targets (`/contact`, product route) arrive in Phase 10.
