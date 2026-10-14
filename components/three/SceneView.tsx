@@ -18,6 +18,13 @@ interface SceneViewProps {
   rotate?: boolean;
   /** Wheel and pinch zoom; takes over touch gestures, so only for a full-screen explorer. */
   zoom?: boolean;
+  /** Full explorer: tap parts to isolate, drag the section, balloons. */
+  explore?: boolean;
+  /**
+   * Accessible name. With it the view is a focusable image (arrow keys turn
+   * the model); without it the view is decorative.
+   */
+  label?: string;
   /** Sizing for the placeholder; the view fills it. */
   className?: string;
   /** `sizes` for the poster image, matching the placeholder's width. */
@@ -39,6 +46,8 @@ export function SceneView({
   env,
   rotate = false,
   zoom = false,
+  explore = false,
+  label,
   className = "",
   sizes = "100vw",
   eager = false,
@@ -84,6 +93,13 @@ export function SceneView({
       ref={element}
       className={`relative ${gestures} ${className}`}
       data-lenis-prevent={zoom && live ? "" : undefined}
+      {...(label
+        ? {
+            role: "img",
+            "aria-label": label,
+            tabIndex: live && rotate ? 0 : undefined,
+          }
+        : { "aria-hidden": true })}
     >
       {(!live || !ready) && (
         <PosterFallback poster={poster} env={env} sizes={sizes} eager={eager} />
@@ -95,6 +111,7 @@ export function SceneView({
           element={element}
           rotate={rotate}
           zoom={zoom}
+          explore={explore}
         />
       )}
     </div>

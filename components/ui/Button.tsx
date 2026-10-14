@@ -24,6 +24,10 @@ type ButtonAsButton = CommonProps & {
   type?: "button" | "submit" | "reset";
   disabled?: boolean;
   onClick?: MouseEventHandler<HTMLButtonElement>;
+  /** Makes it a toggle button (`aria-pressed`). */
+  pressed?: boolean;
+  /** Announced keyboard shortcut, e.g. "E". */
+  shortcut?: string;
 };
 
 type ButtonAsLink = CommonProps & {
@@ -70,7 +74,10 @@ export function Button(props: ButtonProps) {
 
   const classes = [
     "group relative inline-flex min-h-target min-w-target items-center justify-center gap-1 overflow-hidden rounded-xs type-annotation select-none",
-    variantClasses[variant],
+    // A pressed toggle holds the hover fill instead of the variant's ink.
+    props.href === undefined && props.pressed
+      ? "border border-ink bg-ink text-ground"
+      : variantClasses[variant],
     sizeClasses[size],
     disabled ? "cursor-not-allowed opacity-50" : "cursor-pointer",
     className ?? "",
@@ -97,7 +104,10 @@ export function Button(props: ButtonProps) {
   );
 
   // Reduced motion: no scale; the instant fill above is the press feedback.
-  const press = disabled || reduced ? undefined : { scale: 0.98 };
+  // `whileTap` stays defined either way: Motion adds tabindex="0" whenever it
+  // is set, and the server can't know the OS preference, so dropping it on a
+  // reduced-motion client caused a hydration mismatch.
+  const press = disabled ? undefined : { scale: reduced ? 1 : 0.98 };
 
   if (props.href !== undefined) {
     return (
@@ -117,6 +127,8 @@ export function Button(props: ButtonProps) {
       type={props.type ?? "button"}
       disabled={disabled}
       onClick={props.onClick}
+      aria-pressed={props.pressed}
+      aria-keyshortcuts={props.shortcut}
       className={classes}
       whileTap={press}
       transition={transition("press")}

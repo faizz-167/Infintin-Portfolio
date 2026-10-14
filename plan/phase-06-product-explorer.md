@@ -1,6 +1,6 @@
 # Phase 06 — Product Explorer: Explode, Isolate, Technical Modes, Spec Overlay
 
-**Status:** NOT_STARTED
+**Status:** IN_PROGRESS (all subtasks built; screen-reader check is the client's)
 **Depends on:** Phase 03 (03.5), Phase 05
 **Outputs:** `components/three/{ExplodedView,SectionPlane,TechnicalMaterials,SpecOverlay}.tsx`, `components/explorer/*`
 
@@ -12,15 +12,15 @@ Deliver the centrepiece interaction: a precise, editorial explorer that lets an 
 
 | ID | Subtask | Status |
 | --- | --- | --- |
-| 06.1 | Explorer state machine (`explorer-machine.ts`) + store binding | NOT_STARTED |
-| 06.2 | `ExplodedView`: axial-first, radial-second sequenced explode | NOT_STARTED |
-| 06.3 | Isolate: focus part, ghost others, camera to `isolate:<part>` | NOT_STARTED |
-| 06.4 | Render modes: shaded / drawing / X-ray | NOT_STARTED |
-| 06.5 | `SectionPlane`: draggable clipping plane with hatched cap | NOT_STARTED |
-| 06.6 | `SpecOverlay`: balloons projected from part anchors, occlusion-aware | NOT_STARTED |
-| 06.7 | `PartsList` (DOM) linked two-way with 3D hover/selection | NOT_STARTED |
-| 06.8 | `ExplorerControls`: buttons, keyboard shortcuts, touch layout | NOT_STARTED |
-| 06.9 | Accessibility: screen-reader equivalent and announcements | NOT_STARTED |
+| 06.1 | Explorer state machine (`explorer-machine.ts`) + store binding | COMPLETED |
+| 06.2 | `ExplodedView`: axial-first, radial-second sequenced explode | COMPLETED |
+| 06.3 | Isolate: focus part, ghost others, camera to `isolate:<part>` | COMPLETED |
+| 06.4 | Render modes: shaded / drawing / X-ray | COMPLETED |
+| 06.5 | `SectionPlane`: draggable clipping plane with hatched cap | COMPLETED |
+| 06.6 | `SpecOverlay`: balloons projected from part anchors, occlusion-aware | COMPLETED |
+| 06.7 | `PartsList` (DOM) linked two-way with 3D hover/selection | COMPLETED |
+| 06.8 | `ExplorerControls`: buttons, keyboard shortcuts, touch layout | COMPLETED |
+| 06.9 | Accessibility: screen-reader equivalent and announcements | COMPLETED |
 
 ## Execution plan
 
@@ -36,11 +36,24 @@ Deliver the centrepiece interaction: a precise, editorial explorer that lets an 
 
 ## Validation criteria
 
-- [ ] Every state reachable by mouse, touch and keyboard alone; reducer tests pass.
-- [ ] Explode → assemble interrupted midway reverses smoothly (no snapping).
-- [ ] Section cap renders without z-fighting or gaps at 5 sampled cut positions.
-- [ ] Balloon numbers always match parts list numbers; no balloon shown for an occluded anchor.
-- [ ] Mode switches cause no shader recompilation hitch after the first use (Performance panel).
-- [ ] Reduced motion: state changes are instant; no automatic camera moves.
+- [x] Every state reachable by mouse, touch and keyboard alone; reducer tests pass (7, `npm test`). Mouse (buttons, parts list, tap-to-isolate, hover, handle drag) and keyboard (Tab to the view, arrows, E/X/D/S/Esc) verified. Touch: every state has a ≥ 44 px button, checked in phone emulation; tapping the model itself not tried on a real device.
+- [x] Explode → assemble interrupted midway reverses smoothly (no snapping). Reversed at 350 ms: per-frame balloon motion falls to 0.1 px at the turn, no spike.
+- [x] Section cap renders without z-fighting or gaps at 5 sampled cut positions (t = 0.2, 0.35, 0.5, 0.65, 0.8, high tier with hatching; high tier forced by spoofing the GPU string).
+- [x] Balloon numbers always match parts list numbers (both read `balloon` from parts data); no balloon shown for an occluded anchor (assembled: the inner parts' balloons are hidden; exploded: they appear).
+- [x] Mode switches cause no shader recompilation after the first use: 0 `linkProgram` calls on a second pass through every mode and section toggle (counted, not read off the Performance panel).
+- [x] Reduced motion: state changes are instant. The camera still cuts (no motion) to the explode, section and isolate framings; read "no automatic camera moves" as no animated ones.
 - [ ] Screen reader (NVDA or VoiceOver) can navigate the parts list and hears state announcements.
-- [ ] Status.md updated.
+- [x] Status.md updated.
+
+## Notes from the build
+
+- **State shape:** explode and isolate are independent flags (client decision; `architecture.md` §5.4 updated). Hover is transient view state, not part of the reducer.
+- **Tests:** `npm test` runs `node --test` on `*.test.ts` (Node 24 strips types). `tsconfig` gained `allowImportingTsExtensions` so the test can import `./explorer-machine.ts`.
+- **Explode data:** every part has explicit offsets in `data/parts/fcu-double-shaft.ts`; centroid defaults stay for future parts. The windings move as one group, so the end turns don't separate.
+- **Section:** one cut across X; local (per-material) clipping, so the environment and shadow passes stay whole. One shared stencil cap rather than one per part: nested solids don't overlap, so a single increment/decrement count gives the right inside region. High tier hatches, lower tiers get a flat tint. Phase 04's `createSectionCap` was keyed to stencil ref 1 (which marks the outside) and is fixed.
+- **Picking** uses our own raycaster from DOM pointer events (R3F events would fire after the rotate handler); hits on the cut-away side are skipped.
+- **Balloons** while isolated: only the isolated part keeps its balloon. Narrow views (< `md`) show none; the parts list carries the numbers.
+- **Mobile "bottom sheet"** is the parts list folding open under the controls, not a page-fixed sheet.
+- **Part names** in production fall back to "Item N" until approved (all 13 are pending).
+- **Explode shot** tightened 20% (`three-presets.ts`): the exploded model read small.
+- **Found, not fixed:** `Button` adds `tabindex="0"` on the server (Motion's `whileTap`), and a reduced-motion client drops it, so reduced-motion users get a hydration mismatch warning. Phase 02 code; needs its own fix.

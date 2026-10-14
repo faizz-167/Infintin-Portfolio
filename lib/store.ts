@@ -1,4 +1,11 @@
 import { create } from "zustand";
+import {
+  type ExplorerAction,
+  type ExplorerState,
+  explorerReducer,
+  initialExplorerState,
+} from "@/components/explorer/explorer-machine";
+import type { PartId } from "@/data/types";
 import type { QualityTier, ShotId } from "@/design/three-presets";
 import { rememberTier, tierBelow } from "./quality";
 
@@ -9,6 +16,9 @@ interface ViewState {
   ready: boolean;
   /** Camera shot the rig is damping towards. */
   shot: ShotId;
+  explorer: ExplorerState;
+  /** Part under the pointer or focused in the parts list. Transient. */
+  hovered: PartId | null;
 }
 
 interface SceneStore {
@@ -25,6 +35,9 @@ interface SceneStore {
   setViewVisible: (id: string, visible: boolean) => void;
   setViewReady: (id: string) => void;
   setShot: (id: string, shot: ShotId) => void;
+  /** Explorer actions from buttons, keys, gestures and scroll timelines. */
+  dispatch: (id: string, action: ExplorerAction) => void;
+  setHovered: (id: string, part: PartId | null) => void;
 }
 
 // Per-frame values (rotation, damped camera) never go through the store:
@@ -53,7 +66,16 @@ export const useSceneStore = create<SceneStore>()((set) => {
 
     registerView: (id, shot) =>
       set(({ views }) => ({
-        views: { ...views, [id]: { visible: false, ready: false, shot } },
+        views: {
+          ...views,
+          [id]: {
+            visible: false,
+            ready: false,
+            shot,
+            explorer: initialExplorerState,
+            hovered: null,
+          },
+        },
       })),
     unregisterView: (id) =>
       set(({ views }) => {
@@ -63,5 +85,21 @@ export const useSceneStore = create<SceneStore>()((set) => {
     setViewVisible: (id, visible) => patchView(id, { visible }),
     setViewReady: (id) => patchView(id, { ready: true }),
     setShot: (id, shot) => patchView(id, { shot }),
+    dispatch: (id, action) =>
+      set(({ views }) => {
+        const view = views[id];
+        if (!view) return {};
+        const explorer = explorerReducer(view.explorer, action);
+        return explorer === view.explorer
+          ? {}
+          : { views: { ...views, [id]: { ...view, explorer } } };
+      }),
+    setHovered: (id, part) =>
+      set(({ views }) => {
+        const view = views[id];
+        return view && view.hovered !== part
+          ? { views: { ...views, [id]: { ...view, hovered: part } } }
+          : {};
+      }),
   };
 });

@@ -2,13 +2,15 @@
 
 import { View } from "@react-three/drei";
 import { invalidate, useFrame } from "@react-three/fiber";
-import { type RefObject, Suspense, useEffect, useRef } from "react";
+import { type RefObject, Suspense, useEffect, useRef, useState } from "react";
 import type { EnvironmentId } from "@/design/three-presets";
 import { useSceneStore } from "@/lib/store";
 import { CameraRig } from "./CameraRig";
-import { RotateGroup, useDragRotate } from "./DragRotate";
-import { LabStage, StageShadow } from "./LabStage";
+import { RotateGroup, useViewGestures } from "./DragRotate";
+import { LabStage } from "./LabStage";
 import { FcuDoubleShaft } from "./models/FcuDoubleShaft";
+import { SpecOverlay } from "./SpecOverlay";
+import { createViewRuntime } from "./viewRuntime";
 
 interface SceneContentProps {
   id: string;
@@ -17,6 +19,8 @@ interface SceneContentProps {
   element: RefObject<HTMLDivElement | null>;
   rotate: boolean;
   zoom: boolean;
+  /** Full explorer: pick parts, drag the section handle, show balloons. */
+  explore: boolean;
 }
 
 /**
@@ -29,9 +33,30 @@ export default function SceneContent({
   element,
   rotate,
   zoom,
+  explore,
 }: SceneContentProps) {
   const visible = useSceneStore((s) => s.views[id]?.visible ?? false);
-  const rotation = useDragRotate(element, { enabled: rotate, zoom });
+  const dispatch = useSceneStore((s) => s.dispatch);
+  const setHovered = useSceneStore((s) => s.setHovered);
+  const [runtime] = useState(createViewRuntime);
+
+  useEffect(() => {
+    runtime.element = element.current;
+    return () => {
+      runtime.element = null;
+    };
+  }, [runtime, element]);
+
+  useViewGestures(element, runtime, {
+    rotate,
+    zoom,
+    ...(explore && {
+      onTap: (part) =>
+        dispatch(id, part ? { type: "ISOLATE", part } : { type: "CLEAR" }),
+      onHover: (part) => setHovered(id, part),
+      onSection: (t) => dispatch(id, { type: "SET_SECTION", t }),
+    }),
+  });
 
   // Scrolling into view needs a frame to draw the view's first picture.
   useEffect(() => {
@@ -39,18 +64,25 @@ export default function SceneContent({
   }, [visible]);
 
   return (
-    <View className="absolute inset-0" visible={visible}>
-      <LabStage env={env}>
-        <CameraRig viewId={id} />
-        <Suspense fallback={null}>
-          <RotateGroup state={rotation}>
-            <FcuDoubleShaft />
-            <StageShadow env={env} />
-          </RotateGroup>
-          <ReadySignal id={id} />
-        </Suspense>
-      </LabStage>
-    </View>
+    <>
+      <View className="absolute inset-0" visible={visible}>
+        <LabStage env={env}>
+          <CameraRig viewId={id} runtime={runtime} />
+          <Suspense fallback={null}>
+            <RotateGroup state={runtime.rotation}>
+              <FcuDoubleShaft
+                viewId={id}
+                env={env}
+                runtime={runtime}
+                balloons={explore}
+              />
+            </RotateGroup>
+            <ReadySignal id={id} />
+          </Suspense>
+        </LabStage>
+      </View>
+      {explore && <SpecOverlay runtime={runtime} env={env} />}
+    </>
   );
 }
 

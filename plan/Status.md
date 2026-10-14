@@ -1,7 +1,7 @@
 # Infintin Redesign — Status
 
 **Last updated:** 2026-10-13
-**Current phase:** 05 in progress
+**Current phase:** 06 in progress (05 device checks and 06 screen-reader check open)
 **Overall:** 5 / 12 active phases completed (Phase 12 deferred)
 
 ## Rules
@@ -22,7 +22,7 @@
 | 03 | Static content layer & claim gating | [phase-03-content-layer.md](phase-03-content-layer.md) | 00.2, 01 | COMPLETED | 8 / 8 |
 | 04 | 3D asset pipeline, materials & lighting | [phase-04-3d-pipeline.md](phase-04-3d-pipeline.md) | 00.4, 01 | COMPLETED | 7 / 7 (04.7 moved to 05) |
 | 05 | 3D core: canvas, stage, model, quality | [phase-05-3d-core.md](phase-05-3d-core.md) | 02, 04 | IN_PROGRESS | 8 / 8 (device checks open) |
-| 06 | Product explorer | [phase-06-product-explorer.md](phase-06-product-explorer.md) | 03.5, 05 | NOT_STARTED | 0 / 9 |
+| 06 | Product explorer | [phase-06-product-explorer.md](phase-06-product-explorer.md) | 03.5, 05 | IN_PROGRESS | 9 / 9 (screen-reader check open) |
 | 07 | Site shell & motion primitives | [phase-07-shell-motion.md](phase-07-shell-motion.md) | 02, 03 | NOT_STARTED | 0 / 9 |
 | 08 | Home: Hero & Blueprint | [phase-08-home-hero.md](phase-08-home-hero.md) | 05, 06.2, 07 | NOT_STARTED | 0 / 6 |
 | 09 | Home: remaining scenes | [phase-09-home-scenes.md](phase-09-home-scenes.md) | 06, 08 | NOT_STARTED | 0 / 9 |
@@ -35,6 +35,8 @@ Parallelisable after Phase 01: 02, 03 and 04 can run side by side; 07 can start 
 ## In progress
 
 Phase 05 — 3D core. All subtasks built; open validation: fps on a mid-range Android phone, touch/pen drag on a real device, laptop rotate fps ≈53 (target 60).
+
+Phase 06 — Product explorer. All subtasks built and checked on `/system/explorer`; open: NVDA or VoiceOver pass over the parts list and announcements.
 
 ## Blockers
 
@@ -72,6 +74,11 @@ None for Phases 00–11. Several claims and content items are pending client app
 | 2026-10-13 | Phase 05: initial tier from device hints only (no `detect-gpu`, which fetches benchmark tables from a CDN); runtime step-down via our own frame monitor, since drei `PerformanceMonitor` misreads `frameloop="demand"` idle time as low fps. | Client + Phase 05 |
 | 2026-10-13 | Phase 05: explorer/explode/section store state deferred to Phase 06; zoom is a `SceneView` opt-in used only on the dev bench. Posters (04.7) captured from the live stage on `/system/model`. | Client |
 | 2026-10-13 | Tier data lives in `design/quality-tiers.ts` (re-exported from `three-presets.ts`) so the root layout never bundles three.js. | Phase 05 |
+| 2026-10-13 | Explorer state: explode and isolate are independent flags (isolate works assembled; clearing returns to the explode state). §5.4 updated. | Client |
+| 2026-10-13 | Reducer tests run on `node --test` (no test runner package); `tsconfig` allows `.ts` import extensions. | Client |
+| 2026-10-13 | Unapproved part names show as "Item N" in production. | Client |
+| 2026-10-13 | `ProductExplorer` is a standalone component on dev-only `/system/explorer`; Phase 10 mounts it on the product route. | Client |
+| 2026-10-13 | Section uses one shared stencil cap and per-material clipping; picking is our own raycast from DOM events. | Phase 06 |
 
 ## Open questions (client)
 
@@ -106,3 +113,4 @@ See `spec/content-guardrails.md` §3. Highest priority before Phase 03 content e
 - 2026-10-13 — Phase 04: 04.1–04.6 completed. High GLB 263 KB / 51,794 tris, LOD1 117 KB / 19,022 tris, deterministic, parity (names + transforms) checked. Presets in `design/three-presets.ts`; dev-only `/system/model` loads both GLBs with no console errors (only R3F's `THREE.Clock` deprecation warning). Lamination shader compiles but is hidden inside the housing until explode exists (Phase 06), so not yet judged by eye.
 - 2026-10-13 — 04.8 completed: runtime guard replaces the cast; models:optimize deterministic, typecheck, lint, build and claims:check pass.
 - 2026-10-13 — Phase 05: 05.1–05.8 built, plus 04.7 posters. One canvas with 4 views, 0 idle frames, no-WebGL posters, mouse drag with inertia, wheel zoom clamp, `<Activity>` hide/show all verified on `/system/model`. Rotate ≈53 fps on Intel Raptor Lake-P iGPU (1440×900, 1×). Android fps and real touch/pen drag not yet measured. Phase 04 marked COMPLETED.
+- 2026-10-13 — Phase 06: 06.1–06.9 built. Verified on `/system/explorer`: reducer tests (7), explode/assemble with smooth interrupted reversal, isolate with ghosting, camera and inspection frame, shaded/drawing/X-ray with no shader relinks after first use, section with hatched cap at 5 cut positions and a draggable handle, occlusion-aware balloons on a rail, parts list linked both ways, keyboard shortcuts, reduced motion, phone layout. Screen-reader check pending (client). Found a pre-existing `Button` hydration mismatch for reduced-motion users (not fixed).

@@ -96,7 +96,8 @@ export function StageShadow({ env }: { env: EnvironmentId }) {
       key={env}
       frames={1}
       position={[0, FLOOR_Y, 0]}
-      scale={[0.4, 1]}
+      // Covers the exploded length (blower wheels slide 160 mm each way).
+      scale={[0.45, 1.25]}
       resolution={512}
       opacity={opacity}
       blur={blur}

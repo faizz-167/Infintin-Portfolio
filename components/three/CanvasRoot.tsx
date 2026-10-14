@@ -36,7 +36,12 @@ export default function CanvasRoot() {
         shadows={spec.directionalShadow ? "percentage" : false}
         // Moving frames drop to 75% resolution; the drop is hard to see in motion.
         performance={{ min: 0.75 }}
-        gl={{ antialias: true }}
+        // Stencil for section caps; local clipping for per-material section
+        // planes (environment and shadow passes stay uncut).
+        gl={{ antialias: true, stencil: true }}
+        onCreated={({ gl }) => {
+          gl.localClippingEnabled = true;
+        }}
         className="z-canvas"
         style={{ position: "fixed", inset: 0, pointerEvents: "none" }}
       >

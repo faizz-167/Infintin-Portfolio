@@ -11,7 +11,8 @@
     "format": "biome format --write",
     "models:optimize": "node scripts/optimize-models.mjs",
     "claims:report": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check-claims.mjs",
-    "claims:check": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check-claims.mjs --build"
+    "claims:check": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check-claims.mjs --build",
+    "test": "node --test --disable-warning=MODULE_TYPELESS_PACKAGE_JSON \"**/*.test.ts\""
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",

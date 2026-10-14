@@ -2,7 +2,10 @@ import type { PartSpec } from "../types";
 
 // Balloons run outside in, the order an assembly drawing lists them. Explode
 // order clears the housing before the electromagnetic stack, since nothing
-// inside the mid cover is visible assembled (model-audit.md §3).
+// inside the mid cover is visible assembled (model-audit.md §3). Exploded:
+// blower wheels and end covers slide off along the shaft, clips and the mid
+// cover lift, then the rotor and magnet slide out to opposite sides of the
+// stator. The stand, stator, windings and shaft stay as the datum.
 export const fcuDoubleShaftParts = [
   {
     id: "blower-wheel-front",
@@ -10,7 +13,7 @@ export const fcuDoubleShaftParts = [
     label: "parts.blower-wheel-front",
     balloon: 1,
     material: "galvanisedSteel",
-    explode: { order: 1 },
+    explode: { order: 1, axial: 0.16 },
     group: "air-moving",
   },
   {
@@ -19,7 +22,7 @@ export const fcuDoubleShaftParts = [
     label: "parts.blower-wheel-rear",
     balloon: 2,
     material: "galvanisedSteel",
-    explode: { order: 1 },
+    explode: { order: 1, axial: -0.16 },
     group: "air-moving",
   },
   {
@@ -28,7 +31,7 @@ export const fcuDoubleShaftParts = [
     label: "parts.retaining-clip-front",
     balloon: 3,
     material: "galvanisedSteel",
-    explode: { order: 2 },
+    explode: { order: 2, axial: 0.1, radial: 0.06 },
     group: "mounting",
   },
   {
@@ -37,7 +40,7 @@ export const fcuDoubleShaftParts = [
     label: "parts.retaining-clip-rear",
     balloon: 4,
     material: "galvanisedSteel",
-    explode: { order: 2 },
+    explode: { order: 2, axial: -0.1, radial: 0.06 },
     group: "mounting",
   },
   {
@@ -48,6 +51,8 @@ export const fcuDoubleShaftParts = [
     material: "polymerBlack",
     // The stand is the datum the drawing hangs from, so it never moves.
     explode: { order: 0, axial: 0, radial: 0 },
+    // Front face; its top is the cradle, inside the motor.
+    anchor: [0.5, 0.3, 1],
     group: "mounting",
   },
   {
@@ -56,7 +61,7 @@ export const fcuDoubleShaftParts = [
     label: "parts.end-cover-front",
     balloon: 6,
     material: "castAluminium",
-    explode: { order: 3 },
+    explode: { order: 3, axial: 0.1 },
     group: "housing",
   },
   {
@@ -65,7 +70,7 @@ export const fcuDoubleShaftParts = [
     label: "parts.end-cover-rear",
     balloon: 7,
     material: "castAluminium",
-    explode: { order: 3 },
+    explode: { order: 3, axial: -0.1 },
     group: "housing",
   },
   {
@@ -74,7 +79,7 @@ export const fcuDoubleShaftParts = [
     label: "parts.mid-cover",
     balloon: 8,
     material: "castAluminium",
-    explode: { order: 4 },
+    explode: { order: 4, radial: 0.12 },
     group: "housing",
   },
   {
@@ -93,6 +98,8 @@ export const fcuDoubleShaftParts = [
     balloon: 10,
     material: "enamelCopper",
     explode: { order: 5 },
+    // On the front end turns; the slot portion sits inside the stator.
+    anchor: [0.5, 1, 0.95],
     group: "electromagnetic",
   },
   {
@@ -101,7 +108,7 @@ export const fcuDoubleShaftParts = [
     label: "parts.rotor-magnet",
     balloon: 11,
     material: "magnetCoated",
-    explode: { order: 6 },
+    explode: { order: 6, axial: 0.075 },
     group: "rotating",
   },
   {
@@ -110,7 +117,7 @@ export const fcuDoubleShaftParts = [
     label: "parts.rotor",
     balloon: 12,
     material: "siliconSteel",
-    explode: { order: 6 },
+    explode: { order: 6, axial: -0.075 },
     group: "rotating",
   },
   {
@@ -120,6 +127,8 @@ export const fcuDoubleShaftParts = [
     balloon: 13,
     material: "polishedSteel",
     explode: { order: 7 },
+    // In the gap between the front end cover and blower wheel.
+    anchor: [0.5, 1, 0.7],
     group: "rotating",
   },
 ] as const satisfies readonly PartSpec[];

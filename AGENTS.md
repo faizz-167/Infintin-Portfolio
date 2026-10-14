@@ -2,7 +2,7 @@
 
 Spec driven. Nothing gets built without a spec.
 
-- `plan/specs/phaseNN-phase_name.md` — one per phase, written just before it starts.
+- `plan/specs/phase-NN-phase_name.md` — one per phase, written just before it starts.
   Behaviour and an acceptance check, never filenames.
 - This file — always true, read on every prompt.
 

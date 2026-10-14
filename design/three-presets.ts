@@ -5,11 +5,17 @@
 
 import {
   AgXToneMapping,
+  AlwaysStencilFunc,
+  BackSide,
   Color,
+  DecrementWrapStencilOp,
   DoubleSide,
+  FrontSide,
+  IncrementWrapStencilOp,
   MeshBasicMaterial,
   MeshPhysicalMaterial,
   NotEqualStencilFunc,
+  ReplaceStencilOp,
   ShaderMaterial,
   type ToneMapping,
 } from "three";
@@ -25,6 +31,7 @@ const palette = {
   leadLit: "#a2a9b6",
   copper: "#9c4522",
   copperLit: "#d9774a",
+  lead: "#5c5c5c",
 } as const;
 
 // ---------------------------------------------------------------- Materials
@@ -152,6 +159,12 @@ export function createDrawingSurface(env: EnvironmentId): MeshBasicMaterial {
   });
 }
 
+/** Ink for drawing-mode edges of parts that aren't the isolated one. */
+export const drawingEdgesMuted = {
+  sheet: palette.leadLit,
+  lab: palette.lead,
+} as const satisfies Record<EnvironmentId, string>;
+
 /** Copper marks the isolated part in X-ray mode (edges and ghost). */
 export const xrayHighlight = {
   sheet: palette.copper,
@@ -172,27 +185,33 @@ export function createXrayGhost(
     transparent: true,
     depthWrite: false,
     side: DoubleSide,
+    // Honour section clipping planes like the built-in materials do.
+    clipping: true,
     uniforms: {
       uColor: { value: new Color(color) },
       uPower: { value: 2.5 },
       uOpacity: { value: 0.55 },
     },
     vertexShader: `
+#include <clipping_planes_pars_vertex>
 varying vec3 vNormal;
 varying vec3 vView;
 void main() {
-  vec4 mv = modelViewMatrix * vec4(position, 1.0);
+  vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
   vNormal = normalize(normalMatrix * normal);
-  vView = normalize(-mv.xyz);
-  gl_Position = projectionMatrix * mv;
+  vView = normalize(-mvPosition.xyz);
+  gl_Position = projectionMatrix * mvPosition;
+  #include <clipping_planes_vertex>
 }`,
     fragmentShader: `
+#include <clipping_planes_pars_fragment>
 uniform vec3 uColor;
 uniform float uPower;
 uniform float uOpacity;
 varying vec3 vNormal;
 varying vec3 vView;
 void main() {
+  #include <clipping_planes_fragment>
   float rim = pow(1.0 - abs(dot(normalize(vNormal), normalize(vView))), uPower);
   gl_FragColor = vec4(uColor, rim * uOpacity);
   #include <colorspace_fragment>
@@ -201,23 +220,28 @@ void main() {
 }
 
 /**
- * Section mode cap: drawn on the cutting plane only where the stencil marks
- * the inside of a cut part, filled with 45° hatching in screen space so the
- * line spacing stays constant at any zoom, like a drawing.
+ * Section mode cap: a plane on the cut, drawn only where the stencil says
+ * the view ray is inside a cut part. Part back faces increment the stencil
+ * and front faces decrement it (`createSectionStencil`), so inside reads
+ * non-zero; the cap passes on "not equal to 0" and writes 0 back.
+ * High tier fills it with 45° hatching in screen space, so the line spacing
+ * stays constant at any zoom, like a drawing; lower tiers get a flat tint.
  */
-export const SECTION_STENCIL_REF = 1;
-
 export function createSectionCap(
   env: EnvironmentId,
   pixelRatio: number,
+  hatch: boolean,
 ): ShaderMaterial {
   const ink = env === "sheet" ? palette.graphite : palette.paper;
   const ground = env === "sheet" ? palette.paper : palette.graphite;
   return new ShaderMaterial({
     name: "sectionCap",
     stencilWrite: true,
-    stencilRef: SECTION_STENCIL_REF,
+    stencilRef: 0,
     stencilFunc: NotEqualStencilFunc,
+    stencilFail: ReplaceStencilOp,
+    stencilZFail: ReplaceStencilOp,
+    stencilZPass: ReplaceStencilOp,
     uniforms: {
       uInk: { value: new Color(ink) },
       uGround: { value: new Color(ground) },
@@ -225,6 +249,7 @@ export function createSectionCap(
       uSpacing: { value: 6 },
       uWidth: { value: 1 },
       uPixelRatio: { value: pixelRatio },
+      uHatch: { value: hatch ? 1 : 0 },
     },
     vertexShader: `
 void main() {
@@ -236,13 +261,38 @@ uniform vec3 uGround;
 uniform float uSpacing;
 uniform float uWidth;
 uniform float uPixelRatio;
+uniform float uHatch;
 void main() {
   vec2 p = gl_FragCoord.xy / uPixelRatio;
   float d = mod(p.x + p.y, uSpacing * 1.41421356);
   float line = 1.0 - smoothstep(uWidth, uWidth + 1.0, d);
-  gl_FragColor = vec4(mix(uGround, uInk, line), 1.0);
+  float ink = mix(0.3, line, uHatch);
+  gl_FragColor = vec4(mix(uGround, uInk, ink), 1.0);
   #include <colorspace_fragment>
 }`,
+  });
+}
+
+/**
+ * Invisible pass over each cut part that counts faces into the stencil:
+ * back faces +1, front faces −1. Clipped like the part itself, depth-test
+ * off so the count covers the whole ray.
+ */
+export function createSectionStencil(
+  side: "back" | "front",
+): MeshBasicMaterial {
+  const op = side === "back" ? IncrementWrapStencilOp : DecrementWrapStencilOp;
+  return new MeshBasicMaterial({
+    name: `sectionStencil-${side}`,
+    side: side === "back" ? BackSide : FrontSide,
+    colorWrite: false,
+    depthWrite: false,
+    depthTest: false,
+    stencilWrite: true,
+    stencilFunc: AlwaysStencilFunc,
+    stencilFail: op,
+    stencilZFail: op,
+    stencilZPass: op,
   });
 }
 
@@ -349,7 +399,7 @@ export const cameraShots = {
     mobile: { position: [1.1, 0, 0], target: [0, 0, 0], fov: 18 },
   },
   explode: {
-    position: [1.2, 0.45, 1.05],
+    position: [0.96, 0.36, 0.84],
     target: [0, 0, 0],
     fov: 35,
     mobile: { position: [0.9, 0.5, 1.25], target: [0, 0, 0], fov: 45 },

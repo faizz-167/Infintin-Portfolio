@@ -130,11 +130,19 @@ export interface PartSpec {
   balloon: number;
   material: MaterialPresetId;
   /**
-   * Offsets default from each part's centroid at load time (architecture
-   * §5.3), so data only sets `order` and overrides where the default reads
-   * badly. Metres along the shaft / outward from it.
+   * Exploded position. `order` sequences the explode (lower leaves first).
+   * `axial`: metres along the shaft, signed (+ is the front, +Z); defaults
+   * to 0.1 m away from the motor centre on the part's own side, 0 for parts
+   * centred on it. `radial`: metres outward from the shaft, in the direction
+   * of the part's centroid, or straight up for parts centred on the axis;
+   * defaults to 0.
    */
   explode: { order: number; axial?: number; radial?: number };
+  /**
+   * Where the balloon leader touches the part, as a fraction of its bounding
+   * box on each axis (0 = min, 1 = max). Defaults to top centre, [0.5, 1, 0.5].
+   */
+  anchor?: readonly [number, number, number];
   description?: ClaimId;
   group: PartGroup;
 }

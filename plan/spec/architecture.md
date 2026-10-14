@@ -171,7 +171,7 @@ Explode offsets default from each part's centroid relative to the assembly centr
 
 ### 5.4 Explorer state machine
 
-States: `assembled` → `exploded` → `isolated(partId)`; orthogonal render mode: `shaded | drawing | xray`; orthogonal `section: off | on(t)`. Implemented as a small reducer in `explorer-machine.ts`, exposed through the store. UI controls (Framer Motion), keyboard shortcuts and scroll timelines all dispatch the same actions.
+Two independent flags: `exploded` (assembled / exploded) and `isolated` (a part id or none), so a part can be isolated while assembled (the rest ghosts) and clearing isolation returns to whichever explode state was active. Orthogonal render mode: `shaded | drawing | xray`; orthogonal `section: off | on(t)`. (Changed in Phase 06 from a linear assembled → exploded → isolated chain.) Implemented as a small reducer in `explorer-machine.ts`, exposed through the store. UI controls (Framer Motion), keyboard shortcuts and scroll timelines all dispatch the same actions.
 
 ### 5.5 Lighting & materials strategy
 
