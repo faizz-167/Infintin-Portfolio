@@ -372,7 +372,13 @@ export interface CameraShot extends Framing {
   mobile?: Framing;
 }
 
-export type ShotId = "hero" | "home" | "elevation" | "explode" | "section";
+export type ShotId =
+  | "hero"
+  | "home"
+  | "elevation"
+  | "profile"
+  | "explode"
+  | "section";
 
 /**
  * The CAD export's own camera (orthographic, dropped from the GLB): a
@@ -383,6 +389,50 @@ export const cadCamera = {
   position: [1.148, 0.23, 0.678],
   quaternion: [-0.0644, 0.4959, 0.0709, 0.8631],
 } as const;
+
+// The home Portfolio elevation: side-on from +X (the front wheel, +Z, on the
+// left), a few degrees above the shaft. Distances assume the view's box has
+// the elevation poster's aspect (≈1.78), which the scene keeps: `close` shows
+// ≈0.5 m of the shaft, `whole` fits the 705 mm assembly to ≈88% of the width.
+const travel = {
+  fov: 18,
+  rise: (5 * Math.PI) / 180,
+  close: 0.9,
+  whole: 1.42,
+  // Blower wheel centres along the shaft.
+  wheel: 0.23,
+  // Share of the scroll spent travelling; the rest pulls back to the whole.
+  along: 0.75,
+} as const;
+
+/**
+ * Camera for travel progress `p`: 0 to `along` moves from the front wheel to
+ * the rear one at `close`; the rest eases back to the whole assembly, which
+ * is the `profile` shot.
+ */
+export function travelFraming(p: number): Framing {
+  const t = Math.min(Math.max(p, 0), 1);
+  let z: number;
+  let distance: number;
+  if (t <= travel.along) {
+    z = travel.wheel * (1 - (2 * t) / travel.along);
+    distance = travel.close;
+  } else {
+    const u = (t - travel.along) / (1 - travel.along);
+    const eased = u * u * (3 - 2 * u);
+    z = -travel.wheel * (1 - eased);
+    distance = travel.close + (travel.whole - travel.close) * eased;
+  }
+  return {
+    position: [
+      distance * Math.cos(travel.rise),
+      distance * Math.sin(travel.rise),
+      z,
+    ],
+    target: [0, 0, z],
+    fov: travel.fov,
+  };
+}
 
 // Long lenses throughout: low perspective distortion reads as a technical
 // photograph, and keeps the shaft centreline close to straight.
@@ -414,6 +464,8 @@ export const cameraShots = {
     fov: 18,
     mobile: { position: [1.1, 0, 0], target: [0, 0, 0], fov: 18 },
   },
+  // Landscape boxes only (the Portfolio scene keeps its view at 16:9).
+  profile: travelFraming(1),
   explode: {
     position: [0.96, 0.36, 0.84],
     target: [0, 0, 0],

@@ -4,6 +4,7 @@ import { View } from "@react-three/drei";
 import { invalidate, useFrame } from "@react-three/fiber";
 import { type RefObject, Suspense, useEffect, useRef, useState } from "react";
 import type { EnvironmentId } from "@/design/three-presets";
+import type { CalloutAnchor } from "@/lib/calloutTrack";
 import { useSceneStore } from "@/lib/store";
 import { CameraRig } from "./CameraRig";
 import { RotateGroup, useViewGestures } from "./DragRotate";
@@ -22,6 +23,7 @@ interface SceneContentProps {
   /** Full explorer: pick parts, drag the section handle, show balloons. */
   explore: boolean;
   fixedShot: boolean;
+  callouts?: readonly CalloutAnchor[];
 }
 
 /**
@@ -36,6 +38,7 @@ export default function SceneContent({
   zoom,
   explore,
   fixedShot,
+  callouts,
 }: SceneContentProps) {
   const visible = useSceneStore((s) => s.views[id]?.visible ?? false);
   const dispatch = useSceneStore((s) => s.dispatch);
@@ -77,6 +80,7 @@ export default function SceneContent({
                 env={env}
                 runtime={runtime}
                 balloons={explore}
+                callouts={callouts}
               />
             </RotateGroup>
             <ReadySignal id={id} />

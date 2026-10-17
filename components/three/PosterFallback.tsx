@@ -12,12 +12,15 @@ export function PosterFallback({
   env,
   sizes,
   eager,
+  caption = true,
 }: {
   poster: PosterShot;
   env: EnvironmentId;
   sizes: string;
   /** Above the fold: the poster is likely the page's largest paint. */
   eager: boolean;
+  /** Off where the page shows the status next to the view itself. */
+  caption?: boolean;
 }) {
   return (
     <figure className="absolute inset-0 m-0">
@@ -31,9 +34,11 @@ export function PosterFallback({
         className="object-contain"
       />
       {/* Restates the approved product status (claim product.status). */}
-      <figcaption className="absolute bottom-1 left-1 type-caption text-ink-muted">
-        Render of prototype assembly
-      </figcaption>
+      {caption && (
+        <figcaption className="absolute bottom-1 left-1 type-caption text-ink-muted">
+          Render of prototype assembly
+        </figcaption>
+      )}
     </figure>
   );
 }

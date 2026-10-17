@@ -1,77 +1,130 @@
 "use client";
 
-import { AnimatePresence, motion } from "motion/react";
-import { type ReactNode, useEffect, useState } from "react";
-import { initialExplorerState } from "@/components/explorer/explorer-machine";
-import { PartsList } from "@/components/explorer/PartsList";
-import type { PartName } from "@/components/explorer/partNames";
+import { type ReactNode, useEffect, useMemo, useRef } from "react";
 import { type SceneBuild, ScrollScene } from "@/components/motion/ScrollScene";
-import { SplitHeadline } from "@/components/motion/SplitHeadline";
-import { useMotionPreference } from "@/components/motion/useMotionPreference";
 import { SceneView } from "@/components/three/SceneView";
 import { Button } from "@/components/ui/Button";
-import { TextLink } from "@/components/ui/TextLink";
-import { driveExplode } from "@/lib/explodeDrive";
+import type { PartId } from "@/data/types";
+import { type CalloutAnchor, onCallouts } from "@/lib/calloutTrack";
+import { driveCamera } from "@/lib/cameraDrive";
 import { useSceneStore } from "@/lib/store";
+import type { PortfolioCallout } from "./portfolioCallouts";
 
 const VIEW = "portfolio";
 
+// The view keeps the elevation poster's aspect at every width, so the poster
+// fractions and the camera's travel distances hold. On desktop the box is
+// centred in the pinned scene; the callout layer repeats the same box.
+const STAGE_BOX =
+  "lg:absolute lg:inset-x-0 lg:top-1/2 lg:mx-0 lg:aspect-[2706/1520] lg:-translate-y-1/2";
+
+// Above: long enough to clear the blower wheel's rim in the close-up. Below:
+// short, since the stand already reaches down towards the scene's edge.
+const LEADER_ABOVE = "lg:h-[clamp(6rem,22vh,13rem)]";
+const NOTE_ABOVE = "lg:bottom-[clamp(6rem,22vh,13rem)]";
+const LEADER_BELOW = "lg:h-[clamp(3rem,9vh,5rem)]";
+const NOTE_BELOW = "lg:top-[clamp(3rem,9vh,5rem)]";
+
+// The shaft's axis, tracked like a callout so the centreline sits on it at
+// every point of the travel. Poster: the shaft's height in the still.
+const CENTRELINE: CalloutAnchor = { part: "shaft", at: [0.5, 0.5, 0.5] };
+const CENTRELINE_POSTER = 0.498;
+
 type PortfolioStageProps = {
   name: string;
-  overview: ReactNode;
+  overview: ReactNode | null;
   status: ReactNode;
-  specs: ReactNode;
-  names: readonly PartName[];
+  /** Approved callouts only, in shaft order. */
+  callouts: readonly (PortfolioCallout & { note: ReactNode })[];
   href: string;
 };
 
-/** Hands the explode to scroll: the parts follow `p` exactly while the scene
- * is pinned, and the explorer state takes over at either end, so the camera
- * frames the explode and the toggle shows what is on screen. */
-function scrubExplode(p: number) {
-  const { dispatch } = useSceneStore.getState();
-  dispatch(VIEW, { type: p > 0 ? "EXPLODE" : "ASSEMBLE" });
-  driveExplode(VIEW, p > 0 && p < 1 ? p : null);
-}
-
 /**
- * Sheet 03, the Lab. The motor beside its specification, with a compact
- * explorer (drag, explode, X-ray) and the parts list its balloons refer to.
- * On desktop the scene pins and scrolling opens the assembly along the
- * shaft; balloons come into view as the parts separate. Phones keep the
- * toggle instead of a scroll-held scene.
+ * Sheet 03, the Lab: a teaser for the product page. The motor in elevation,
+ * side-on and full-bleed; on desktop the scene pins and the camera travels
+ * the shaft from the front wheel to the rear one, then pulls back to the
+ * whole assembly. Each callout draws as the camera reaches its part; the
+ * name and the link to the product sheet close the scene. Phones, reduced
+ * motion and no-JS show the end state: the whole motor, every note, the
+ * close. The explorer's instruments live on the product page only.
  */
 export function PortfolioStage({
   name,
   overview,
   status,
-  specs,
-  names,
+  callouts,
   href,
 }: PortfolioStageProps) {
   const tier = useSceneStore((s) => s.tier);
   const ready = useSceneStore((s) => s.views[VIEW]?.ready ?? false);
-  const state = useSceneStore(
-    (s) => s.views[VIEW]?.explorer ?? initialExplorerState,
-  );
-  const dispatch = useSceneStore((s) => s.dispatch);
-  const { transition } = useMotionPreference();
-  const [listOpen, setListOpen] = useState(false);
   const live = tier !== null && tier !== "poster";
+  const items = useRef(new Map<PartId, HTMLLIElement>());
+  const centreline = useRef<SVGSVGElement>(null);
 
-  // A drive left mid-way would outlive the page (Activity hide).
-  useEffect(() => () => driveExplode(VIEW, null), []);
+  const anchors = useMemo<CalloutAnchor[]>(
+    () => [CENTRELINE, ...callouts.map(({ part, at }) => ({ part, at }))],
+    [callouts],
+  );
+
+  // Notes follow the live projection; without it they sit on the poster.
+  useEffect(
+    () =>
+      onCallouts(VIEW, (positions) => {
+        const axis = positions?.get(CENTRELINE.part);
+        if (centreline.current) {
+          centreline.current.style.top = axis
+            ? `${axis.y}px`
+            : `${CENTRELINE_POSTER * 100}%`;
+        }
+        for (const callout of callouts) {
+          const item = items.current.get(callout.part);
+          const point = positions?.get(callout.part);
+          if (!item) continue;
+          item.style.left = point
+            ? `${point.x}px`
+            : `${callout.poster[0] * 100}%`;
+          item.style.top = point
+            ? `${point.y}px`
+            : `${callout.poster[1] * 100}%`;
+        }
+      }),
+    [callouts],
+  );
+
+  // A drive left behind would outlive the page (Activity hide).
+  useEffect(() => () => driveCamera(VIEW, null), []);
 
   const build: SceneBuild = (tl, { conditions }) => {
     if (!conditions.desktop) return;
     const drive = { p: 0 };
+    driveCamera(VIEW, 0);
     tl.to(drive, {
       p: 1,
       duration: 1,
       ease: "none",
-      onUpdate: () => scrubExplode(drive.p),
+      onUpdate: () => driveCamera(VIEW, drive.p),
     });
-    return () => driveExplode(VIEW, null);
+    for (const { part, reveal } of callouts) {
+      tl.fromTo(
+        `[data-leader="${part}"]`,
+        { scaleY: 0 },
+        { scaleY: 1, duration: 0.06, ease: "none" },
+        reveal,
+      );
+      tl.fromTo(
+        `[data-note="${part}"]`,
+        { autoAlpha: 0 },
+        { autoAlpha: 1, duration: 0.05, ease: "none" },
+        reveal + 0.04,
+      );
+    }
+    tl.fromTo(
+      "[data-close]",
+      { autoAlpha: 0, y: 24 },
+      { autoAlpha: 1, y: 0, duration: 0.12, ease: "power2.out" },
+      0.84,
+    );
+    return () => driveCamera(VIEW, null);
   };
 
   return (
@@ -80,7 +133,7 @@ export function PortfolioStage({
       sheet="Portfolio"
       pin="desktop"
       scrub
-      end="+=150%"
+      end="+=250%"
       build={build}
     >
       {/* Lab ground: painted around the view by the view itself, so the
@@ -88,89 +141,92 @@ export function PortfolioStage({
       <div
         data-env="lab"
         data-ground={live && ready ? "canvas" : undefined}
-        className="isolate flex flex-col gap-5 overflow-clip px-margin py-scene lg:grid lg:h-svh lg:min-h-[40rem] lg:grid-cols-12 lg:gap-x-gutter lg:gap-y-0 lg:pt-[calc(var(--spacing-header)+var(--spacing-4))] lg:pb-5"
+        className="relative isolate flex flex-col gap-5 overflow-clip px-margin py-scene lg:block lg:h-svh lg:min-h-[40rem] lg:p-0"
       >
-        <SceneView
-          id={VIEW}
-          shot="hero"
-          poster="hero"
-          env="lab"
-          rotate
-          explore
-          label="3D view of the motor assembly. Drag or use the arrow keys to turn it; the parts list describes each part."
-          sizes="(min-width: 64rem) 66vw, 100vw"
-          className="ground-hole order-2 aspect-[4/3] w-full lg:order-none lg:col-span-8 lg:aspect-auto lg:h-full"
-        />
+        <div className={`relative -mx-margin aspect-[2706/1520] ${STAGE_BOX}`}>
+          <SceneView
+            id={VIEW}
+            shot="profile"
+            poster="elevation"
+            env="lab"
+            callouts={anchors}
+            // The close carries the status tag; the caption would sit under
+            // its button.
+            posterCaption={false}
+            sizes="100vw"
+            className="ground-hole size-full"
+          />
+          {/* The site's datum: the shaft centreline, edge to edge. */}
+          <svg
+            ref={centreline}
+            aria-hidden="true"
+            style={{ top: `${CENTRELINE_POSTER * 100}%` }}
+            className="pointer-events-none absolute inset-x-0 h-px w-full overflow-visible text-ink-muted"
+          >
+            <line
+              x1="0"
+              x2="100%"
+              y1="0.5"
+              y2="0.5"
+              stroke="currentColor"
+              strokeWidth="1"
+              strokeDasharray="24 6 3 6"
+            />
+          </svg>
+        </div>
 
-        {/* Phones: name, then the motor, then the details. */}
-        <div className="contents lg:col-span-4 lg:flex lg:min-h-0 lg:flex-col lg:gap-4">
-          <div className="order-1 flex flex-col gap-2 lg:order-none">
-            <SplitHeadline className="type-display-m">{name}</SplitHeadline>
-            <div>{status}</div>
-            <p className="type-body text-ink-muted">{overview}</p>
-          </div>
-
-          <div className="order-3 flex min-h-0 flex-col gap-4 lg:order-none lg:contents">
-            <div className="flex flex-wrap gap-1">
-              <Button
-                variant="secondary"
-                pressed={state.exploded}
-                onClick={() =>
-                  dispatch(VIEW, {
-                    type: state.exploded ? "ASSEMBLE" : "EXPLODE",
-                  })
-                }
+        {/* Real text, in shaft order. Desktop: each note hangs on a leader
+            from its anchor, in a layer over the view. Phones: a list. */}
+        <ol
+          aria-label="Callouts"
+          className={`pointer-events-none flex flex-col gap-2 lg:block ${STAGE_BOX}`}
+        >
+          {callouts.map((callout) => {
+            const above = callout.side === "above";
+            return (
+              <li
+                key={callout.part}
+                ref={(item) => {
+                  if (item) items.current.set(callout.part, item);
+                  else items.current.delete(callout.part);
+                }}
+                style={{
+                  left: `${callout.poster[0] * 100}%`,
+                  top: `${callout.poster[1] * 100}%`,
+                }}
+                className="rule-hairline py-1 lg:absolute lg:size-0 lg:border-0 lg:p-0"
               >
-                Explode
-              </Button>
-              <Button
-                variant="secondary"
-                pressed={state.mode === "xray"}
-                onClick={() =>
-                  dispatch(VIEW, {
-                    type: "SET_MODE",
-                    mode: state.mode === "xray" ? "shaded" : "xray",
-                  })
-                }
-              >
-                X-ray
-              </Button>
-            </div>
+                <span
+                  aria-hidden="true"
+                  className="absolute hidden size-1.5 -translate-1/2 rounded-full bg-ink lg:block"
+                />
+                <span
+                  aria-hidden="true"
+                  data-leader={callout.part}
+                  className={`absolute left-0 hidden w-px bg-ink lg:block ${above ? `bottom-0 origin-bottom ${LEADER_ABOVE}` : `top-0 origin-top ${LEADER_BELOW}`}`}
+                />
+                <span
+                  data-note={callout.part}
+                  className={`block type-annotation text-ink lg:absolute lg:left-2 lg:w-max lg:max-w-64 ${above ? NOTE_ABOVE : NOTE_BELOW}`}
+                >
+                  {callout.note}
+                </span>
+              </li>
+            );
+          })}
+        </ol>
 
-            {specs}
-
-            {/* The balloons' key. Folded by default: open, it scrolls inside
-              the pinned scene rather than pushing the page. */}
-            <div className="flex min-h-0 flex-col">
-              <button
-                type="button"
-                aria-expanded={listOpen}
-                onClick={() => setListOpen((open) => !open)}
-                className="flex min-h-target w-full shrink-0 cursor-pointer items-center justify-between border-rule border-t type-annotation text-ink"
-              >
-                Parts list
-                <span aria-hidden="true">{listOpen ? "−" : "+"}</span>
-              </button>
-              <AnimatePresence initial={false}>
-                {listOpen && (
-                  <motion.div
-                    key="parts"
-                    initial={{ height: 0 }}
-                    animate={{ height: "auto" }}
-                    exit={{ height: 0 }}
-                    transition={transition("move")}
-                    data-lenis-prevent=""
-                    className="min-h-0 overflow-hidden lg:overflow-y-auto"
-                  >
-                    <PartsList viewId={VIEW} names={names} />
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-
-            <p className="type-annotation lg:mt-auto">
-              <TextLink href={href}>Open the full explorer</TextLink>
-            </p>
+        <div
+          data-close=""
+          className="flex flex-col gap-3 lg:absolute lg:bottom-0 lg:left-0 lg:max-w-[36rem] lg:px-margin lg:pb-5"
+        >
+          <h2 className="type-display-m">{name}</h2>
+          <div>{status}</div>
+          {overview && <p className="type-body text-ink-muted">{overview}</p>}
+          <div>
+            <Button href={href} arrow>
+              Open the product sheet
+            </Button>
           </div>
         </div>
       </div>

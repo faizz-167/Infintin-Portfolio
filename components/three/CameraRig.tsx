@@ -10,7 +10,9 @@ import {
   cameraShots,
   isolateShot,
   type ShotId,
+  travelFraming,
 } from "@/design/three-presets";
+import { drivenCamera, onCameraDriven } from "@/lib/cameraDrive";
 import { useSceneStore } from "@/lib/store";
 import { prefersReducedMotion } from "./reducedMotion";
 import type { ViewRuntime } from "./viewRuntime";
@@ -97,9 +99,12 @@ export function CameraRig({
     invalidate();
   }, [shot, isolated, invalidate]);
 
+  useEffect(() => onCameraDriven(viewId, invalidate), [viewId, invalidate]);
+
   useFrame((state, rawDelta) => {
     const cam = camera.current;
     if (!cam) return;
+    const driven = drivenCamera(viewId);
     // drei's View sets the camera aspect just before it renders, so on the
     // very first frame it is not set yet; the view's own size is.
     const aspect = placed.current
@@ -107,12 +112,16 @@ export function CameraRig({
       : state.size.width / state.size.height;
     const framing = runtime.focus
       ? focusShot(runtime.focus)
-      : framingFor(shotRef.current, aspect);
+      : driven !== undefined
+        ? travelFraming(driven)
+        : framingFor(shotRef.current, aspect);
     goal.current.position.set(...framing.position);
     goal.current.target.set(...framing.target);
 
-    // First frame, and every frame under reduced motion: cut, don't move.
-    if (!placed.current || prefersReducedMotion()) {
+    // First frame, every frame under reduced motion, and a driven camera
+    // (the scroll is already smoothed; damping again would lag behind it):
+    // cut, don't move.
+    if (!placed.current || prefersReducedMotion() || driven !== undefined) {
       placed.current = true;
       cam.position.copy(goal.current.position);
       target.current.copy(goal.current.target);

@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import { useEffect, useRef } from "react";
 import type { PosterShot } from "@/data/types";
 import type { EnvironmentId, ShotId } from "@/design/three-presets";
+import type { CalloutAnchor } from "@/lib/calloutTrack";
 import { useSceneStore } from "@/lib/store";
 import { PosterFallback } from "./PosterFallback";
 
@@ -41,6 +42,14 @@ interface SceneViewProps {
    * that cuts or opens the model owns the framing itself.
    */
   fixedShot?: boolean;
+  /**
+   * Points on the model whose screen positions are published for the page's
+   * own callouts (`lib/calloutTrack`). Pass a stable array.
+   */
+  callouts?: readonly CalloutAnchor[];
+  /** The poster's "render of prototype" caption; off where the page shows
+   * the product status beside the view, and the caption would collide. */
+  posterCaption?: boolean;
 }
 
 /**
@@ -63,6 +72,8 @@ export function SceneView({
   eager = false,
   ownLoading = false,
   fixedShot = false,
+  callouts,
+  posterCaption = true,
 }: SceneViewProps) {
   const element = useRef<HTMLDivElement>(null);
   const shotRef = useRef(shot);
@@ -115,7 +126,13 @@ export function SceneView({
         : { "aria-hidden": true })}
     >
       {(ownLoading ? tier === "poster" : !live || !ready) && (
-        <PosterFallback poster={poster} env={env} sizes={sizes} eager={eager} />
+        <PosterFallback
+          poster={poster}
+          env={env}
+          sizes={sizes}
+          eager={eager}
+          caption={posterCaption}
+        />
       )}
       {live && (
         <SceneContent
@@ -126,6 +143,7 @@ export function SceneView({
           zoom={zoom}
           explore={explore}
           fixedShot={fixedShot}
+          callouts={callouts}
         />
       )}
     </div>

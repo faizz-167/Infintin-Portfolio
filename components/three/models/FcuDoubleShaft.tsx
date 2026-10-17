@@ -12,7 +12,9 @@ import {
   modelUrlFor,
   qualityTiers,
 } from "@/design/three-presets";
+import type { CalloutAnchor } from "@/lib/calloutTrack";
 import { useSceneStore } from "@/lib/store";
+import { CalloutTracker } from "../CalloutTracker";
 import {
   computePartLayout,
   displacementAt,
@@ -40,6 +42,8 @@ interface FcuDoubleShaftProps {
   runtime: ViewRuntime;
   /** Balloons over the view (the full explorer only). */
   balloons: boolean;
+  /** Points whose screen positions the page's callouts follow. */
+  callouts?: readonly CalloutAnchor[];
 }
 
 /**
@@ -54,6 +58,7 @@ export function FcuDoubleShaft({
   env,
   runtime,
   balloons,
+  callouts,
 }: FcuDoubleShaftProps) {
   const tier = useSceneStore((s) => s.tier) ?? "low";
   // Meshopt only; no Draco, so drei never fetches a decoder from its CDN.
@@ -186,6 +191,15 @@ export function FcuDoubleShaft({
           isolated={explorer.isolated}
           hovered={hovered}
           sectionOn={explorer.section.on}
+        />
+      )}
+      {callouts && (
+        <CalloutTracker
+          viewId={viewId}
+          runtime={runtime}
+          layout={layout}
+          registry={registry}
+          callouts={callouts}
         />
       )}
     </group>
