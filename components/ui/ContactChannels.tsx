@@ -38,7 +38,7 @@ export function ContactChannels({ className }: { className?: string }) {
             <dt className="type-annotation text-ink-muted">{channel.label}</dt>
             <dd className="type-body">
               {href ? (
-                <TextLink href={href} external={false}>
+                <TextLink href={href} external={false} arrow>
                   <ClaimText id={channel.value} />
                 </TextLink>
               ) : (

@@ -197,6 +197,23 @@
     outline: 2px solid var(--accent);
     outline-offset: 3px;
   }
+
+  /*
+   * One press for every control: it sinks 1 px while held. `translate` is
+   * its own property, so it stacks on whatever `transform` a control already
+   * animates (Button's spring scale) instead of replacing it. Transforms
+   * don't apply to inline boxes, so TextLink sinks its inner span instead.
+   * Reduced motion keeps each control's own state change and drops the move.
+   */
+  @media (prefers-reduced-motion: no-preference) {
+    :where(a[href], button, summary) {
+      transition: translate var(--duration-instant) var(--ease-settle);
+    }
+    :where(a[href], button:enabled, summary):active {
+      translate: 0 1px;
+      transition-timing-function: var(--ease-machine);
+    }
+  }
 }
 
 /*

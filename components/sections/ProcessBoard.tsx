@@ -106,6 +106,9 @@ const MAX_Y = Math.max(...corners.map(([, y]) => y));
 const BOX_W = MAX_X - MIN_X;
 const BOX_H = MAX_Y - MIN_Y;
 
+/** Where the first tile's centre sits across the board, as a fraction of its width. */
+export const FIRST_TILE_X = (project(centre(0))[0] - MIN_X) / BOX_W;
+
 type Side = "top" | "left" | "front";
 
 /**
@@ -181,7 +184,8 @@ function Tile({ index, state }: { index: number; state: StageState }) {
   const number = String(index + 1).padStart(2, "0");
   return (
     <div
-      className="process-tile absolute [transform-style:preserve-3d]"
+      className="process-tile group/tile absolute [transform-style:preserve-3d]"
+      data-reached={state === "upcoming" ? undefined : ""}
       style={{ left: u(x), top: u(y), width: u(TILE), height: u(TILE) }}
     >
       {/* Contact shadow, just above the floor so it never fights the grid. */}
@@ -222,32 +226,38 @@ function Tile({ index, state }: { index: number; state: StageState }) {
         className="process-cap absolute [transform-style:preserve-3d]"
         style={{ inset: u(0.4) }}
       >
-        {SIDES.map((side) => (
-          <Face
-            key={side}
-            side={side}
-            z={BASE_H}
-            h={CAP_H}
-            className={`${CAP_UNLIT[side]} ${
-              side === "top"
-                ? `flex items-center justify-center border text-ink-muted ${
-                    state === "upcoming"
-                      ? "border-dashed border-ink-muted"
-                      : "border-rule"
-                  }`
-                : ""
-            }`}
-          >
-            {side === "top" && <span className="type-data">{number}</span>}
-            {lit && (
-              <span
-                className={`process-lit absolute inset-0 flex items-center justify-center ${lit[side]}`}
-              >
-                {side === "top" && <span className="type-data">{number}</span>}
-              </span>
-            )}
-          </Face>
-        ))}
+        {/* The hover lift lives on its own layer: GSAP owns the cap's
+            transform (the press) and pins its `translate` to none. */}
+        <div className="absolute inset-0 transition-[translate] duration-(--duration-instant) ease-settle [transform-style:preserve-3d] group-data-hover/tile:[translate:0_0_2px]">
+          {SIDES.map((side) => (
+            <Face
+              key={side}
+              side={side}
+              z={BASE_H}
+              h={CAP_H}
+              className={`${CAP_UNLIT[side]} ${
+                side === "top"
+                  ? `flex items-center justify-center border text-ink-muted ${
+                      state === "upcoming"
+                        ? "border-dashed border-ink-muted"
+                        : "border-rule"
+                    }`
+                  : ""
+              }`}
+            >
+              {side === "top" && <span className="type-data">{number}</span>}
+              {lit && (
+                <span
+                  className={`process-lit absolute inset-0 flex items-center justify-center ${lit[side]}`}
+                >
+                  {side === "top" && (
+                    <span className="type-data">{number}</span>
+                  )}
+                </span>
+              )}
+            </Face>
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -376,7 +386,8 @@ export function ProcessBoard({ showOwners }: { showOwners: boolean }) {
         ))}
       </div>
 
-      <ol className="absolute inset-0">
+      {/* Clicks and hovers pass through to the tiles underneath. */}
+      <ol className="pointer-events-none absolute inset-0">
         {processStages.map((stage, index) => {
           const [x, y] = origin(index);
           // Under the tile's nearest corner, the lowest point it has on screen.
@@ -391,12 +402,12 @@ export function ProcessBoard({ showOwners }: { showOwners: boolean }) {
                 top: `calc(${u(sy - MIN_Y)} + 0.5rem)`,
               }}
             >
-              <div className="process-label flex flex-col items-center gap-[0.25rem]">
+              <div className="process-label group/label flex flex-col items-center gap-[0.25rem]">
                 <span
-                  className={`whitespace-nowrap border bg-ground px-1 py-[0.1875rem] type-annotation ${
+                  className={`whitespace-nowrap border bg-ground px-1 py-[0.1875rem] type-annotation transition-[translate,border-color] duration-(--duration-instant) ease-settle group-data-hover/label:-translate-y-[2px] ${
                     current
                       ? "border-accent text-accent"
-                      : "border-rule text-ink"
+                      : "border-rule text-ink group-data-hover/label:border-ink"
                   }`}
                 >
                   {stage.name}

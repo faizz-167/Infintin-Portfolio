@@ -1,6 +1,6 @@
 "use client";
 
-import { describedBy, FieldMessages } from "./FieldMessages";
+import { describedBy, FieldMessages, FocusRule } from "./FieldMessages";
 import { useFieldValidation, type Validate } from "./useFieldValidation";
 
 type SelectProps = {
@@ -51,7 +51,7 @@ export function Select({
           aria-describedby={describedBy(v.helpId, v.errorId, help, v.error)}
           onBlur={(e) => v.onBlur(e.currentTarget.value)}
           onChange={(e) => v.onChange(e.currentTarget.value)}
-          className="min-h-target w-full appearance-none rounded-xs border border-ink-muted bg-ground py-0 pr-5 pl-2 type-data text-ink aria-invalid:border-accent"
+          className="peer min-h-target w-full appearance-none rounded-xs border border-ink-muted bg-ground py-0 pr-5 pl-2 type-data text-ink aria-invalid:border-accent"
         >
           {placeholder !== undefined && <option value="">{placeholder}</option>}
           {options.map((o) => (
@@ -63,7 +63,8 @@ export function Select({
         <svg
           aria-hidden="true"
           viewBox="0 0 12 8"
-          className="pointer-events-none absolute top-1/2 right-2 h-1 w-2 -translate-y-1/2 text-ink"
+          // `:open` while the picker is up, where the browser supports it.
+          className="pointer-events-none absolute top-1/2 right-2 h-1 w-2 -translate-y-1/2 text-ink transition-[rotate] duration-(--duration-quick) ease-settle peer-open:rotate-180 motion-reduce:transition-none"
         >
           <path
             d="M1 1l5 5 5-5"
@@ -72,6 +73,7 @@ export function Select({
             strokeWidth="1.5"
           />
         </svg>
+        <FocusRule />
       </div>
       <FieldMessages
         helpId={v.helpId}

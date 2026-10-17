@@ -4,7 +4,7 @@ import { type SceneBuild, ScrollScene } from "@/components/motion/ScrollScene";
 import { SplitHeadline } from "@/components/motion/SplitHeadline";
 import { processStages } from "@/data/process";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
-import { ProcessBoard } from "./ProcessBoard";
+import { FIRST_TILE_X, ProcessBoard } from "./ProcessBoard";
 import { OwnerMark, STATE_LABEL } from "./ProcessMarks";
 
 /** Board timeline units: each run takes one, its tile lights as it lands. */
@@ -33,9 +33,13 @@ function buildBoard(tl: gsap.core.Timeline, root: HTMLElement) {
 
   // Travel is linear with the drawing and the tiles are evenly spaced, so the
   // head crosses the viewport steadily from left to right as the board moves.
+  // The board starts with the first tile centred, so the run begins mid-sheet
+  // rather than hard against the left margin.
   tl.fromTo(
     board,
-    { x: 0 },
+    {
+      x: () => view.clientWidth / 2 - board.offsetWidth * FIRST_TILE_X,
+    },
     {
       x: () => -Math.max(0, board.offsetWidth - view.clientWidth),
       duration: processStages.length * RUN + LIGHT,
@@ -131,10 +135,41 @@ function buildBoard(tl: gsap.core.Timeline, root: HTMLElement) {
 
   tl.to({}, { duration: HOLD });
 
+  // Hovering a reached tile lifts it and marks its label. The label sits in
+  // the flat layer, not inside the tile, so CSS alone can't pair them; the
+  // flag goes on both and each styles itself from it. Pointers that hover
+  // only, so a tap never leaves a tile raised.
+  const hovers = window.matchMedia("(hover: hover)").matches
+    ? [...tiles].flatMap((tile, index) => {
+        const label = labels[index];
+        if (!label || !tile.hasAttribute("data-reached")) return [];
+        const enter = () => {
+          tile.dataset.hover = "";
+          label.dataset.hover = "";
+        };
+        const leave = () => {
+          delete tile.dataset.hover;
+          delete label.dataset.hover;
+        };
+        tile.addEventListener("pointerenter", enter);
+        tile.addEventListener("pointerleave", leave);
+        return [
+          () => {
+            tile.removeEventListener("pointerenter", enter);
+            tile.removeEventListener("pointerleave", leave);
+            leave();
+          },
+        ];
+      })
+    : [];
+
   // The travel distance depends on the viewport; measure it again on resize.
   const remeasure = () => tl.invalidate();
   ScrollTrigger.addEventListener("refreshInit", remeasure);
-  return () => ScrollTrigger.removeEventListener("refreshInit", remeasure);
+  return () => {
+    ScrollTrigger.removeEventListener("refreshInit", remeasure);
+    for (const off of hovers) off();
+  };
 }
 
 const build: SceneBuild = (tl, { conditions, root }) => {

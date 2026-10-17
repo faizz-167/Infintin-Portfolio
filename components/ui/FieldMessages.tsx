@@ -65,3 +65,17 @@ export function describedBy(
     undefined
   );
 }
+
+/**
+ * Accent rule along a control's bottom edge, drawn in from the left while the
+ * control has focus and retracted on blur. Sits after the control (a `peer`)
+ * inside a relative wrapper; 2 px so it reads over the 1 px border.
+ */
+export function FocusRule() {
+  return (
+    <span
+      aria-hidden="true"
+      className="wipe-x pointer-events-none absolute inset-x-0 bottom-0 h-[2px] bg-accent peer-focus:wipe-on"
+    />
+  );
+}

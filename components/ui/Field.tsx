@@ -1,6 +1,6 @@
 "use client";
 
-import { describedBy, FieldMessages } from "./FieldMessages";
+import { describedBy, FieldMessages, FocusRule } from "./FieldMessages";
 import { useFieldValidation, type Validate } from "./useFieldValidation";
 
 type FieldProps = {
@@ -23,7 +23,7 @@ type FieldProps = {
 };
 
 const controlClasses =
-  "w-full rounded-xs border border-ink-muted bg-ground px-2 type-data text-ink aria-invalid:border-accent";
+  "peer block w-full rounded-xs border border-ink-muted bg-ground px-2 type-data text-ink aria-invalid:border-accent";
 
 /** Text input with an always-visible label, help text and inline validation. */
 export function Field({
@@ -57,23 +57,26 @@ export function Field({
         {label}
         {required && <span className="text-ink-muted"> (required)</span>}
       </label>
-      {multiline ? (
-        <textarea
-          {...shared}
-          rows={5}
-          className={`${controlClasses} py-1`}
-          onBlur={(e) => v.onBlur(e.currentTarget.value)}
-          onChange={(e) => v.onChange(e.currentTarget.value)}
-        />
-      ) : (
-        <input
-          {...shared}
-          type={type}
-          className={`${controlClasses} min-h-target`}
-          onBlur={(e) => v.onBlur(e.currentTarget.value)}
-          onChange={(e) => v.onChange(e.currentTarget.value)}
-        />
-      )}
+      <div className="relative">
+        {multiline ? (
+          <textarea
+            {...shared}
+            rows={5}
+            className={`${controlClasses} py-1`}
+            onBlur={(e) => v.onBlur(e.currentTarget.value)}
+            onChange={(e) => v.onChange(e.currentTarget.value)}
+          />
+        ) : (
+          <input
+            {...shared}
+            type={type}
+            className={`${controlClasses} min-h-target`}
+            onBlur={(e) => v.onBlur(e.currentTarget.value)}
+            onChange={(e) => v.onChange(e.currentTarget.value)}
+          />
+        )}
+        <FocusRule />
+      </div>
       <FieldMessages
         helpId={v.helpId}
         errorId={v.errorId}

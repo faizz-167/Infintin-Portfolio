@@ -29,9 +29,13 @@ export function Disclosure({ summary, children, className }: DisclosureProps) {
   const spring = useRef(transition("move"));
   spring.current = transition("move");
   const toggled = useRef(false);
+  // Set by the first toggle. Until then the content keeps its resting look,
+  // so a panel the browser opened on its own (no JS yet) is never faded out.
+  const [touched, setTouched] = useState(false);
 
   const expand = () => {
     toggled.current = true;
+    setTouched(true);
     setOpen(true);
     setExpanded(true);
   };
@@ -79,6 +83,7 @@ export function Disclosure({ summary, children, className }: DisclosureProps) {
           e.preventDefault();
           if (expanded) {
             toggled.current = true;
+            setTouched(true);
             setExpanded(false);
           } else {
             expand();
@@ -87,12 +92,34 @@ export function Disclosure({ summary, children, className }: DisclosureProps) {
         className="flex min-h-target cursor-pointer list-none items-center justify-between gap-2 py-1 type-annotation text-ink [&::-webkit-details-marker]:hidden"
       >
         {summary}
-        <span aria-hidden="true" className="shrink-0">
-          {expanded ? "−" : "+"}
-        </span>
+        {/* A plus whose upright stroke turns a quarter turn flat to make the
+            minus, so the marker moves rather than swapping glyphs. */}
+        <svg
+          aria-hidden="true"
+          viewBox="0 0 12 12"
+          className="size-[0.75rem] shrink-0 overflow-visible"
+        >
+          <path d="M0 6h12" stroke="currentColor" strokeWidth="1.5" />
+          <path
+            d="M6 0v12"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            className={`origin-center transition-[rotate] duration-(--duration-quick) ease-settle motion-reduce:transition-none ${
+              expanded ? "rotate-90" : ""
+            }`}
+          />
+        </svg>
       </summary>
       <div ref={panel} className="overflow-hidden">
-        <div className="pb-3">{children}</div>
+        <div
+          // Opening fades in from `@starting-style` as the browser first
+          // renders the content; closing fades out while the height shrinks.
+          className={`pb-3 transition-[opacity,translate] duration-(--duration-quick) ease-settle starting:-translate-y-[4px] starting:opacity-0 motion-reduce:transition-none ${
+            touched && !expanded ? "-translate-y-[4px] opacity-0" : ""
+          }`}
+        >
+          {children}
+        </div>
       </div>
     </details>
   );

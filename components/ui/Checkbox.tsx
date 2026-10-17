@@ -67,6 +67,8 @@ export function Checkbox({
               fill="none"
               stroke="currentColor"
               strokeWidth="2"
+              pathLength={1}
+              className="[stroke-dasharray:1] [stroke-dashoffset:1] [.peer:checked~svg_&]:[stroke-dashoffset:0] [.peer:checked~svg_&]:transition-[stroke-dashoffset] [.peer:checked~svg_&]:duration-(--duration-quick) [.peer:checked~svg_&]:ease-settle motion-reduce:transition-none"
             />
           </svg>
         </span>
