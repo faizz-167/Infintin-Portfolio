@@ -88,12 +88,17 @@ export function HeroStage({
   const [peeking, setPeeking] = useState(false);
   const [interacted, setInteracted] = useState(false);
 
+  const assembled = phase === "assembled";
+
   // Assembly lock. The parts wait exploded from the first frame; once the
   // model is up they seat along the shaft and the headline machines to width.
+  // Only until assembled: `<Activity>` keeps the phase when the page is hidden
+  // and shown again, and re-runs this effect, which would leave the parts
+  // exploded with no assembly left to bring them back.
   useEffect(() => {
-    if (!reduced) driveExplode(VIEW, 1);
+    if (!reduced && !assembled) driveExplode(VIEW, 1);
     return () => driveExplode(VIEW, null);
-  }, [reduced]);
+  }, [reduced, assembled]);
 
   // The late clock starts once nothing covers the hero.
   useEffect(() => {
@@ -101,8 +106,6 @@ export function HeroStage({
     const timer = setTimeout(() => setLate(true), LATE_MS);
     return () => clearTimeout(timer);
   }, [covered]);
-
-  const assembled = phase === "assembled";
   useEffect(() => {
     if (assembled) return;
     if (tier === "poster") {

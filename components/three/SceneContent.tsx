@@ -70,7 +70,13 @@ export default function SceneContent({
 
   return (
     <>
-      <View className="absolute inset-0" visible={visible}>
+      {/* One CSS pixel past the placeholder on every side. three.js rounds
+          each side of the scissor box to device pixels on its own, so at a
+          fractional offset the drawn box can stop a row short of the
+          placeholder's edge, and the page ground behind the canvas shows
+          through as a hairline. The overlap sits under the ground painted
+          around the view (`ground-hole`), so it never shows. */}
+      <View className="absolute -inset-px" visible={visible}>
         <LabStage env={env}>
           <CameraRig viewId={id} runtime={runtime} fixedShot={fixedShot} />
           <Suspense fallback={null}>
