@@ -23,6 +23,11 @@ import type { ClaimId, ClaimQualifier, Product, SpecRow } from "@/data/types";
 // explorer's deep-link state is read in the browser.
 export const ensureStatic = "navigation";
 
+// The App Shell is shared across slugs and can't hold `params`, and nearly
+// everything here depends on the product, so a Suspense shell would only be a
+// placeholder. Navigation waits instead, on a payload that is already static.
+export const instant = false;
+
 export function generateStaticParams() {
   return products.map((product) => ({ slug: product.slug }));
 }
