@@ -343,21 +343,10 @@
 }
 
 /*
- * Hover wipes (button fill, link underline) are CSS transitions: they are
+ * Hover wipes (link underlines) are CSS transitions: they are
  * hover-only, never dragged or toggled. They grow from the start edge and
  * retract back to it. Reduced motion swaps the scale for a cross-fade.
  */
-@utility wipe-y {
-  transform: scaleY(0);
-  transform-origin: bottom;
-  transition: transform var(--duration-quick) var(--ease-settle);
-  @media (prefers-reduced-motion: reduce) {
-    transform: none;
-    opacity: 0;
-    transition: opacity var(--duration-quick) var(--ease-settle);
-  }
-}
-
 @utility wipe-x {
   transform: scaleX(0);
   transform-origin: left;
@@ -366,6 +355,38 @@
     transform: none;
     opacity: 0;
     transition: opacity var(--duration-quick) var(--ease-settle);
+  }
+}
+
+/*
+ * Button fill: grows in from the edge the pointer entered by and retracts
+ * out through the edge it left by. Button writes `data-edge` (top, right,
+ * bottom, left) and `data-on` on pointer enter/leave; no edge means bottom.
+ * Reduced motion: Button never writes an edge, so it is a plain cross-fade.
+ */
+@utility wipe-edge {
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform var(--duration-quick) var(--ease-settle);
+  &[data-edge="top"] {
+    transform-origin: top;
+  }
+  &[data-edge="left"] {
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+  &[data-edge="right"] {
+    transform: scaleX(0);
+    transform-origin: right;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    transform: none;
+    opacity: 0;
+    transition: opacity var(--duration-quick) var(--ease-settle);
+  }
+  &[data-on] {
+    transform: none;
+    opacity: 1;
   }
 }
 
