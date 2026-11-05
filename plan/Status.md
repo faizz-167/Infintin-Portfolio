@@ -1,7 +1,7 @@
 # Infintin Redesign — Status
 
 **Last updated:** 2026-11-05
-**Current phase:** 11 next (not started; spec now lists six known issues from the 2026-11-05 design review). Phases 13–17 (client requests, run before 11) are built and committed; 13–16 still have open checks, as do 05 and 06.
+**Current phase:** 11 in progress (built; blocked on the JS budget / first-load LCP decision, client copy, and device, screen-reader and browser passes). Phases 13–17 (client requests, run before 11) are built and committed; 13–16 still have open checks, as do 05 and 06.
 **Overall:** 10 / 17 active phases completed (Phase 12 deferred)
 
 ## Rules
@@ -27,7 +27,7 @@
 | 08 | Home: Hero & Blueprint | [phase-08-home-hero.md](phase-08-home-hero.md) | 05, 06.2, 07 | COMPLETED | 6 / 6 |
 | 09 | Home: remaining scenes | [phase-09-home-scenes.md](phase-09-home-scenes.md) | 06, 08 | COMPLETED | 9 / 9 |
 | 10 | Product route & contact page (UI) | [phase-10-product-contact.md](phase-10-product-contact.md) | 03, 06, 07 | COMPLETED | 7 / 7 |
-| 11 | A11y, responsive, performance, SEO, launch QA | [phase-11-quality-launch.md](phase-11-quality-launch.md) | 08, 09, 10 | NOT_STARTED | 0 / 8 |
+| 11 | A11y, responsive, performance, SEO, launch QA | [phase-11-quality-launch.md](phase-11-quality-launch.md) | 08, 09, 10 | IN_PROGRESS | 3 / 8 |
 | 12 | Enquiry delivery integration | [phase-12-enquiry-delivery.md](phase-12-enquiry-delivery.md) | 10.7 + client | DEFERRED | 0 / 5 |
 | 13 | Type motion & preloader | [phase-13-type-and-preloader.md](phase-13-type-and-preloader.md) | 07, 08, 10 | IN_PROGRESS | 4 / 4 (reload / reduced-motion / no-JS check open) |
 | 14 | Isometric Process board | [phase-14-process-isometric.md](phase-14-process-isometric.md) | 07, 09 | IN_PROGRESS | — (fps, screen reader, reduced motion, no-JS open) |
@@ -52,6 +52,8 @@ Phase 14 — Process board. Built; open: ≈60 fps through the scrub, screen-rea
 Phase 15 — Portfolio teaser. Built; awaiting client review. Open: real screen-reader pass (DOM order checked). Known: 1 px seam at the edges of live views at fractional offsets.
 
 Phase 16 — micro-interactions. Built; open: reduced motion, touch emulation and CLS in a browser.
+
+Phase 11 — launch QA. Findings in `spec/qa-report.md`. Open: initial JS on `/` 230.5 KB gz vs 230 KB budget (product 226.9, contact 221.3); first-load LCP 5.5 s (preloader holds the H1) vs 2.5 s; R3F `THREE.Clock` warning; Lighthouse Performance score not measurable here; NVDA/VoiceOver, real devices, Firefox/Safari, Search Console; three copy items with the client.
 
 Phase 17 — completed by script on the production build; not tried with a real mouse or touch device. Known: leaving mid-grow through a different edge snaps the transform origin.
 
@@ -113,6 +115,11 @@ None for Phases 00–11. Several claims and content items are pending client app
 | 2026-10-14 | While `contact.email` is pending, the not-connected form message offers copy only, no address. | Client |
 | 2026-10-14 | Spec row label "Shaft" renamed "Output shafts" (collided with pending claim text in `claims:check`). | Phase 10 |
 | 2026-10-14 | Claims approved per PRD: all except energy saving, payback, rare-earth wording, dimensions, converter efficiency and IP67 (pending), and "100% indigenously designed" (withheld; PRD §5 forbids absolute claims). 76 approved, 6 pending, 1 withheld. | Client |
+| 2026-11-05 | Initial JS budget raised to 230 KB gz (from 150). R3F bumped to 9.8.2. | Client |
+| 2026-11-05 | Title block yields: fades out while text or a control is under it, back when the corner is clear. | Client |
+| 2026-11-05 | Share card is a static JPEG in `public/og/` spread through `siteOpenGraph` (`ImageResponse` can't decode WebP; a page's own `openGraph` drops an inherited `opengraph-image` file). | Phase 11 |
+| 2026-11-05 | No Product JSON-LD while the motor is a prototype with no offer; Organization only. | Phase 11 |
+| 2026-11-05 | Contact shadow is our own `StageShadow` (drei `ContactShadows` leaks its render targets). | Phase 11 |
 | 2026-10-14 | Menu uses springs (§7.2) rather than `ease-settle` tweens; headline width machining ends at the style's own width, not a fixed 112. | Phase 07 |
 
 ## Open questions (client)
@@ -163,3 +170,8 @@ See `spec/content-guardrails.md` §3. Highest priority before Phase 03 content e
 - 2026-10-25 — Next.js bumped to 16.4.3 with a `sharp` override (commit 4e9cd11). Not logged at the time.
 - 2026-11-05 — Status check: table and header brought up to date with phases 13–17. `node_modules` was missing; restored with `npm ci` (lockfile only, no new packages; npm reports 4 moderate audit findings, not acted on). On Next 16.4.3: build, typecheck, lint, tests (11) and claims:check pass. Typecheck needs a build (or `next typegen`) first on a fresh clone: `LayoutProps`/`PageProps` are generated into `.next/types`.
 - 2026-11-05 — Design review (unslop audit) of `/`, product page and `/contact` at 1440 × 900: no slop; the Drawing Set direction holds. Six known issues added to the Phase 11 spec (title block covering content, captions outside their frame, three copy repeats/case items that need the client, npm audit findings).
+- 2026-11-05 — Phase 11 built on the production build: title block yields to content; hero poster caption off; SEO (titles, descriptions, canonicals, OG/Twitter card, sitemap, robots, Organization JSON-LD); 404, error and global-error pages; focus moves to the new page's h1 after client-side navigation (Tab used to land in the footer); contact-shadow GPU leak fixed (+14 render targets per explorer cycle, now flat). Lighthouse a11y/BP/SEO 100 on every route, mobile and desktop; INP 112 ms; CLS 0.047; repeat-load LCP 1.56 s. Fails: initial JS 267 KB gz (budget 150), first-load LCP 5.5 s (preloader), one R3F deprecation warning. Build, typecheck, lint, tests (11) and claims:check pass.
+- 2026-11-05 — JS budget raised to 230 KB; R3F 9.8.2 installed (still raises the `THREE.Clock` warning). Framer Motion moved to `m` + `LazyMotion`, but `motion/react` keeps the whole library in the bundle: no saving (267 KB). Importing `framer-motion` directly measured 235 / 247 / 244 KB on `/`, product, `/contact`; not kept, as it would be a new declared dependency.
+- 2026-11-05 — `framer-motion` 14.6.0 added (Client OK) and imported directly; `Disclosure` off `useAnimate`; mobile menu sheet lazy-loaded on first intent. Initial JS: `/` 233, product 229, `/contact` 224 KB gz. `motion` package removed (unused).
+- 2026-11-05 — Client: "Contact" removed from the nav (header, menu, footer); the "Talk to engineering" action already opens the form. Product hero and "Next steps" cut to one button each, "Discuss technical fit" ("Request a pilot" and "Contact engineering" opened the same form); product data now has one `cta`.
+- 2026-11-05 — GSAP CustomEase replaced by our own cubic-bezier eases (same curves, tested against CustomEase). Initial JS: `/` 230.5, product 226.9, `/contact` 221.3 KB gz.

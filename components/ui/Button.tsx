@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "motion/react";
+import { m } from "framer-motion";
 import {
   type MouseEventHandler,
   type PointerEvent,
@@ -11,7 +11,7 @@ import { LetterSwap } from "@/components/motion/LetterSwap";
 import { useMotionPreference } from "@/components/motion/useMotionPreference";
 import { RouteLink } from "./RouteLink";
 
-const MotionLink = motion.create(RouteLink);
+const MotionLink = m.create(RouteLink);
 
 type Variant = "primary" | "secondary" | "text";
 type Size = "md" | "lg";
@@ -183,7 +183,7 @@ export function Button(props: ButtonProps) {
   }
 
   return (
-    <motion.button
+    <m.button
       type={props.type ?? "button"}
       disabled={disabled}
       onClick={props.onClick}
@@ -196,6 +196,6 @@ export function Button(props: ButtonProps) {
       onPointerLeave={onPointerLeave}
     >
       {content}
-    </motion.button>
+    </m.button>
   );
 }

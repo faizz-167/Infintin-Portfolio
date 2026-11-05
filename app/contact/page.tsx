@@ -9,14 +9,23 @@ import {
 import { claimString } from "@/components/ui/ClaimText";
 import { ContactChannels } from "@/components/ui/ContactChannels";
 import { enquiryTypes } from "@/data/contact";
+import { siteOpenGraph } from "@/lib/seo";
 
 export const ensureStatic = "navigation";
 
+const DESCRIPTION =
+  "Talk to Infintin's engineers about a fan coil unit programme, an OEM integration or a pilot.";
+
 export const metadata: Metadata = {
   title: "Contact",
-  description:
-    "Talk to Infintin's engineers about a fan coil unit programme, an OEM integration or a pilot.",
+  description: DESCRIPTION,
   alternates: { canonical: "/contact" },
+  openGraph: {
+    ...siteOpenGraph,
+    title: "Contact",
+    description: DESCRIPTION,
+    url: "/contact",
+  },
 };
 
 /**

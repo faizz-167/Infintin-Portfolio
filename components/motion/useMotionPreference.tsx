@@ -1,6 +1,6 @@
 "use client";
 
-import { MotionConfig, useReducedMotion } from "motion/react";
+import { MotionConfig, useReducedMotion } from "framer-motion";
 import { createContext, type ReactNode, useContext } from "react";
 import {
   crossFade,

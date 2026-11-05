@@ -277,6 +277,9 @@ export function HeroStage({
             rotate
             ownLoading
             fixedShot
+            // The status sits under the lede, and the full-bleed view's
+            // corner is outside the sheet frame on desktop.
+            posterCaption={false}
             label="3D model of the fan coil unit motor prototype. Arrow keys turn it; hold E to look inside."
             className="size-full"
           />

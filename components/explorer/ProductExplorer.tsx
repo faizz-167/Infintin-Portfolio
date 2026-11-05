@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, m } from "framer-motion";
 import {
   type KeyboardEvent,
   type ReactNode,
@@ -165,7 +165,7 @@ export function ProductExplorer({
         </button>
         <AnimatePresence initial={false}>
           {listOpen && (
-            <motion.div
+            <m.div
               key="parts"
               initial={{ height: 0 }}
               animate={{ height: "auto" }}
@@ -174,7 +174,7 @@ export function ProductExplorer({
               className="overflow-hidden"
             >
               <PartsList viewId={id} names={names} />
-            </motion.div>
+            </m.div>
           )}
         </AnimatePresence>
       </div>

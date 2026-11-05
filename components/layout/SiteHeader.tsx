@@ -8,7 +8,8 @@ import { RouteLink } from "@/components/ui/RouteLink";
 import { company } from "@/data/company";
 import { navigation, primaryAction } from "@/data/navigation";
 import { useActiveSheet } from "@/lib/sheets";
-import { isCurrent, MenuOverlay } from "./MenuOverlay";
+import { isCurrent } from "./isCurrent";
+import { MenuOverlay } from "./MenuOverlay";
 import { useEnvUnder } from "./useEnvUnder";
 
 /**

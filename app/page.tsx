@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { Fragment, type ReactNode } from "react";
 import { PageTransition } from "@/components/layout/PageTransition";
 import { SectionSweep } from "@/components/motion/SectionSweep";
@@ -13,7 +14,27 @@ import {
   projectShown,
 } from "@/components/sections/ProjectSpotlight";
 import { TechnicalEdge } from "@/components/sections/TechnicalEdge";
+import { claimString } from "@/components/ui/ClaimText";
+import { company } from "@/data/company";
 import type { EnvironmentId } from "@/design/three-presets";
+import { organizationJsonLd, siteOpenGraph } from "@/lib/seo";
+
+// The title carries the search terms the PRD leads with (HVAC, fan coil unit
+// motors, controllers); the description is the approved vision line.
+const TITLE = `${company.shortName} · Fan coil unit motors and controllers for HVAC`;
+const DESCRIPTION = claimString(company.vision) ?? undefined;
+
+export const metadata: Metadata = {
+  title: { absolute: TITLE },
+  description: DESCRIPTION,
+  alternates: { canonical: "/" },
+  openGraph: {
+    ...siteOpenGraph,
+    title: TITLE,
+    description: DESCRIPTION,
+    url: "/",
+  },
+};
 
 type Scene = {
   id: string;
@@ -69,6 +90,11 @@ export default function Home() {
 
   return (
     <PageTransition>
+      <script
+        type="application/ld+json"
+        // biome-ignore lint/security/noDangerouslySetInnerHtml: approved claims only, `<` escaped
+        dangerouslySetInnerHTML={{ __html: organizationJsonLd() }}
+      />
       <Hero />
       <Blueprint />
       {cuts}

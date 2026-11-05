@@ -3,6 +3,7 @@
 import { type ReactNode, useEffect, ViewTransition } from "react";
 import { useLenis } from "@/components/motion/SmoothScroll";
 import { ScrollTrigger } from "@/lib/gsap";
+import { focusPageHeading, isFirstPageShow } from "@/lib/routeFocus";
 
 // Class names for the route wipe (globals.css). Only typed navigations from
 // RouteLink animate; back/forward and refreshes carry no type and swap
@@ -27,6 +28,9 @@ const exit = {
  * routes alive, and a page coming back from `display: none` needs Lenis and
  * ScrollTrigger to measure it again. Child scenes rebuild their triggers in
  * layout effects, which run before this effect.
+ *
+ * And moves focus to the page's heading when it is shown by a client-side
+ * navigation (see `focusPageHeading`).
  */
 export function PageTransition({ children }: { children: ReactNode }) {
   const lenis = useLenis();
@@ -35,6 +39,12 @@ export function PageTransition({ children }: { children: ReactNode }) {
     lenis?.resize();
     ScrollTrigger.refresh();
   }, [lenis]);
+
+  // Its own effect with no inputs: it runs once per show (mount, or coming
+  // back from `<Activity>`), never again when Lenis arrives.
+  useEffect(() => {
+    if (!isFirstPageShow()) focusPageHeading();
+  }, []);
 
   return (
     <ViewTransition enter={enter} exit={exit} default="none">

@@ -4,10 +4,13 @@ import { Preloader } from "@/components/layout/Preloader";
 import { SheetFrame } from "@/components/layout/SheetFrame";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
+import { MotionFeatures } from "@/components/motion/MotionFeatures";
 import { SmoothScroll } from "@/components/motion/SmoothScroll";
 import { SiteCanvas } from "@/components/three/SiteCanvas";
 import { ClaimText } from "@/components/ui/ClaimText";
+import { company } from "@/data/company";
 import { preloadDecisionScript } from "@/lib/preloader";
+import { siteOpenGraph, siteUrl } from "@/lib/seo";
 import "./globals.css";
 
 // Variable fonts: next/font only ships the wght axis unless extra axes are
@@ -26,12 +29,14 @@ const sourceSerif = Source_Serif_4({
 });
 
 export const metadata: Metadata = {
-  // Placeholder: the current site's domain, until the launch domain is confirmed.
-  metadataBase: new URL("https://infintin.in"),
+  metadataBase: siteUrl,
   title: {
-    default: "Infintin",
-    template: "%s · Infintin",
+    default: company.shortName,
+    template: `%s · ${company.shortName}`,
   },
+  applicationName: company.shortName,
+  openGraph: siteOpenGraph,
+  twitter: { card: "summary_large_image" },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -57,18 +62,20 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         >
           Skip to content
         </a>
-        <SmoothScroll>
-          <Preloader />
-          <SiteHeader />
-          {/* Positioned above the fixed canvas (z-canvas), which shows through
-              wherever the page leaves a scene view's placeholder unpainted. */}
-          <main id="content" className="relative z-content">
-            {children}
-          </main>
-          <SiteFooter />
-          <SheetFrame status={<ClaimText id="product.status" />} />
-        </SmoothScroll>
-        <SiteCanvas />
+        <MotionFeatures>
+          <SmoothScroll>
+            <Preloader />
+            <SiteHeader />
+            {/* Positioned above the fixed canvas (z-canvas), which shows through
+                wherever the page leaves a scene view's placeholder unpainted. */}
+            <main id="content" className="relative z-content">
+              {children}
+            </main>
+            <SiteFooter />
+            <SheetFrame status={<ClaimText id="product.status" />} />
+          </SmoothScroll>
+          <SiteCanvas />
+        </MotionFeatures>
       </body>
     </html>
   );

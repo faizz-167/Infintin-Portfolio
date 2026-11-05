@@ -58,11 +58,8 @@ export const products = [
     modelRef: "fcu-double-shaft",
     posterRefs: ["hero", "elevation"],
     cta: {
-      primary: {
-        label: "Discuss technical fit",
-        href: "/contact?type=oem-integration",
-      },
-      secondary: { label: "Request a pilot", href: "/contact?type=pilot" },
+      label: "Discuss technical fit",
+      href: "/contact?type=oem-integration",
     },
   },
 ] as const satisfies readonly Product[];

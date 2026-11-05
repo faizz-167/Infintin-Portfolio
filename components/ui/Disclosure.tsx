@@ -1,7 +1,7 @@
 "use client";
 
-import { useAnimate } from "motion/react";
-import { type ReactNode, useLayoutEffect, useRef, useState } from "react";
+import { m, useMotionValue } from "framer-motion";
+import { type ReactNode, useState } from "react";
 import { useMotionPreference } from "@/components/motion/useMotionPreference";
 
 type DisclosureProps = {
@@ -17,56 +17,39 @@ type DisclosureProps = {
  * panel; closing shrinks it and only then drops `open`, since the browser
  * hides the content the instant the attribute goes.
  *
- * The panel carries no inline height until a toggle runs, so the server HTML
+ * The panel's height stays `auto` until a toggle runs, so the server HTML
  * opens normally before (or without) hydration.
+ *
+ * Height is driven by the `m.div`'s `animate` prop rather than `useAnimate`:
+ * that hook bundles Framer Motion's whole animation engine into the page,
+ * while `m` animates through the features `MotionFeatures` loads later.
  */
 export function Disclosure({ summary, children, className }: DisclosureProps) {
   const [expanded, setExpanded] = useState(false);
   const [open, setOpen] = useState(false);
-  const [panel, animate] = useAnimate<HTMLDivElement>();
   const { transition } = useMotionPreference();
-  // A ref, so re-renders mid-animation don't restart it.
-  const spring = useRef(transition("move"));
-  spring.current = transition("move");
-  const toggled = useRef(false);
-  // Set by the first toggle. Until then the content keeps its resting look,
-  // so a panel the browser opened on its own (no JS yet) is never faded out.
+  // The panel's height, "auto" until the first toggle (the same as no inline
+  // height). An open starts from it: set to 0 first when the panel is at
+  // rest, since by the time the animation runs `open` is committed and the
+  // panel would already measure full height; mid-animation it holds the
+  // current height, so a toggle reverses from wherever the panel is.
+  const height = useMotionValue<number | string>("auto");
+  // Set by the first toggle. Until then the panel has no animation target and
+  // the content keeps its resting look, so a panel the browser opened on its
+  // own (no JS yet) is never faded out or clamped.
   const [touched, setTouched] = useState(false);
 
   const expand = () => {
-    toggled.current = true;
+    if (height.get() === "auto") height.set(0);
     setTouched(true);
     setOpen(true);
     setExpanded(true);
   };
 
-  // Layout effect: `open` is committed, so the content can be measured before
-  // the browser paints it at full height. Starts from the current height, so
-  // a toggle mid-animation reverses smoothly.
-  useLayoutEffect(() => {
-    const el = panel.current;
-    if (!toggled.current || !el) return;
-    // No inline height means nothing is running: start from fully closed or
-    // fully open. Otherwise pick up from wherever the last animation stopped.
-    const from =
-      el.style.height === ""
-        ? expanded
-          ? 0
-          : el.scrollHeight
-        : el.getBoundingClientRect().height;
-    const to = expanded ? el.scrollHeight : 0;
-    let cancelled = false;
-    const controls = animate(el, { height: [from, to] }, spring.current);
-    controls.then(() => {
-      if (cancelled) return;
-      el.style.height = "";
-      if (!expanded) setOpen(false);
-    });
-    return () => {
-      cancelled = true;
-      controls.stop();
-    };
-  }, [expanded, animate, panel]);
+  const collapse = () => {
+    setTouched(true);
+    setExpanded(false);
+  };
 
   return (
     <details
@@ -81,13 +64,8 @@ export function Disclosure({ summary, children, className }: DisclosureProps) {
       <summary
         onClick={(e) => {
           e.preventDefault();
-          if (expanded) {
-            toggled.current = true;
-            setTouched(true);
-            setExpanded(false);
-          } else {
-            expand();
-          }
+          if (expanded) collapse();
+          else expand();
         }}
         className="flex min-h-target cursor-pointer list-none items-center justify-between gap-2 py-1 type-annotation text-ink [&::-webkit-details-marker]:hidden"
       >
@@ -110,7 +88,15 @@ export function Disclosure({ summary, children, className }: DisclosureProps) {
           />
         </svg>
       </summary>
-      <div ref={panel} className="overflow-hidden">
+      <m.div
+        className="overflow-hidden"
+        style={{ height }}
+        animate={touched ? { height: expanded ? "auto" : 0 } : undefined}
+        transition={transition("move")}
+        onAnimationComplete={() => {
+          if (!expanded) setOpen(false);
+        }}
+      >
         <div
           // Opening fades in from `@starting-style` as the browser first
           // renders the content; closing fades out while the height shrinks.
@@ -120,7 +106,7 @@ export function Disclosure({ summary, children, className }: DisclosureProps) {
         >
           {children}
         </div>
-      </div>
+      </m.div>
     </details>
   );
 }

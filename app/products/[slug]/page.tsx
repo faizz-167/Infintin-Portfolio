@@ -18,6 +18,7 @@ import { TextLink } from "@/components/ui/TextLink";
 import { getClaim } from "@/data/claims";
 import { getProduct, PRODUCT_NAME_FALLBACK, products } from "@/data/products";
 import type { ClaimId, ClaimQualifier, Product, SpecRow } from "@/data/types";
+import { siteOpenGraph } from "@/lib/seo";
 
 // Every product page is built ahead; nothing on it reads the request. The
 // explorer's deep-link state is read in the browser.
@@ -72,7 +73,7 @@ export async function generateMetadata({
   params,
 }: PageProps<"/products/[slug]">): Promise<Metadata> {
   const product = getProduct((await params).slug);
-  if (!product) return {};
+  if (!product) notFound();
   const name = claimString(product.name) ?? PRODUCT_NAME_FALLBACK;
   const text = description(product, name);
   return {
@@ -82,15 +83,8 @@ export async function generateMetadata({
     openGraph: {
       title: name,
       description: text,
-      type: "website",
-      images: [
-        {
-          url: `/posters/${product.slug}-hero-lab.webp`,
-          width: 2706,
-          height: 1520,
-          alt: `${name}, rendered from its CAD model`,
-        },
-      ],
+      url: `/products/${product.slug}`,
+      ...siteOpenGraph,
     },
   };
 }
@@ -115,12 +109,9 @@ export default async function ProductPage({
           </StatusTag>
         </div>
       </div>
-      <div className="flex flex-wrap gap-2">
-        <Button href={product.cta.primary.href} arrow>
-          {product.cta.primary.label}
-        </Button>
-        <Button href={product.cta.secondary.href} variant="secondary">
-          {product.cta.secondary.label}
+      <div>
+        <Button href={product.cta.href} arrow>
+          {product.cta.label}
         </Button>
       </div>
     </div>
@@ -249,19 +240,11 @@ export default async function ProductPage({
             Tell us about your fan coil unit and its duty, and we'll talk
             through technical fit and what an evaluation would involve.
           </p>
-          <div className="flex flex-wrap gap-2">
-            <Button href={product.cta.primary.href} arrow>
-              {product.cta.primary.label}
-            </Button>
-            <Button href={product.cta.secondary.href} variant="secondary">
-              {product.cta.secondary.label}
+          <div>
+            <Button href={product.cta.href} arrow>
+              {product.cta.label}
             </Button>
           </div>
-          <p className="type-annotation">
-            <TextLink href="/contact?type=product">
-              Contact engineering
-            </TextLink>
-          </p>
         </section>
       </ScrollScene>
     </PageTransition>

@@ -80,7 +80,8 @@ export interface Product {
   posterRefs: readonly PosterShot[];
   /** Path under `public/`, set only once the client approves the file. */
   datasheet?: string;
-  cta: { primary: CtaLink; secondary: CtaLink };
+  /** One way in: pilots and general questions are enquiry types in the form. */
+  cta: CtaLink;
 }
 
 // ---------------------------------------------------------------- Parts

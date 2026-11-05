@@ -3,6 +3,7 @@
 import { type ReactNode, useRef } from "react";
 import { TitleBlock } from "@/components/ui/TitleBlock";
 import { useActiveSheet } from "@/lib/sheets";
+import { useContentUnder } from "./useContentUnder";
 import { useEnvUnder } from "./useEnvUnder";
 
 /**
@@ -10,11 +11,16 @@ import { useEnvUnder } from "./useEnvUnder";
  * title block in the bottom-right corner (current scene, sheet n of N,
  * status). Desktop only; narrow screens show the scene name in the header.
  * Purely visual and transparent to the pointer.
+ *
+ * The title block never covers the page: it fades out while text or a
+ * control is under it and returns once the corner is clear. Reserving the
+ * corner can't work on a scrolling page, where every line passes through it.
  */
 export function SheetFrame({ status }: { status: ReactNode }) {
   const block = useRef<HTMLDivElement>(null);
   const env = useEnvUnder(block, 0.5, 0.5);
   const sheet = useActiveSheet();
+  const covered = useContentUnder(block);
 
   return (
     <div
@@ -29,6 +35,14 @@ export function SheetFrame({ status }: { status: ReactNode }) {
         data-env={env}
         // Overlaps the frame line by a pixel so the borders coincide.
         className={`absolute -right-px -bottom-px ${sheet ? "" : "invisible"}`}
+        style={{
+          opacity: covered ? 0 : 1,
+          // Out at once, back after a beat: content scrolling through the
+          // corner shouldn't make the block flicker between lines.
+          transition: covered
+            ? "opacity var(--duration-instant) var(--ease-settle)"
+            : "opacity var(--duration-quick) var(--ease-settle) var(--duration-base)",
+        }}
       >
         <TitleBlock
           sheetName={sheet?.name ?? ""}

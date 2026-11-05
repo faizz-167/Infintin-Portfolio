@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "motion/react";
+import { m } from "framer-motion";
 import type { ReactNode } from "react";
 import { useMotionPreference } from "./useMotionPreference";
 
@@ -20,7 +20,7 @@ type RevealProps = {
 export function Reveal({ children, className }: RevealProps) {
   const { transition } = useMotionPreference();
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.3 }}
@@ -28,6 +28,6 @@ export function Reveal({ children, className }: RevealProps) {
       className={className}
     >
       {children}
-    </motion.div>
+    </m.div>
   );
 }

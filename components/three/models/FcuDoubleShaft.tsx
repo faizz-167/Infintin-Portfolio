@@ -182,7 +182,7 @@ export function FcuDoubleShaft({
         t={explorer.section.t}
         hatch={qualityTiers[tier].sectionHatch}
       />
-      <StageShadow key={bake} env={env} />
+      <StageShadow bake={bake} env={env} />
       {balloons && (
         <SpecOverlayTracker
           runtime={runtime}

@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "motion/react";
+import { m } from "framer-motion";
 import { useState } from "react";
 import {
   MotionPreference,
@@ -21,14 +21,14 @@ function Disclosure({ spring }: { spring: SpringName }) {
         {open ? "Close" : "Open"} panel ({spring})
       </Button>
       <div className="relative h-6 overflow-hidden border border-rule">
-        <motion.div
+        <m.div
           className="absolute inset-0 grid place-items-center bg-ink type-annotation text-ground"
           initial={false}
           animate={{ x: open ? "0%" : "-100%", opacity: open ? 1 : 0 }}
           transition={transition(spring)}
         >
           Panel
-        </motion.div>
+        </m.div>
       </div>
     </div>
   );
@@ -46,7 +46,7 @@ function Toggle({ spring }: { spring: SpringName }) {
       className="flex min-h-target cursor-pointer items-center gap-2 type-annotation text-ink"
     >
       <span className="relative h-3 w-6 border border-ink-muted">
-        <motion.span
+        <m.span
           className="absolute inset-y-0 left-0 w-1/2 bg-ink"
           initial={false}
           animate={{ x: on ? "100%" : "0%" }}
