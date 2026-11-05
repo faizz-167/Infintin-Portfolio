@@ -31,7 +31,20 @@ Make the experience production-ready: excellent on desktop and mobile, accessibl
 6. **Content (11.6):** run `claims:report`; tick each PRD §13 criterion in `qa-report.md` with evidence.
 7. **Redirects (11.7):** the current site is a single page with anchors only (`content-inventory.md`), so no redirects are expected. Check Google Search Console / `site:` results for any other indexed URLs before closing.
 
+## Known issues going in
+
+Found in a design review on 2026-11-05 (production build, 1440 × 900, `/`, product page, `/contact`). Fix or close each one inside the subtask named.
+
+- **11.3 — Title block covers content.** The fixed sheet title block (bottom right) sits over page content on every route: the hero's "Explore the FCU motor" button and the Engineering "Our approach" paragraph on `/`, parts-list item 13 on the product page, the "Add technical details" row on `/contact`. Content must never sit under it, at any breakpoint.
+- **11.3 — Labels escape their frame.** The "Render of prototype assembly" caption hangs outside the sheet frame on the home hero (left edge) and sits on the top frame line at the start of Engineering. The "Project spotlight · active development" label also sits on the frame line. Each caption stays inside the view or scene it belongs to.
+- **11.6 — "Talk to engineering" three times on one screen.** On the Inquiry screen it is the header CTA, the secondary button and the footer headline. Propose one alternative for the client; client-blocked until approved.
+- **11.6 — Repeated spec placeholder.** The product spec table shows "Contact engineering for current technical details" in five consecutive rows. Proposal: an em dash per empty row and one note under the table. Client-blocked until approved.
+- **11.6 — Project headline in Title Case.** "Development of an Indigenous Motor for Fan Coil Unit Application" is the only headline not in sentence case. It is approved claim text, so the case change needs the client.
+- **11.4 — npm audit.** `npm ci` reports 4 moderate findings. Review them; don't `audit fix --force` without asking.
+
 ## Validation criteria
+
+- [ ] Every item under "Known issues going in" fixed, or listed as client-blocked in `qa-report.md`.
 
 - [ ] All budgets in 11.4 met (numbers recorded in `qa-report.md`).
 - [ ] axe: zero serious/critical issues; full keyboard journey possible.

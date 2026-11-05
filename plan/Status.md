@@ -1,7 +1,7 @@
 # Infintin Redesign — Status
 
 **Last updated:** 2026-11-05
-**Current phase:** 11 next (not started). Phases 13–17 (client requests, run before 11) are built and committed; 13–16 still have open checks, as do 05 and 06.
+**Current phase:** 11 next (not started; spec now lists six known issues from the 2026-11-05 design review). Phases 13–17 (client requests, run before 11) are built and committed; 13–16 still have open checks, as do 05 and 06.
 **Overall:** 10 / 17 active phases completed (Phase 12 deferred)
 
 ## Rules
@@ -162,3 +162,4 @@ See `spec/content-guardrails.md` §3. Highest priority before Phase 03 content e
 - 2026-10-18 — Phase 17 (client request, before 11): button ink fill is direction-aware. It grows in from the edge the pointer entered by (nearest edge relative to the button size) and shrinks out through the edge it left by; letter roll and arrow unchanged. Touch keeps the instant press fill; reduced motion cross-fades with no direction. Checked by script on the production build at 1440 × 900: all four entry and exit edges, reduced motion, touch pointer ignored. Build, typecheck, lint, tests (11) and claims:check pass. Not checked with a real mouse or on a touch device. Known: leaving mid-grow through a different edge snaps the transform origin.
 - 2026-10-25 — Next.js bumped to 16.4.3 with a `sharp` override (commit 4e9cd11). Not logged at the time.
 - 2026-11-05 — Status check: table and header brought up to date with phases 13–17. `node_modules` was missing; restored with `npm ci` (lockfile only, no new packages; npm reports 4 moderate audit findings, not acted on). On Next 16.4.3: build, typecheck, lint, tests (11) and claims:check pass. Typecheck needs a build (or `next typegen`) first on a fresh clone: `LayoutProps`/`PageProps` are generated into `.next/types`.
+- 2026-11-05 — Design review (unslop audit) of `/`, product page and `/contact` at 1440 × 900: no slop; the Drawing Set direction holds. Six known issues added to the Phase 11 spec (title block covering content, captions outside their frame, three copy repeats/case items that need the client, npm audit findings).
