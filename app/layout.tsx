@@ -7,7 +7,6 @@ import { SiteHeader } from "@/components/layout/SiteHeader";
 import { MotionFeatures } from "@/components/motion/MotionFeatures";
 import { SmoothScroll } from "@/components/motion/SmoothScroll";
 import { SiteCanvas } from "@/components/three/SiteCanvas";
-import { ClaimText } from "@/components/ui/ClaimText";
 import { company } from "@/data/company";
 import { preloadDecisionScript } from "@/lib/preloader";
 import { siteOpenGraph, siteUrl } from "@/lib/seo";
@@ -72,7 +71,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
               {children}
             </main>
             <SiteFooter />
-            <SheetFrame status={<ClaimText id="product.status" />} />
+            <SheetFrame />
           </SmoothScroll>
           <SiteCanvas />
         </MotionFeatures>

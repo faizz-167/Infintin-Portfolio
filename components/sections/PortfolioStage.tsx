@@ -218,11 +218,13 @@ export function PortfolioStage({
 
         <div
           data-close=""
-          className="flex flex-col gap-3 lg:absolute lg:bottom-0 lg:left-0 lg:max-w-[36rem] lg:px-margin lg:pb-5"
+          className="flex flex-col gap-3 lg:absolute lg:bottom-0 lg:left-0 lg:max-w-[48rem] lg:px-margin lg:pb-5"
         >
           <h2 className="type-display-m">{name}</h2>
           <div>{status}</div>
-          {overview && <p className="type-body text-ink-muted">{overview}</p>}
+          {overview && (
+            <p className="type-body max-w-[36rem] text-ink-muted">{overview}</p>
+          )}
           <div>
             <Button href={href} arrow>
               Open the product sheet
