@@ -38,12 +38,52 @@ export const claims = {
   "product.energy-saving": {
     text: "Up to 60% energy saving",
     status: "pending",
-    source: "PRD §9; needs baseline, method and evidence",
+    source:
+      "PRD §9. Client answers 2026-11-05: consultant's simulation only; lab study under way, publish after it completes",
   },
   "product.payback": {
-    text: "2 to 3 years payback",
+    text: "About 3 years payback",
     status: "pending",
-    source: "PRD §9; clarify metric and assumptions",
+    source:
+      "Client answers 2026-11-05: Rs 5,500 purchase, 16 h/day, Rs 12/kWh, vs IE3 induction motor, 38% 'measured' saving. Held: source of the 38% while the lab study is still running; publish only with assumptions",
+  },
+  "product.torque": {
+    text: "0.6 Nm",
+    status: "pending",
+    source:
+      "Client answers 2026-11-05. Held: 0.6 Nm at 1200 RPM is ≈75 W, against the approved 50–250 W range",
+  },
+  "product.voltage": {
+    text: "230 V AC, single phase",
+    status: "approved",
+    source: "Client answers 2026-11-05 (rated voltage and controller input)",
+  },
+  "product.speed": {
+    text: "300 to 1200 RPM",
+    status: "approved",
+    source: "Client answers 2026-11-05",
+  },
+  "product.mounting": {
+    text: "Foot mount",
+    status: "approved",
+    source: "Client answers 2026-11-05",
+  },
+  "product.shaft": {
+    text: "Ø12.75 mm, 470 mm long",
+    status: "pending",
+    source:
+      "Client answers 2026-11-05. Held: confirm 470 mm is tip to tip and 12.75 mm is exact",
+  },
+  "product.noise-level": {
+    text: "Below 30 dB",
+    status: "pending",
+    source:
+      "Client answers 2026-11-05. Held: needs dBA, distance and speed of measurement",
+  },
+  "product.operating-temperature": {
+    text: "40 °C",
+    status: "pending",
+    source: "Client answers 2026-11-05. Held: confirm this is maximum ambient",
   },
   "product.noise": {
     text: "Low-noise operation",
@@ -56,10 +96,9 @@ export const claims = {
     source: "PRD §9; confirm integration scope",
   },
   "product.rare-earth": {
-    text: "Rare-earth wording to be confirmed by engineering",
-    status: "pending",
-    source:
-      "PRD §5; rare-earth-free vs heavy-rare-earth-free; model contains a magnet part",
+    text: "Available in heavy-rare-earth-free and fully rare-earth-free versions, to the customer's requirement",
+    status: "approved",
+    source: "Client answers 2026-11-05; magnet material not stated",
   },
   "product.supply": {
     text: "Locally designed, with short lead times and serviceable construction",
@@ -67,19 +106,20 @@ export const claims = {
     source: "PRD §9; confirm manufacturing and service model",
   },
   "product.dimensions": {
-    text: "≈124 × 156 × 705 mm including blower wheels (CAD envelope)",
+    text: "Ø110 × 78 mm motor body",
     status: "pending",
-    source: "model-audit.md §2; engineering approval required",
+    source:
+      "Client answers 2026-11-05. Held: the CAD motor body measures ≈Ø119 × 131 mm (model-audit.md §2)",
   },
   "product.converter-efficiency": {
     text: "96%+ peak converter efficiency",
-    status: "pending",
-    source: "Current site; needs test conditions",
+    status: "withheld",
+    source: "Current site. Client answers 2026-11-05: efficiency curve NA",
   },
   "product.ingress-rating": {
     text: "IP67",
-    status: "pending",
-    source: "Current site; needs certification evidence",
+    status: "withheld",
+    source: "Current site. Client answers 2026-11-05: IP rating NA",
   },
   "product.retrofit": {
     text: "Retrofits into existing fan coil units",
@@ -99,9 +139,9 @@ export const claims = {
 
   // ------------------------------------------------------------ Product FAQ
   "product.faq.status": {
-    text: "The motor is a working prototype under laboratory testing. It is not yet in commercial production.",
+    text: "The motor is a working prototype under laboratory testing, with field trials due by December 2026. It is not yet in commercial production.",
     status: "approved",
-    source: "Drafted from PRD §9 status",
+    source: "Drafted from PRD §9 status; field trials from Client answers 2026-11-05. Re-word once trials start",
   },
   "product.faq.fit": {
     text: "It is designed for fan coil units in the 1 to 2 TR range. Share your unit's configuration and we will confirm fit.",
@@ -119,14 +159,14 @@ export const claims = {
     source: "Drafted from PRD §8.4",
   },
   "product.faq.supply": {
-    text: "The motor is not yet available in volume. Prototype and production work is carried out with manufacturing partners.",
+    text: "Not yet in volume. Paid proofs of concept for specific requirements and pilots of the prototype are open now. Prototype and production work is carried out with manufacturing partners.",
     status: "approved",
-    source: "Drafted; depends on company.manufacturing-model",
+    source: "Drafted; depends on company.manufacturing-model. PoCs and pilots open: Client answers 2026-11-05",
   },
   "product.faq.evaluation": {
-    text: "Start with a technical discussion. From there we can scope a sample evaluation or a paid proof of concept or pilot.",
+    text: "Start with a technical discussion. From there we can scope a paid proof of concept for your requirement, or a pilot of the prototype.",
     status: "approved",
-    source: "Drafted from PRD §8.7, §12",
+    source: "Drafted from PRD §8.7, §12; PoC and pilot terms from Client answers 2026-11-05",
   },
 
   // ------------------------------------------------------------ Home

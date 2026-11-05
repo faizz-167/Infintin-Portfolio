@@ -73,7 +73,7 @@ Mobile emulation: 390 × 844 @3×, 4× CPU, Slow 4G, cold cache.
 
 ## 11.6 Content
 
-`claims:report`: 76 approved, 6 pending, 1 withheld; the 2 non-approved claims referenced by content (`product.rare-earth`, `product.dimensions`) are gated. `claims:check`: 7 unapproved claims absent from 121 prerendered and client files.
+`claims:report`: 80 approved, 7 pending, 3 withheld after the client's answers of 2026-11-05 (rare-earth wording, voltage, speed, mounting, field trials, PoCs and pilots approved; IP67 and converter efficiency withdrawn). The 2 non-approved claims referenced by content (`product.dimensions`, `product.shaft`) are gated and show "Contact engineering". `claims:check`: 10 unapproved claims absent from 124 prerendered and client files. Follow-ups for the client: `content-guardrails.md` §3, items 16–23.
 
 PRD §13:
 
@@ -83,8 +83,8 @@ PRD §13:
 | FCU Double Shaft Motor is the primary product | Pass | Hero, Portfolio scene, only product route |
 | Prototype status prominent and accurate | Pass | Status tag under the hero lede, on the product heading, in the title block on every sheet |
 | No legacy EV product shown as active | Pass | No EV content on any route |
-| Published specifications confirmed | Client-blocked | Dimensions and rare-earth wording pending; gated |
-| Energy saving, payback, rare-earth, noise, efficiency, local manufacturing, lead time qualified or omitted | Client-blocked | Energy saving, payback, converter efficiency, IP67 pending and absent; "Short lead times from local design and production" is an approved claim; confirm it is evidence-backed |
+| Published specifications confirmed | Client-blocked | Voltage, speed, mounting, rare-earth wording approved 2026-11-05; dimensions, shaft, torque, noise level, temperature held on conflicting or unqualified answers; gated |
+| Energy saving, payback, rare-earth, noise, efficiency, local manufacturing, lead time qualified or omitted | Client-blocked | Energy saving (simulation only) and payback held, absent; converter efficiency and IP67 withdrawn; rare-earth qualified "to the customer's requirement"; noise qualitative only; "Short lead times from local design and production" is an approved claim; confirm it is evidence-backed |
 | Project shown as in-progress prototype | Pass | "Project spotlight · active development" |
 | Enquiry from key pages | Pass | Header CTA on every route; hero, product and Inquiry CTAs open `/contact` with the type chosen |
 | Enquiry form accessible, validated, reliable success/error states | Client-blocked | Accessible and validated (above); delivery not connected (Phase 12 deferred), form says so instead of faking success |

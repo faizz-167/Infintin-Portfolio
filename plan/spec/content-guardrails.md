@@ -51,8 +51,8 @@ Source of truth: `prd.md`. PRD wins over the original brief **and over the curre
 
 PRD links to "§17 Open Questions" but the section is missing from `prd.md`. Collected here:
 
-1. Rare-earth terminology: exact approved wording, given the assembly includes a magnet part.
-2. Approved public spec sheet: power, speed, voltage, dimensions, shaft, mounting. Can overall dimensions from the CAD model (≈124 × 156 × 705 mm including blower wheels; motor body ≈131 mm long, Ø119 mm) be published?
+1. ~~Rare-earth terminology~~ — resolved 2026-11-05: both heavy-rare-earth-free and fully rare-earth-free versions, to the customer's requirement. Magnet material still not stated.
+2. Approved public spec sheet — partly resolved 2026-11-05: voltage, speed, mounting, supply published; see 16–22 for the rest.
 3. Are the CAD part names correct for public display (e.g. "turbine" → blower wheel, "coil for max 1/2/3")? Is showing the internal magnet/rotor geometry acceptable IP-wise?
 4. Does the product include the controller? Is there a controller model or photo?
 5. Real prototype / lab photographs available? (Renders must be labelled as renders.)
@@ -63,6 +63,14 @@ PRD links to "§17 Open Questions" but the section is missing from `prd.md`. Col
 10. Domain/canonical URL and hosting target (affects metadata, sitemap, OG images).
 11. ~~FCU power range~~ — resolved 2026-10-13: 50 W to 250 W.
 12. ~~Support list~~ — resolved 2026-10-13: use the PRD list; wording and logo permissions still to confirm (Q6).
-13. Is the AHU motor a public product? If so, what can be stated?
+13. ~~AHU motor~~ — resolved 2026-11-05: target market with R&D in progress; first release is FCU only, so nothing about AHU is published.
 14. Exact degrees: A. Infantraj (M.Tech. or M.Tech., Ph.D.), M. Senthilkumaran (Ph.D. or M.E., Ph.D.), name form for Wg. Cdr. E. J. Kennedy. (C3)
 15. Are the existing photos (`Motor-1.png`, founder and advisor portraits) real photographs cleared for reuse? Higher-resolution originals?
+16. Payback: where does the "measured" 38% saving come from, given the lab study is still running? With an answer, "about 3 years" can be published with its assumptions (Rs 5,500, 16 h/day, Rs 12/kWh, vs IE3 induction motor).
+17. Torque: 0.6 Nm at 1200 RPM is about 75 W, but the approved power range runs to 250 W. Which figure is right, or at what operating point is 0.6 Nm rated?
+18. Dimensions: Ø110 × 78 mm, but the CAD motor body measures about Ø119 × 131 mm. Which is right, and what does each include?
+19. Shaft: is 470 mm the tip-to-tip length of the double shaft, and is Ø12.75 mm exact?
+20. Noise "below 30 dB": dBA? Measured at what distance and speed?
+21. Operating temperature 40 °C: maximum ambient?
+22. Protection features and warranty: not answered.
+23. Energy saving (up to 60%): held until the lab study completes; send results with test conditions.
