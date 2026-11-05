@@ -1,8 +1,8 @@
 # Infintin Redesign — Status
 
-**Last updated:** 2026-10-14
-**Current phase:** 13 in progress (inserted before 11); (05 device checks and 06 screen-reader check still open)
-**Overall:** 8 / 12 active phases completed (Phase 12 deferred)
+**Last updated:** 2026-11-05
+**Current phase:** 11 next (not started). Phases 13–17 (client requests, run before 11) are built and committed; 13–16 still have open checks, as do 05 and 06.
+**Overall:** 10 / 17 active phases completed (Phase 12 deferred)
 
 ## Rules
 
@@ -29,6 +29,13 @@
 | 10 | Product route & contact page (UI) | [phase-10-product-contact.md](phase-10-product-contact.md) | 03, 06, 07 | COMPLETED | 7 / 7 |
 | 11 | A11y, responsive, performance, SEO, launch QA | [phase-11-quality-launch.md](phase-11-quality-launch.md) | 08, 09, 10 | NOT_STARTED | 0 / 8 |
 | 12 | Enquiry delivery integration | [phase-12-enquiry-delivery.md](phase-12-enquiry-delivery.md) | 10.7 + client | DEFERRED | 0 / 5 |
+| 13 | Type motion & preloader | [phase-13-type-and-preloader.md](phase-13-type-and-preloader.md) | 07, 08, 10 | IN_PROGRESS | 4 / 4 (reload / reduced-motion / no-JS check open) |
+| 14 | Isometric Process board | [phase-14-process-isometric.md](phase-14-process-isometric.md) | 07, 09 | IN_PROGRESS | — (fps, screen reader, reduced motion, no-JS open) |
+| 15 | Portfolio elevation teaser | [phase-15-portfolio-teaser.md](phase-15-portfolio-teaser.md) | 09, 10, 14 | IN_PROGRESS | — (awaiting client review; screen reader open) |
+| 16 | Micro-interactions | [phase-16-micro-interactions.md](phase-16-micro-interactions.md) | 15 | IN_PROGRESS | — (reduced motion, touch, CLS open) |
+| 17 | Direction-aware button hover | [phase-17-button-hover.md](phase-17-button-hover.md) | 16 | COMPLETED | — |
+
+Phases 13–17 are client requests inserted before 11. Most of their open checks are real-browser or real-device passes that fold naturally into Phase 11.
 
 Parallelisable after Phase 01: 02, 03 and 04 can run side by side; 07 can start once 02 and 03 are done, in parallel with 05–06.
 
@@ -38,7 +45,15 @@ Phase 05 — 3D core. All subtasks built; open validation: fps on a mid-range An
 
 Phase 06 — Product explorer. All subtasks built and checked on `/system/explorer`; open: NVDA or VoiceOver pass over the parts list and announcements.
 
-Phase 07 — completed on the dev bench `/system/motion` (+ `/b`). Open for Phase 09: scene views are hidden under `[data-env]` backgrounds (see phase file notes).
+Phase 13 — type motion & preloader. Built; open: reload in the same session, reduced motion and JavaScript disabled, not checked in a browser.
+
+Phase 14 — Process board. Built; open: ≈60 fps through the scrub, screen-reader order, reduced motion and no-JS in a browser.
+
+Phase 15 — Portfolio teaser. Built; awaiting client review. Open: real screen-reader pass (DOM order checked). Known: 1 px seam at the edges of live views at fractional offsets.
+
+Phase 16 — micro-interactions. Built; open: reduced motion, touch emulation and CLS in a browser.
+
+Phase 17 — completed by script on the production build; not tried with a real mouse or touch device. Known: leaving mid-grow through a different edge snaps the transform origin.
 
 ## Blockers
 
@@ -145,3 +160,5 @@ See `spec/content-guardrails.md` §3. Highest priority before Phase 03 content e
 - 2026-10-17 — Phase 15 (client request, before 11): home Portfolio scene rebuilt as an elevation teaser. Side-on, full-bleed motor with the shaft centreline; on desktop the pinned scroll drives the camera along the shaft from the front wheel to the rear, then pulls back to the whole assembly. Three callouts (application, power range, retrofit) draw on leaders as their parts come into view, and the close (name, status, overview, "Open the product sheet") comes in at the end. Explorer, toggles, balloons, parts list and spec table removed from home; product page unchanged. Checked at 1440 × 900 (start, middle, end), 390 px, reduced motion, poster tier, and with power range withheld (callout dropped). ≈57 fps through the scrub in dev, no layout shifts recorded. Build, typecheck, lint, tests (11) and claims:check pass. No real screen-reader pass (DOM reading order checked). Seen, not fixed: a 1 px seam at the edges of live views placed at fractional pixel offsets (also on the product page). The poster caption is turned off in this scene (the close shows the status tag; it sat under the button).
 - 2026-10-17 — Phase 16 (client request, before 11): micro-interactions. One 1 px press on every link, button and summary (`translate`, so it stacks on Button's spring scale); focus rule draws along text fields and selects; select chevron turns on `:open`; checkbox tick draws as a stroke; disclosure marker's upright stroke turns flat and the content fades/slides 4 px in (via `@starting-style`) and out; contact channels gained an arrow that nudges 2 px; reached process tiles lift and mark their label on hover (hover-capable pointers only). Focus outline was already global; parts-list ↔ balloon highlighting already existed, balloons stay non-interactive. Copy-email control dropped by the client. Checked at 1440 × 900 by script (computed styles mid-transition). Build, typecheck, lint, tests (11) and claims:check pass. Reduced motion, touch emulation and CLS not yet checked in a browser. Also in this tree: Process board now starts with tile 01 centred.
 - 2026-10-18 — Phase 17 (client request, before 11): button ink fill is direction-aware. It grows in from the edge the pointer entered by (nearest edge relative to the button size) and shrinks out through the edge it left by; letter roll and arrow unchanged. Touch keeps the instant press fill; reduced motion cross-fades with no direction. Checked by script on the production build at 1440 × 900: all four entry and exit edges, reduced motion, touch pointer ignored. Build, typecheck, lint, tests (11) and claims:check pass. Not checked with a real mouse or on a touch device. Known: leaving mid-grow through a different edge snaps the transform origin.
+- 2026-10-25 — Next.js bumped to 16.4.3 with a `sharp` override (commit 4e9cd11). Not logged at the time.
+- 2026-11-05 — Status check: table and header brought up to date with phases 13–17. `node_modules` was missing; restored with `npm ci` (lockfile only, no new packages; npm reports 4 moderate audit findings, not acted on). On Next 16.4.3: build, typecheck, lint, tests (11) and claims:check pass. Typecheck needs a build (or `next typegen`) first on a fresh clone: `LayoutProps`/`PageProps` are generated into `.next/types`.
