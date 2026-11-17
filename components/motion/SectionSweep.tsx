@@ -90,7 +90,11 @@ export function SectionSweep({ from, viewId, children }: SectionSweepProps) {
         ref={cover}
         aria-hidden="true"
         data-env={from}
-        className="pointer-events-none absolute inset-0 z-content motion-reduce:hidden"
+        // Starts 1 px above the scene: at a fractional offset the scene
+        // above and this layer each half-cover the same device pixel, and
+        // the new ground showed through as a hairline. The overlap is the
+        // same environment as the scene above, so it can't be seen.
+        className="pointer-events-none absolute inset-x-0 -top-px bottom-0 z-content motion-reduce:hidden"
         style={{ clipPath: "inset(0% 100% 0% 0%)" }}
       />
       <span

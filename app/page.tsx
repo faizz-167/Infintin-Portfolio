@@ -5,6 +5,7 @@ import { SectionSweep } from "@/components/motion/SectionSweep";
 import { Blueprint } from "@/components/sections/Blueprint";
 import { Ecosystem, ecosystemShown } from "@/components/sections/Ecosystem";
 import { Hero } from "@/components/sections/Hero";
+import { HomeFaq, homeFaqShown } from "@/components/sections/HomeFaq";
 import { Inquiry } from "@/components/sections/Inquiry";
 import { Leadership, leadershipShown } from "@/components/sections/Leadership";
 import { Portfolio } from "@/components/sections/Portfolio";
@@ -68,6 +69,12 @@ export default function Home() {
       env: "lab",
       shown: ecosystemShown(),
       node: <Ecosystem />,
+    },
+    {
+      id: "questions",
+      env: "sheet",
+      shown: homeFaqShown(),
+      node: <HomeFaq />,
     },
     { id: "inquiry", env: "sheet", shown: true, node: <Inquiry /> },
   ];

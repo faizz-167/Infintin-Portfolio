@@ -1,5 +1,7 @@
 type CentreLineProps = {
   orientation?: "horizontal" | "vertical";
+  /** Copper instead of the muted ink: an axis that carries the reading. */
+  accent?: boolean;
   className?: string;
 };
 
@@ -9,13 +11,14 @@ const DASH = "24 6 4 6";
 /** Dashed long-short centre line marking an axis. Decorative. */
 export function CentreLine({
   orientation = "horizontal",
+  accent = false,
   className,
 }: CentreLineProps) {
   const horizontal = orientation === "horizontal";
   return (
     <svg
       aria-hidden="true"
-      className={`block overflow-visible text-ink-muted ${horizontal ? "h-px w-full" : "h-full w-px"} ${className ?? ""}`}
+      className={`block overflow-visible ${accent ? "text-accent" : "text-ink-muted"} ${horizontal ? "h-px w-full" : "h-full w-px"} ${className ?? ""}`}
     >
       <line
         x1="0"

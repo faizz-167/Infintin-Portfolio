@@ -6,9 +6,11 @@ export const contactChannels = [
   { kind: "address", label: "Address", value: "contact.address" },
 ] as const satisfies readonly ContactChannel[];
 
-// No public profiles found on the current site (content-inventory.md); the
-// client supplies them. The footer hides the list while it's empty.
-export const socials: readonly SocialLink[] = [];
+// The company's public profiles, supplied by the client. The footer and the
+// Organization JSON-LD (`sameAs`) both read this list; it hides while empty.
+export const socials: readonly SocialLink[] = [
+  { label: "LinkedIn", href: "https://in.linkedin.com/company/infintin" },
+];
 
 // PRD §8.7. The id is the `?type=` value used to pre-select a type.
 export const enquiryTypes = [

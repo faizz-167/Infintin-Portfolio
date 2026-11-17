@@ -1,10 +1,8 @@
 import { Reveal } from "@/components/motion/Reveal";
 import { ScrollScene } from "@/components/motion/ScrollScene";
 import { SplitHeadline } from "@/components/motion/SplitHeadline";
+import { CentreLine } from "@/components/ui/CentreLine";
 import { ClaimText, claimString } from "@/components/ui/ClaimText";
-import { Grid } from "@/components/ui/Grid";
-import { StatusTag } from "@/components/ui/StatusTag";
-import { processStages } from "@/data/process";
 import { project } from "@/data/project";
 
 /** The project can only be presented under its own approved title. */
@@ -14,14 +12,14 @@ export function projectShown(): boolean {
 
 /**
  * Sheet 06, the Lab. The development project as a case study that reads as
- * work in progress: objective, challenges, approach, where it stands and
- * what comes next. No results section until results exist (PRD §8.4). The
- * context is left to the Blueprint sheet, which already states it.
+ * work in progress: objective, challenges, approach. No results section
+ * until results exist (PRD §8.4); "active development" in the label carries
+ * the status, and the stages are the Process sheet's. The context is left
+ * to the Blueprint sheet, which already states it.
  */
 export function ProjectSpotlight() {
   const title = claimString(project.title);
   if (title === null) return null;
-  const next = processStages.find((stage) => stage.state === "upcoming");
 
   const blocks = [
     { heading: "Objective", id: project.objective },
@@ -34,46 +32,90 @@ export function ProjectSpotlight() {
       id="project"
       sheet="Project"
       env="lab"
-      className="px-margin py-scene"
+      className="flex flex-col gap-scene px-margin py-scene"
     >
-      <Grid className="gap-y-6">
-        <div className="col-span-full flex flex-col gap-3 lg:col-span-9">
-          <p className="type-annotation text-ink-muted">
-            Project spotlight · active development
-          </p>
-          <SplitHeadline className="type-display-l">{title}</SplitHeadline>
-        </div>
+      <div className="flex flex-col gap-3 lg:w-5/6">
+        <p className="type-annotation text-ink-muted">
+          Project spotlight · active development
+        </p>
+        <SplitHeadline className="type-display-l">{title}</SplitHeadline>
+      </div>
 
-        {blocks.map((block, index) => (
-          <Reveal
-            key={block.heading}
-            className={`col-span-full flex flex-col gap-1 rule-hairline pt-2 md:col-span-3 lg:col-span-4 ${index === 0 ? "lg:col-start-1" : ""}`}
-          >
-            <h3 className="type-annotation text-ink-muted">{block.heading}</h3>
-            <p className="type-body">
-              <ClaimText id={block.id} />
-            </p>
-          </Reveal>
-        ))}
-
-        <Reveal className="col-span-full grid grid-cols-subgrid gap-y-3 rule-object pt-3">
-          <div className="col-span-full flex flex-col gap-1 md:col-span-3 lg:col-span-4">
-            <h3 className="type-annotation text-ink-muted">Current status</h3>
-            <StatusTag>
-              <ClaimText id={project.status} />
-            </StatusTag>
-          </div>
-          {next && (
-            <div className="col-span-full flex flex-col gap-1 md:col-span-3 lg:col-span-4">
-              <h3 className="type-annotation text-ink-muted">Next stage</h3>
-              <p className="type-annotation text-ink">{next.name}</p>
-            </div>
-          )}
-          <p className="col-span-full type-caption text-ink-muted lg:col-span-4">
-            An active development project, not a completed deployment.
-          </p>
-        </Reveal>
-      </Grid>
+      {blocks.length > 0 && <ShaftFlow blocks={blocks} />}
     </ScrollScene>
+  );
+}
+
+type Block = { heading: string; id: (typeof project)[keyof typeof project] };
+
+/**
+ * Objective, challenges and approach strung along the shaft: the copper
+ * centre line from the hero's elevation runs across the sheet, each block
+ * hangs from a centre mark on it by a short leader, and the line ends in an
+ * arrowhead, since the project reads forward along the axis like the site.
+ * Phones turn the axis vertical, down the left edge.
+ */
+function ShaftFlow({ blocks }: { blocks: readonly Block[] }) {
+  return (
+    <div className="relative">
+      {/* The axis: horizontal through the marks from lg, vertical on the
+          left below it. Marks are 1.5rem (size-3); the row is the arrowhead's
+          10 px tall, so it starts 5 px above the marks' centre. */}
+      <div className="absolute top-[calc(0.75rem-5px)] right-0 left-0 hidden h-[10px] items-center text-accent lg:flex">
+        <CentreLine accent className="flex-1" />
+        <Arrowhead />
+      </div>
+      <div className="absolute top-0 bottom-0 left-[0.75rem] lg:hidden">
+        <CentreLine orientation="vertical" accent />
+      </div>
+
+      <ol className="relative grid gap-y-6 lg:grid-cols-3 lg:gap-x-gutter">
+        {blocks.map((block) => (
+          <li key={block.heading}>
+            <Reveal className="grid grid-cols-[1.5rem_1fr] gap-x-3 lg:flex lg:flex-col lg:pr-gutter">
+              <CentreMark />
+              {/* Leader from the mark down to the note (desktop). */}
+              <span
+                aria-hidden="true"
+                className="ml-[calc(0.75rem-0.5px)] hidden h-4 w-px bg-rule lg:block"
+              />
+              <div className="flex flex-col gap-2 lg:pt-2">
+                <h3 className="type-annotation text-ink-muted">
+                  {block.heading}
+                </h3>
+                <p className="measure type-lede">
+                  <ClaimText id={block.id} />
+                </p>
+              </div>
+            </Reveal>
+          </li>
+        ))}
+      </ol>
+    </div>
+  );
+}
+
+/** Drafting centre mark: a ring with a dot, sitting on the axis. */
+function CentreMark() {
+  return (
+    <span
+      aria-hidden="true"
+      className="relative flex size-3 items-center justify-center rounded-full border border-accent bg-ground"
+    >
+      <span className="size-[5px] rounded-full bg-accent" />
+    </span>
+  );
+}
+
+function Arrowhead() {
+  return (
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 8 10"
+      className="-ml-px h-[10px] w-2 shrink-0"
+      fill="currentColor"
+    >
+      <path d="M0 0l8 5-8 5z" />
+    </svg>
   );
 }

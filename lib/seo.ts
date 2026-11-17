@@ -1,5 +1,6 @@
 import { claimString } from "@/components/ui/ClaimText";
 import { company } from "@/data/company";
+import { socials } from "@/data/contact";
 
 /**
  * Placeholder: the current site's domain, until the launch domain is
@@ -56,6 +57,7 @@ export function organizationJsonLd(): string {
     email: email ?? undefined,
     telephone: telephone ?? undefined,
     address: address ?? undefined,
+    sameAs: socials.length > 0 ? socials.map((s) => s.href) : undefined,
   };
   // `<` escaped so claim text can never close the script tag.
   return JSON.stringify(data).replace(/</g, "\\u003c");

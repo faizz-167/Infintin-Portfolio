@@ -344,11 +344,15 @@ export function HeroStage({
         )}
       </div>
 
-      {/* The Sheet side of the cut. */}
+      {/* The Sheet side of the cut. Hit-testable on purpose: the header
+          takes its ink from `elementsFromPoint`, which skips
+          pointer-events: none, so it read the Lab through the paper. The
+          clip limits hits to the revealed part, and once the paper covers
+          the hero the controls under it are hidden anyway. */}
       <div
         aria-hidden="true"
         data-env="sheet"
-        className="hero-sheet pointer-events-none absolute inset-0 text-ink motion-reduce:hidden"
+        className="hero-sheet absolute inset-0 text-ink motion-reduce:hidden"
         style={{ clipPath: "inset(0% 100% 0% 0%)" }}
       >
         {sheetDrawing}

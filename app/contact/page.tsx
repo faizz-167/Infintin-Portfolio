@@ -8,7 +8,8 @@ import {
 } from "@/components/sections/EnquiryForm";
 import { claimString } from "@/components/ui/ClaimText";
 import { ContactChannels } from "@/components/ui/ContactChannels";
-import { enquiryTypes } from "@/data/contact";
+import { TextLink } from "@/components/ui/TextLink";
+import { enquiryTypes, socials } from "@/data/contact";
 import { siteOpenGraph } from "@/lib/seo";
 
 export const ensureStatic = "navigation";
@@ -54,6 +55,17 @@ export default function ContactPage() {
           </div>
 
           <ContactChannels />
+          {socials.length > 0 && (
+            <ul aria-label="Social profiles" className="type-body">
+              {socials.map((social) => (
+                <li key={social.href}>
+                  <TextLink href={social.href} arrow>
+                    {social.label}
+                  </TextLink>
+                </li>
+              ))}
+            </ul>
+          )}
 
           <section
             aria-labelledby="topics-heading"

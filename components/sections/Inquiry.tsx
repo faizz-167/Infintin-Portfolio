@@ -4,14 +4,13 @@ import { Button } from "@/components/ui/Button";
 import { CentreLine } from "@/components/ui/CentreLine";
 import { claimString } from "@/components/ui/ClaimText";
 import { TextLink } from "@/components/ui/TextLink";
-import type { EnquiryTypeId } from "@/data/contact";
-
-const contactFor = (type: EnquiryTypeId) => `/contact?type=${type}`;
+import { primaryAction } from "@/data/navigation";
 
 /**
- * Sheet 09, the last. A short statement and two ways in, each opening the
- * contact form with its enquiry type chosen. Plain links, so they work
- * without JavaScript. The shaft centre line ends here, as the rule under
+ * Sheet 09, the last. A short statement and the one way in, the same
+ * action as the header's (both old buttons opened the same form; the
+ * enquiry type is chosen there). A plain link, so it works without
+ * JavaScript. The shaft centre line ends here, as the rule under
  * the actions.
  */
 export function Inquiry() {
@@ -32,16 +31,9 @@ export function Inquiry() {
         and what an evaluation would need.
       </p>
       <div className="flex flex-col gap-3">
-        <div className="flex flex-wrap items-center gap-2">
-          <Button href={contactFor("pilot")} size="lg" arrow>
-            Discuss a pilot
-          </Button>
-          <Button
-            href={contactFor("oem-integration")}
-            variant="secondary"
-            size="lg"
-          >
-            Talk to engineering
+        <div>
+          <Button href={primaryAction.href} size="lg" arrow>
+            {primaryAction.label}
           </Button>
         </div>
         {/* The centre line that runs through the page, ending in a stop. */}

@@ -320,6 +320,16 @@
   border-block-start: var(--rule-object) solid var(--ink);
 }
 
+/* Diagonal hatch in the rule colour: marks an edge or region without
+   claiming the status hatch's meaning (that one is the status mark). */
+@utility hatch-rule {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    var(--rule) 0 1px,
+    transparent 1px 6px
+  );
+}
+
 @utility z-canvas {
   z-index: var(--z-canvas);
 }
@@ -412,6 +422,15 @@
 ::view-transition-group(site-canvas) {
   animation: none;
 }
+/* Normal blending: the default adds the two images together, which would
+   brighten wherever the old and new canvas both have model pixels. */
+::view-transition-image-pair(site-canvas) {
+  isolation: auto;
+}
+::view-transition-old(site-canvas),
+::view-transition-new(site-canvas) {
+  mix-blend-mode: normal;
+}
 /* Stacking during a wipe: old page, new page (1), morphing name (2), then
    the fixed chrome on top (3). */
 ::view-transition-group(site-header),
@@ -419,14 +438,29 @@
   z-index: 3;
 }
 ::view-transition-old(site-header),
-::view-transition-old(site-frame),
-::view-transition-old(site-canvas) {
+::view-transition-old(site-frame) {
   display: none;
 }
 ::view-transition-new(site-header),
-::view-transition-new(site-frame),
-::view-transition-new(site-canvas) {
+::view-transition-new(site-frame) {
   animation: none;
+}
+
+/* The canvas goes with the pages: the old frame (the model the leaving page
+   was showing) holds underneath, and the new canvas wipes in with the new
+   page. Hiding the old one left the outgoing page's viewer blank, and
+   showing the new one at once drew the next page's model before its sheet
+   arrived. */
+::view-transition-old(site-canvas) {
+  animation: page-hold var(--duration-base) linear both;
+}
+:root:active-view-transition-type(nav-forward)::view-transition-new(
+    site-canvas
+  ) {
+  animation: page-wipe-from-right var(--duration-base) var(--ease-machine) both;
+}
+:root:active-view-transition-type(nav-back)::view-transition-new(site-canvas) {
+  animation: page-wipe-from-left var(--duration-base) var(--ease-machine) both;
 }
 
 /* The outgoing page stays put for the length of the wipe, underneath. */
@@ -481,8 +515,17 @@
   ::view-transition-old(.page-exit) {
     animation-duration: 200ms;
   }
+  ::view-transition-old(site-canvas) {
+    animation-duration: 200ms;
+  }
   ::view-transition-new(.page-enter-forward),
-  ::view-transition-new(.page-enter-back) {
+  ::view-transition-new(.page-enter-back),
+  :root:active-view-transition-type(nav-forward)::view-transition-new(
+      site-canvas
+    ),
+  :root:active-view-transition-type(nav-back)::view-transition-new(
+      site-canvas
+    ) {
     animation: page-fade-in 200ms linear both;
   }
   ::view-transition-group(.morph) {
