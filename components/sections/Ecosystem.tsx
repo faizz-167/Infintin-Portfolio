@@ -49,7 +49,7 @@ export function Ecosystem() {
       className="flex flex-col gap-6 px-margin py-scene"
     >
       <SplitHeadline className="type-display-l lg:w-2/3">
-        Recognition and support
+        Awards, events and industry support
       </SplitHeadline>
       {shown.length > 0 && (
         <section

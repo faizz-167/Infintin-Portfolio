@@ -42,7 +42,7 @@ export function TechnicalEdge() {
     >
       <div className="flex flex-col gap-6">
         <SplitHeadline className="type-display-l lg:w-2/3">
-          Engineered part by part, for one duty
+          Fan coil unit motor engineering, part by part
         </SplitHeadline>
         {entries.length > 0 && <ApproachFigure entries={entries} />}
       </div>
@@ -58,7 +58,7 @@ export function TechnicalEdge() {
               md the cards simply stack. */}
           <div
             style={{ "--rows": rows.length + 1 } as CSSProperties}
-            className="grid gap-gutter md:grid-cols-2 md:grid-rows-[repeat(var(--rows),auto)]"
+            className="grid gap-gutter md:gap-y-0 md:grid-cols-2 md:grid-rows-[repeat(var(--rows),auto)] md:content-start"
           >
             <ComparisonCard
               title="Typical imported EC motor supply"
@@ -101,13 +101,13 @@ function ComparisonCard({
       aria-label={title}
       className={`grid border border-rule md:row-[span_var(--rows)] md:grid-rows-subgrid ${
         infintin
-          ? "border-t-[length:var(--rule-object)] border-t-ink"
+          ? "border-t-[length:var(--rule-object)] border-t-copper"
           : "bg-paper-deep/40"
       }`}
     >
       <h4
         className={`p-3 type-annotation lg:p-4 ${
-          infintin ? "text-ink" : "text-ink-muted"
+          infintin ? "text-copper" : "text-ink-muted"
         }`}
       >
         {title}

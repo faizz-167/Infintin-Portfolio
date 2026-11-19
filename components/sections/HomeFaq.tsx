@@ -32,7 +32,7 @@ export function HomeFaq() {
           className="w-2 shrink-0 border-rule border-r hatch-rule"
         />
         <div className="flex flex-col gap-3 p-3 lg:p-4">
-          <h2 className="type-display-l">Questions</h2>
+          <h2 className="type-display-l">Questions about our motors</h2>
           <p className="measure type-body text-ink-muted">
             Where the motor stands, and how an evaluation starts. Anything not
             covered here, ask our engineers.

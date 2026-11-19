@@ -25,7 +25,7 @@ export function Blueprint() {
       </figure>
       <div className="flex flex-col gap-6">
         <SplitHeadline className="type-display-l lg:w-2/3">
-          Why we are building it
+          Why we are building a local fan coil unit motor
         </SplitHeadline>
 
         {/* Problem and approach as two framed panels read left to right,
