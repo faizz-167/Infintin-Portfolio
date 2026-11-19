@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/Button";
 import { ContactChannels } from "@/components/ui/ContactChannels";
 import { Container } from "@/components/ui/Container";
+import { Logo } from "@/components/ui/Logo";
 import { TextLink } from "@/components/ui/TextLink";
 import { company } from "@/data/company";
 import { socials } from "@/data/contact";
@@ -47,9 +48,10 @@ export function SiteFooter() {
           )}
         </div>
 
-        <p className="type-caption text-ink-muted lg:col-span-12">
-          © {company.name}
-        </p>
+        <div className="flex flex-col gap-3 border-rule border-t pt-4 md:flex-row md:items-end md:justify-between lg:col-span-12">
+          <Logo className="h-[2.5rem] text-ink" />
+          <p className="type-caption text-ink-muted">© {company.name}</p>
+        </div>
       </Container>
     </footer>
   );

@@ -32,7 +32,8 @@ Source of truth: `prd.md`. PRD wins over the original brief **and over the curre
 | `company.positioning` | PRD §5 positioning statement | pending | Sourcing wording |
 | `process.ownership` | Internal vs external stage split | pending | PRD lists 3D modelling in both |
 | `recognition.*` | Pitch X 2026, Autohackathon 2023, EDII TN – IVP, DST NIDHI SSP via AIC – Anna Incubator, ITEL Foundation grant | pending | Names, wording, logo permissions |
-| `team.*` | Founder/advisor names, titles, bios, photos | pending | Re-confirm all |
+| `team.*` | Founder names, titles, bios, photos (consultants removed 2026-11-19) | pending | Re-confirm all. Founder photos supplied 2026-11-18 (two are only 389 × 300). |
+| `event.*` | ETM 2026, Electric Motor Expo 2026, RATA Conclave 2026, PitchX 2026 | approved | From the client's event list, 2026-11-18 |
 | `product.dimensions` | CAD envelope ≈124 × 156 × 705 mm | withheld | Engineering approval required |
 | `product.converter-efficiency` | 96%+ peak converter efficiency (current site) | withheld | Needs test conditions |
 | `product.ingress-rating` | IP67 (current site) | withheld | Needs certification evidence |
@@ -57,7 +58,7 @@ PRD links to "§17 Open Questions" but the section is missing from `prd.md`. Col
 4. Does the product include the controller? Is there a controller model or photo?
 5. Real prototype / lab photographs available? (Renders must be labelled as renders.)
 6. Founder/advisor data and photos; recognition logos and permission.
-7. Brand: logo vector, any existing colour/type rules the new direction must respect.
+7. Brand (raster logo supplied 2026-11-18; vector still wanted): logo vector, any existing colour/type rules the new direction must respect.
 8. Contact transport, recipient, retention, spam protection (deferred).
 9. Legacy EV products: archive with status label, or remove entirely?
 10. Domain/canonical URL and hosting target (affects metadata, sitemap, OG images).

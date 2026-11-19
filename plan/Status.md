@@ -34,6 +34,7 @@
 | 15 | Portfolio elevation teaser | [phase-15-portfolio-teaser.md](phase-15-portfolio-teaser.md) | 09, 10, 14 | IN_PROGRESS | — (awaiting client review; screen reader open) |
 | 16 | Micro-interactions | [phase-16-micro-interactions.md](phase-16-micro-interactions.md) | 15 | IN_PROGRESS | — (reduced motion, touch, CLS open) |
 | 17 | Direction-aware button hover | [phase-17-button-hover.md](phase-17-button-hover.md) | 16 | COMPLETED | — |
+| 20 | Client photography and logo | [phase-20-photography-and-brand.md](phase-20-photography-and-brand.md) | 19 | IN_PROGRESS | — (awaiting review) |
 
 Phases 13–17 are client requests inserted before 11. Most of their open checks are real-browser or real-device passes that fold naturally into Phase 11.
 
@@ -184,3 +185,7 @@ See `spec/content-guardrails.md` §3. Highest priority before Phase 03 content e
 - 2026-11-17 — Header ink over the hero's swept paper fixed: `.hero-sheet` was pointer-events: none, so the header's hit-test read the Lab through it. Checked in dev: lab at the top, sheet once swept.
 - 2026-11-17 — Project spotlight: status panel removed; Objective/Challenges/Approach now on a copper centre line with marks, leaders and an arrowhead (vertical on phones). `CentreLine` gained `accent`. Capabilities heading cell inverted. Checked in dev at 1688 and 390 px; typecheck and lint pass.
 - 2026-11-17 — Inquiry: two buttons (same form) merged into one "Talk to engineering" → /contact.
+- 2026-11-19 — Phase 20: client logo (header, footer, favicon), founder portraits, event photos in Recognition (4 new event claims, approved from the client's list), prototype photo on the home Project sheet and a Photographs sheet on the product page. Originals kept out of git in `assets-src/photos/`; `scripts/photos.sh` makes web versions (EXIF stripped). Also fixed a pre-existing Blueprint SVG lint error. Build, typecheck, lint, tests, claims:check pass; checked in production build at 1688 and 390 px.
+- 2026-11-19 — Consultants removed from Leadership at client request (team data, claims and the `consultant` kind deleted); only the three founders remain.
+- 2026-11-19 — Client: Engineering approach view (live 3D isolate) replaced by the Three-quarter prototype photo; the approach list is static text now (`part` dropped from approach data; scene no longer leaves its ground to the canvas). Project sheet photo removed. Build, lint, tests, claims:check pass; checked at 1440 px.
+- 2026-11-19 — Leadership redesigned (client): founders as three framed title-block cells (number strip, 4:3 portrait, copper discipline, name, focus) with an intro line beside the headline; `team.*.role` split into discipline + new `team.*.focus` claims. Founder photos now kept at their own 4:3 frame. Checked at 1440 and 390 px (no overflow); build, lint, typecheck, claims:check pass.

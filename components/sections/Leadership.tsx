@@ -1,16 +1,10 @@
-import Image from "next/image";
 import { Reveal } from "@/components/motion/Reveal";
 import { ScrollScene } from "@/components/motion/ScrollScene";
 import { SplitHeadline } from "@/components/motion/SplitHeadline";
 import { ClaimText, claimString } from "@/components/ui/ClaimText";
-import { Grid } from "@/components/ui/Grid";
+import { Photo } from "@/components/ui/Photo";
 import { team } from "@/data/team";
 import type { TeamMember } from "@/data/types";
-
-const GROUPS = [
-  { kind: "founder", heading: "Founders" },
-  { kind: "consultant", heading: "Consultants" },
-] as const;
 
 /** A person appears only once their name and role are both approved. */
 function listed(): TeamMember[] {
@@ -24,9 +18,12 @@ export function leadershipShown(): boolean {
 }
 
 /**
- * Sheet 07. The people as an editorial list: names in Archivo, roles in
- * Source Serif. Portraits only where a cleared photo exists, all in the same
- * monochrome treatment.
+ * Sheet 07. The founders as framed cells, edge to edge, in the same
+ * vocabulary as Capabilities: each cell is a small title block. A strip with
+ * the item number, the portrait across the cell, then the discipline (the
+ * one copper line), the name and what the discipline covers. The outer frame
+ * comes from the grid's top and left plus each cell's right and bottom, so
+ * shared edges stay one hairline.
  */
 export function Leadership() {
   const people = listed();
@@ -37,56 +34,58 @@ export function Leadership() {
       id="leadership"
       sheet="Leadership"
       env="sheet"
-      className="px-margin py-scene"
+      className="flex flex-col gap-6 px-margin py-scene"
     >
-      <Grid className="gap-y-6">
-        <SplitHeadline className="col-span-full type-display-l lg:col-span-8">
+      <div className="grid gap-x-gutter gap-y-3 lg:grid-cols-12 lg:items-end">
+        <SplitHeadline className="type-display-l lg:col-span-8">
           The engineers behind it
         </SplitHeadline>
-        {GROUPS.map(({ kind, heading }) => {
-          const members = people.filter((m) => m.kind === kind);
-          if (members.length === 0) return null;
-          return (
-            <section
-              key={kind}
-              aria-label={heading}
-              className="col-span-full grid grid-cols-subgrid gap-y-4"
-            >
-              <h3 className="col-span-full type-annotation text-ink-muted lg:col-span-3">
-                {heading}
-              </h3>
-              <ul className="col-span-full grid grid-cols-subgrid gap-y-4 lg:col-span-9">
-                {members.map((member) => (
-                  <li
-                    key={member.id}
-                    className="col-span-full rule-hairline pt-2 md:col-span-3 lg:col-span-3"
-                  >
-                    <Reveal className="flex gap-3">
-                      {member.photo && (
-                        <Image
-                          src={member.photo}
-                          alt=""
-                          width={96}
-                          height={120}
-                          className="h-auto w-8 shrink-0 grayscale"
-                        />
-                      )}
-                      <div className="flex flex-col gap-1">
-                        <p className="type-annotation text-[1.0625rem] text-ink">
-                          <ClaimText id={member.name} />
-                        </p>
-                        <p className="type-body text-ink-muted">
-                          <ClaimText id={member.role} />
-                        </p>
-                      </div>
-                    </Reveal>
-                  </li>
-                ))}
-              </ul>
-            </section>
-          );
-        })}
-      </Grid>
+        <p className="measure type-body text-ink-muted lg:col-span-4">
+          The founders between them cover the motor, the electronics that drive
+          it and how it is made.
+        </p>
+      </div>
+
+      <ul className="grid border-rule border-t border-l md:grid-cols-3">
+        {people.map((member, index) => (
+          <li
+            key={member.id}
+            className="flex flex-col border-rule border-r border-b"
+          >
+            <Reveal className="flex h-full flex-col">
+              <p className="flex items-baseline justify-between border-rule border-b px-3 py-1">
+                <span className="type-data text-ink">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                <span className="type-annotation text-ink-muted">Founder</span>
+              </p>
+              {member.photo && (
+                // The name follows, so the portrait adds no words.
+                <Photo
+                  photo={{ src: member.photo, alt: "" }}
+                  framed={false}
+                  aspect="aspect-[4/3]"
+                  sizes="(min-width: 768px) 33vw, 100vw"
+                  className="border-rule border-b"
+                />
+              )}
+              <div className="flex flex-col gap-2 p-3 lg:p-4">
+                <p className="type-annotation text-accent">
+                  <ClaimText id={member.role} />
+                </p>
+                <h3 className="type-lede text-ink">
+                  <ClaimText id={member.name} />
+                </h3>
+                {member.focus && (
+                  <p className="type-body text-ink-muted">
+                    <ClaimText id={member.focus} />
+                  </p>
+                )}
+              </div>
+            </Reveal>
+          </li>
+        ))}
+      </ul>
     </ScrollScene>
   );
 }

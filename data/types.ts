@@ -42,6 +42,23 @@ export interface CtaLink {
   href: string;
 }
 
+// ---------------------------------------------------------------- Photos
+
+/** A photograph under `public/`, supplied by the client. */
+export interface Photo {
+  src: string;
+  /** Describes what is in the frame; `""` only beside text that names it. */
+  alt: string;
+  /** CSS object-position for the crop, when the subject isn't centred. */
+  position?: string;
+}
+
+/** A photograph of the real prototype, never a render. */
+export interface ProductPhoto extends Photo {
+  /** The view in drawing terms, shown as the frame's corner label. */
+  view: string;
+}
+
 // ---------------------------------------------------------------- Product
 
 export type ProductSlug = "fcu-double-shaft";
@@ -78,6 +95,8 @@ export interface Product {
   faq: readonly FaqItem[];
   modelRef: ProductSlug;
   posterRefs: readonly PosterShot[];
+  /** Photographs of the working prototype; the first is the lead image. */
+  photos: readonly ProductPhoto[];
   /** Path under `public/`, set only once the client approves the file. */
   datasheet?: string;
   /** One way in: pilots and general questions are enquiry types in the form. */
@@ -180,10 +199,13 @@ export interface Project {
 
 export interface TeamMember {
   id: string;
-  kind: "founder" | "consultant";
+  kind: "founder";
   /** Name with credentials, as displayed. */
   name: ClaimId;
+  /** The discipline they lead, e.g. "Motor design". */
   role: ClaimId;
+  /** What that covers in practice, when there is more to say. */
+  focus?: ClaimId;
   /** Path under `public/`, only once a cleared photo exists. */
   photo?: string;
 }
@@ -199,6 +221,16 @@ export interface Recognition {
   /** Text placeholder until a logo is supplied with permission to use it. */
   initials: string;
   logoPermission: boolean;
+}
+
+/** A show, conclave or pitch event the company took part in, with a photo. */
+export interface CompanyEvent {
+  id: string;
+  /** Event name, place and year, as the frame's corner label. */
+  name: ClaimId;
+  /** What the company did there. */
+  caption: ClaimId;
+  photo: Photo;
 }
 
 export interface ContactChannel {

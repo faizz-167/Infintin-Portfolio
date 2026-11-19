@@ -57,6 +57,35 @@ export const products = [
     ],
     modelRef: "fcu-double-shaft",
     posterRefs: ["hero", "elevation"],
+    // Client photographs of the working prototype, 18 Nov 2026 (originals
+    // in assets-src/photos/prototype, web versions by scripts/photos.sh).
+    photos: [
+      {
+        src: "/images/prototype/fcu-elevation.jpg",
+        view: "Elevation",
+        alt: "The FCU double shaft motor prototype from the front: the motor on its black stand, a blower wheel on each end of the shaft.",
+      },
+      {
+        src: "/images/prototype/fcu-three-quarter.jpg",
+        view: "Three-quarter",
+        alt: "The prototype from a three-quarter angle, looking into the open end of a blower wheel.",
+      },
+      {
+        src: "/images/prototype/fcu-elevation-mounting-plate.jpg",
+        view: "Elevation, mounting plate",
+        alt: "The prototype from the front with the mounting plate fitted on top of the stand.",
+      },
+      {
+        src: "/images/prototype/fcu-plan.jpg",
+        view: "Plan",
+        alt: "The prototype seen from above: the motor between the two blower wheels on one shaft.",
+      },
+      {
+        src: "/images/prototype/fcu-plan-mounting-plate.jpg",
+        view: "Plan, mounting plate",
+        alt: "The prototype seen from above with the mounting plate covering the motor.",
+      },
+    ],
     cta: {
       label: "Discuss technical fit",
       href: "/contact?type=oem-integration",
