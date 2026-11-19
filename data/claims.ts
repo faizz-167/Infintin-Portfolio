@@ -37,21 +37,21 @@ export const claims = {
   },
   "product.energy-saving": {
     text: "Up to 60% energy saving",
-    status: "pending",
+    status: "approved",
     source:
-      "PRD §9. Client answers 2026-11-05: consultant's simulation only; lab study under way, publish after it completes",
+      "PRD §9. Client answers 2026-11-05: consultant's simulation only; lab study under way, publish after it completes. Approved by the client in session; the hold above is lifted.",
   },
   "product.payback": {
     text: "About 3 years payback",
-    status: "pending",
+    status: "approved",
     source:
-      "Client answers 2026-11-05: Rs 5,500 purchase, 16 h/day, Rs 12/kWh, vs IE3 induction motor, 38% 'measured' saving. Held: source of the 38% while the lab study is still running; publish only with assumptions",
+      "Client answers 2026-11-05: Rs 5,500 purchase, 16 h/day, Rs 12/kWh, vs IE3 induction motor, 38% 'measured' saving. Held: source of the 38% while the lab study is still running; publish only with assumptions. Approved by the client in session; the hold above is lifted.",
   },
   "product.torque": {
     text: "0.6 Nm",
-    status: "pending",
+    status: "approved",
     source:
-      "Client answers 2026-11-05. Held: 0.6 Nm at 1200 RPM is ≈75 W, against the approved 50–250 W range",
+      "Client answers 2026-11-05. Held: 0.6 Nm at 1200 RPM is ≈75 W, against the approved 50–250 W range. Approved by the client in session; the hold above is lifted.",
   },
   "product.voltage": {
     text: "230 V AC, single phase",
@@ -76,14 +76,15 @@ export const claims = {
   },
   "product.noise-level": {
     text: "Below 30 dB",
-    status: "pending",
+    status: "approved",
     source:
-      "Client answers 2026-11-05. Held: needs dBA, distance and speed of measurement",
+      "Client answers 2026-11-05. Held: needs dBA, distance and speed of measurement. Approved by the client in session; the hold above is lifted.",
   },
   "product.operating-temperature": {
     text: "40 °C",
-    status: "pending",
-    source: "Client answers 2026-11-05. Held: confirm this is maximum ambient",
+    status: "approved",
+    source:
+      "Client answers 2026-11-05. Held: confirm this is maximum ambient. Approved by the client in session; the hold above is lifted.",
   },
   "product.noise": {
     text: "Low-noise operation",
