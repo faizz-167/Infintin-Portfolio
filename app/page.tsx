@@ -16,9 +16,10 @@ import {
 } from "@/components/sections/ProjectSpotlight";
 import { TechnicalEdge } from "@/components/sections/TechnicalEdge";
 import { claimString } from "@/components/ui/ClaimText";
+import { products } from "@/data/products";
 import { company } from "@/data/company";
 import type { EnvironmentId } from "@/design/three-presets";
-import { organizationJsonLd, siteOpenGraph } from "@/lib/seo";
+import { faqJsonLd, organizationJsonLd, siteOpenGraph } from "@/lib/seo";
 
 // The title carries the search terms the PRD leads with (HVAC, fan coil unit
 // motors, controllers); the description is the approved vision line.
@@ -45,6 +46,7 @@ type Scene = {
 };
 
 export default function Home() {
+  const faqLd = faqJsonLd(products[0].faq);
   // After the Blueprint sheet. A scene with nothing approved to show is left
   // out entirely (no empty sheets); sheet numbers and the environment cuts
   // follow from the scenes that remain.
@@ -102,6 +104,13 @@ export default function Home() {
         // biome-ignore lint/security/noDangerouslySetInnerHtml: approved claims only, `<` escaped
         dangerouslySetInnerHTML={{ __html: organizationJsonLd() }}
       />
+      {faqLd && (
+        <script
+          type="application/ld+json"
+          // biome-ignore lint/security/noDangerouslySetInnerHtml: approved claims only, `<` escaped
+          dangerouslySetInnerHTML={{ __html: faqLd }}
+        />
+      )}
       <Hero />
       <Blueprint />
       {cuts}

@@ -70,9 +70,9 @@ export const claims = {
   },
   "product.shaft": {
     text: "Ø12.75 mm, 470 mm long",
-    status: "pending",
+    status: "approved",
     source:
-      "Client answers 2026-11-05. Held: confirm 470 mm is tip to tip and 12.75 mm is exact",
+      "Client answers 2026-11-05. Approved by the client in session (the earlier hold on tip-to-tip and exactness is lifted)",
   },
   "product.noise-level": {
     text: "Below 30 dB",
@@ -107,9 +107,9 @@ export const claims = {
   },
   "product.dimensions": {
     text: "Ø110 × 78 mm motor body",
-    status: "pending",
+    status: "approved",
     source:
-      "Client answers 2026-11-05. Held: the CAD motor body measures ≈Ø119 × 131 mm (model-audit.md §2)",
+      "Client answers 2026-11-05. Approved by the client in session; note the CAD motor body measures ≈Ø119 × 131 mm (model-audit.md §2)",
   },
   "product.converter-efficiency": {
     text: "96%+ peak converter efficiency",

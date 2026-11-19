@@ -1,13 +1,7 @@
 "use client";
 
 import { m } from "framer-motion";
-import {
-  type MouseEventHandler,
-  type PointerEvent,
-  type ReactNode,
-  useRef,
-} from "react";
-import { LetterSwap } from "@/components/motion/LetterSwap";
+import type { MouseEventHandler, ReactNode } from "react";
 import { useMotionPreference } from "@/components/motion/useMotionPreference";
 import { RouteLink } from "./RouteLink";
 
@@ -42,10 +36,15 @@ type ButtonAsLink = CommonProps & {
 
 export type ButtonProps = ButtonAsButton | ButtonAsLink;
 
+// Hover: the button lifts off the sheet and a hard offset shadow appears
+// beneath it, like a part drawn with a drop line. No fill, no text change.
+// Press (and touch, which has no hover) drops it back flat at once.
+const lift =
+  "transition-[translate,box-shadow] duration-(--duration-quick) ease-settle hover:-translate-x-[2px] hover:-translate-y-[2px] active:translate-0 active:shadow-none motion-reduce:transition-none motion-reduce:hover:translate-0";
+
 const variantClasses: Record<Variant, string> = {
-  primary: "border border-accent bg-accent text-on-accent",
-  secondary:
-    "border border-ink text-ink transition-colors duration-(--duration-quick) ease-settle hover:text-ground active:text-ground",
+  primary: `border border-accent bg-accent text-on-accent hover:shadow-[4px_4px_0_var(--ink)] ${lift}`,
+  secondary: `border border-ink text-ink hover:shadow-[4px_4px_0_var(--accent)] ${lift}`,
   text: "text-ink",
 };
 
@@ -54,33 +53,9 @@ const sizeClasses: Record<Size, string> = {
   lg: "px-4 py-2",
 };
 
-// The hover wipe: primary and secondary fill with ink from the edge the
-// pointer came in by (see `edgeOf`), the text variant draws a copper
-// underline. On press the fill shows at once (no transition), so touch
-// devices without hover still get instant feedback.
-const fillClasses =
-  "wipe-edge absolute inset-0 bg-ink group-active:wipe-on group-active:transition-none";
+// The text variant draws a copper underline on hover.
 const underlineClasses =
   "wipe-x absolute inset-x-3 bottom-2 h-px bg-accent group-hover:wipe-on group-active:wipe-on group-active:transition-none";
-
-type Edge = "top" | "right" | "bottom" | "left";
-
-// Nearest edge to the pointer, as a fraction of the button's size rather than
-// in pixels: on a wide button a pixel measure would almost never pick a side.
-function edgeOf(event: PointerEvent<HTMLElement>): Edge {
-  const box = event.currentTarget.getBoundingClientRect();
-  const x = (event.clientX - box.left) / box.width;
-  const y = (event.clientY - box.top) / box.height;
-  const distances: [Edge, number][] = [
-    ["top", y],
-    ["right", 1 - x],
-    ["bottom", 1 - y],
-    ["left", x],
-  ];
-  return distances.reduce((nearest, next) =>
-    next[1] < nearest[1] ? next : nearest,
-  )[0];
-}
 
 /**
  * Rectangular, 2 px radius, 44 px minimum target. The press is acknowledged on
@@ -97,34 +72,10 @@ export function Button(props: ButtonProps) {
   } = props;
   const { reduced, transition } = useMotionPreference();
   const disabled = props.href === undefined && props.disabled === true;
-  const fillRef = useRef<HTMLSpanElement>(null);
-
-  // Written straight to the fill's dataset: hover is per frame and needs no
-  // re-render. Touch is left to the press state (`group-active`), so a tap
-  // never leaves the fill stuck on.
-  function onPointerEnter(event: PointerEvent<HTMLElement>) {
-    const fill = fillRef.current;
-    if (!fill || event.pointerType === "touch") return;
-    if (!reduced) {
-      // Jump to the hidden state on the entry edge, then animate in from it.
-      fill.style.transition = "none";
-      fill.dataset.edge = edgeOf(event);
-      void fill.offsetWidth;
-      fill.style.transition = "";
-    }
-    fill.dataset.on = "";
-  }
-
-  function onPointerLeave(event: PointerEvent<HTMLElement>) {
-    const fill = fillRef.current;
-    if (!fill || event.pointerType === "touch") return;
-    if (!reduced) fill.dataset.edge = edgeOf(event);
-    delete fill.dataset.on;
-  }
 
   const classes = [
-    "group relative inline-flex min-h-target min-w-target items-center justify-center gap-1 overflow-hidden rounded-xs type-annotation select-none",
-    // A pressed toggle holds the hover fill instead of the variant's ink.
+    "group relative inline-flex min-h-target min-w-target items-center justify-center gap-1 rounded-xs type-annotation select-none",
+    // A pressed toggle stays filled with ink.
     props.href === undefined && props.pressed
       ? "border border-ink bg-ink text-ground"
       : variantClasses[variant],
@@ -135,21 +86,10 @@ export function Button(props: ButtonProps) {
 
   const content = (
     <>
-      {!disabled && (
-        <span
-          aria-hidden="true"
-          className={variant === "text" ? underlineClasses : fillClasses}
-          ref={variant === "text" ? undefined : fillRef}
-        />
+      {!disabled && variant === "text" && (
+        <span aria-hidden="true" className={underlineClasses} />
       )}
-      <span className="relative">
-        {/* Plain-text labels roll on hover; anything richer stays put. */}
-        {typeof children === "string" && !disabled ? (
-          <LetterSwap label={children} />
-        ) : (
-          children
-        )}
-      </span>
+      <span className="relative">{children}</span>
       {arrow && (
         <span
           aria-hidden="true"
@@ -161,7 +101,7 @@ export function Button(props: ButtonProps) {
     </>
   );
 
-  // Reduced motion: no scale; the instant fill above is the press feedback.
+  // Reduced motion: no scale; the shadow dropping away is the press feedback.
   // `whileTap` stays defined either way: Motion adds tabindex="0" whenever it
   // is set, and the server can't know the OS preference, so dropping it on a
   // reduced-motion client caused a hydration mismatch.
@@ -174,8 +114,6 @@ export function Button(props: ButtonProps) {
         className={classes}
         whileTap={press}
         transition={transition("press")}
-        onPointerEnter={onPointerEnter}
-        onPointerLeave={onPointerLeave}
       >
         {content}
       </MotionLink>
@@ -192,8 +130,6 @@ export function Button(props: ButtonProps) {
       className={classes}
       whileTap={press}
       transition={transition("press")}
-      onPointerEnter={onPointerEnter}
-      onPointerLeave={onPointerLeave}
     >
       {content}
     </m.button>

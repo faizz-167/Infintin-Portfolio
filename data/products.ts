@@ -31,27 +31,27 @@ export const products = [
     controller: "product.controller",
     faq: [
       {
-        question: "What stage of development is the motor at?",
+        question: "What stage of development is the FCU double shaft motor at?",
         answer: "product.faq.status",
       },
       {
-        question: "Will it fit my fan coil unit?",
+        question: "Will this motor fit my existing fan coil unit?",
         answer: "product.faq.fit",
       },
       {
-        question: "Can it be customised?",
+        question: "Can the fan coil unit motor and controller be customised?",
         answer: "product.faq.customisation",
       },
       {
-        question: "How is it being tested?",
+        question: "How is the fan coil unit motor being tested?",
         answer: "product.faq.testing",
       },
       {
-        question: "Is it available to order?",
+        question: "Is the FCU double shaft motor available to order?",
         answer: "product.faq.supply",
       },
       {
-        question: "How do we start an evaluation?",
+        question: "How do I start evaluating the motor for my fan coil unit?",
         answer: "product.faq.evaluation",
       },
     ],
