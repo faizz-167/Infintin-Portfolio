@@ -35,18 +35,12 @@ describe("explorer reducer", () => {
     );
   });
 
-  it("keeps mode and section independent of explode and isolate", () => {
-    let state: ExplorerState = reduce(initial, {
-      type: "SET_MODE",
-      mode: "xray",
-    });
-    state = reduce(state, { type: "TOGGLE_SECTION" });
+  it("keeps section independent of explode and isolate", () => {
+    let state: ExplorerState = reduce(initial, { type: "TOGGLE_SECTION" });
     state = reduce(state, { type: "EXPLODE" });
     state = reduce(state, { type: "ISOLATE", part: "windings" });
-    assert.equal(state.mode, "xray");
     assert.equal(state.section.on, true);
     state = reduce(state, { type: "CLEAR" });
-    assert.equal(state.mode, "xray");
     assert.equal(state.section.on, true);
   });
 
@@ -76,7 +70,6 @@ describe("explorer reducer", () => {
   it("resets everything", () => {
     let state = reduce(initial, { type: "EXPLODE" });
     state = reduce(state, { type: "ISOLATE", part: "rotor" });
-    state = reduce(state, { type: "SET_MODE", mode: "drawing" });
     state = reduce(state, { type: "TOGGLE_SECTION" });
     assert.deepEqual(reduce(state, { type: "RESET" }), initial);
   });

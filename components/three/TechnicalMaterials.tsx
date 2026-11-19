@@ -105,31 +105,12 @@ export function useTechnicalMaterials(
       },
       lookFor(
         part: PartSpec,
-        { mode, isolated }: ExplorerState,
+        { isolated }: ExplorerState,
         hovered: PartId | null,
       ): PartLook {
         const highlight = part.id === isolated || part.id === hovered;
         const ghosted = isolated !== null && part.id !== isolated;
 
-        if (mode === "xray") {
-          return {
-            surface: highlight
-              ? cache.shared.ghostHighlight
-              : cache.shared.ghost,
-            edges: null,
-          };
-        }
-        if (mode === "drawing") {
-          return {
-            surface:
-              ghosted && !highlight ? cache.shared.ghost : cache.shared.drawing,
-            edges: highlight
-              ? xrayHighlight[env]
-              : ghosted
-                ? drawingEdgesMuted[env]
-                : drawingEdges[env].color,
-          };
-        }
         if (ghosted && !highlight)
           return { surface: cache.shared.ghost, edges: null };
         return { surface: cache.preset(part.material, highlight), edges: null };
