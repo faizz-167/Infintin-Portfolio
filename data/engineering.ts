@@ -1,12 +1,9 @@
-import type { ClaimId, PartId } from "./types";
+import type { ClaimId } from "./types";
 
 export interface ApproachItem {
   id: string;
   title: string;
   text: ClaimId;
-  /** The part the statement is about, isolated beside it. `null` for the
-   * controller, which isn't in the model; the assembly stays whole. */
-  part: PartId | null;
 }
 
 // PRD §8.4 approach, in the order the parts sit from the outside in.
@@ -15,20 +12,17 @@ export const approach = [
     id: "laminations",
     title: "Laminations",
     text: "edge.laminations",
-    part: "stator",
   },
   {
     id: "copper-fill",
     title: "Copper fill",
     text: "edge.copper-fill",
-    part: "windings",
   },
-  { id: "magnet", title: "Magnets", text: "edge.magnet", part: "rotor-magnet" },
+  { id: "magnet", title: "Magnets", text: "edge.magnet" },
   {
     id: "controller",
     title: "Controller",
     text: "edge.controller",
-    part: null,
   },
 ] as const satisfies readonly ApproachItem[];
 

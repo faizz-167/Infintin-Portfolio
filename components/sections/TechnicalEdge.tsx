@@ -22,7 +22,6 @@ export function TechnicalEdge() {
       id: item.id,
       title: item.title,
       text: <ClaimText id={item.text} />,
-      part: item.part,
     }));
   const rows = comparison.filter(
     (row) => shown(row.typical) && shown(row.infintin),
@@ -34,12 +33,10 @@ export function TechnicalEdge() {
   );
 
   return (
-    // The canvas shows through: the page ground behind it is the Sheet's.
     <ScrollScene
       id="engineering"
       sheet="Engineering"
       env="sheet"
-      ground="canvas"
       className="flex flex-col gap-scene px-margin py-scene"
     >
       <div className="flex flex-col gap-6">

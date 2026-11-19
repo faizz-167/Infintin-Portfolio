@@ -8,6 +8,7 @@ import { ProductExplorerScene } from "@/components/sections/ProductExplorerScene
 import { Button } from "@/components/ui/Button";
 import { ClaimText, claimString } from "@/components/ui/ClaimText";
 import { Disclosure } from "@/components/ui/Disclosure";
+import { Photo } from "@/components/ui/Photo";
 import {
   type Provenance,
   SpecTable,
@@ -202,6 +203,44 @@ export default async function ProductPage({
           </section>
         </ScrollScene>
       </SectionSweep>
+
+      {product.photos.length > 0 && (
+        <ScrollScene
+          id="photographs"
+          sheet="Photographs"
+          env="sheet"
+          className="flex flex-col gap-5 px-margin pb-scene"
+        >
+          <div className="flex flex-col gap-2">
+            <h2 className="type-display-m">The prototype, photographed</h2>
+            <p className="measure type-body text-ink-muted">
+              Photographs of the prototype, not renders. Taken in November 2026.
+            </p>
+          </div>
+          {/* The lead view across the sheet, the rest in pairs below. */}
+          <ul className="grid gap-gutter md:grid-cols-2">
+            {product.photos.map((photo, index) => (
+              <li
+                key={photo.src}
+                className={index === 0 ? "md:col-span-2" : ""}
+              >
+                <Photo
+                  photo={photo}
+                  label={photo.view}
+                  aspect={
+                    index === 0
+                      ? "aspect-[2/1] lg:aspect-[21/9]"
+                      : "aspect-[2/1]"
+                  }
+                  sizes={
+                    index === 0 ? "100vw" : "(min-width: 768px) 50vw, 100vw"
+                  }
+                />
+              </li>
+            ))}
+          </ul>
+        </ScrollScene>
+      )}
 
       <ScrollScene
         id="questions"

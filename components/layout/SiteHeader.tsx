@@ -4,8 +4,8 @@ import { usePathname } from "next/navigation";
 import { useRef } from "react";
 import { LetterSwap } from "@/components/motion/LetterSwap";
 import { Button } from "@/components/ui/Button";
+import { Logo } from "@/components/ui/Logo";
 import { RouteLink } from "@/components/ui/RouteLink";
-import { company } from "@/data/company";
 import { navigation, primaryAction } from "@/data/navigation";
 import { useActiveSheet } from "@/lib/sheets";
 import { isCurrent } from "./isCurrent";
@@ -36,9 +36,9 @@ export function SiteHeader() {
       <div className="mx-auto flex h-full max-w-page items-center justify-between gap-3 px-margin">
         <RouteLink
           href="/"
-          className="flex min-h-target items-center type-annotation text-ink"
+          className="flex min-h-target shrink-0 items-center text-ink"
         >
-          {company.shortName}
+          <Logo className="h-[1.75rem] lg:h-[2rem]" />
         </RouteLink>
 
         {sheet && (

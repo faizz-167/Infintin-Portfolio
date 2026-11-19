@@ -141,7 +141,8 @@ export const claims = {
   "product.faq.status": {
     text: "The motor is a working prototype under laboratory testing, with field trials due by December 2026. It is not yet in commercial production.",
     status: "approved",
-    source: "Drafted from PRD §9 status; field trials from Client answers 2026-11-05. Re-word once trials start",
+    source:
+      "Drafted from PRD §9 status; field trials from Client answers 2026-11-05. Re-word once trials start",
   },
   "product.faq.fit": {
     text: "It is designed for fan coil units in the 1 to 2 TR range. Share your unit's configuration and we will confirm fit.",
@@ -161,12 +162,14 @@ export const claims = {
   "product.faq.supply": {
     text: "Not yet in volume. Paid proofs of concept for specific requirements and pilots of the prototype are open now. Prototype and production work is carried out with manufacturing partners.",
     status: "approved",
-    source: "Drafted; depends on company.manufacturing-model. PoCs and pilots open: Client answers 2026-11-05",
+    source:
+      "Drafted; depends on company.manufacturing-model. PoCs and pilots open: Client answers 2026-11-05",
   },
   "product.faq.evaluation": {
     text: "Start with a technical discussion. From there we can scope a paid proof of concept for your requirement, or a pilot of the prototype.",
     status: "approved",
-    source: "Drafted from PRD §8.7, §12; PoC and pilot terms from Client answers 2026-11-05",
+    source:
+      "Drafted from PRD §8.7, §12; PoC and pilot terms from Client answers 2026-11-05",
   },
 
   // ------------------------------------------------------------ Home
@@ -327,9 +330,14 @@ export const claims = {
     source: "Current site; re-confirm (PRD §8.5)",
   },
   "team.augustine.role": {
-    text: "Founder — motor design: electromagnetic FEA, structural and thermal analysis, prototype testing",
+    text: "Motor design",
     status: "approved",
     source: "Current site, SRM reference trimmed",
+  },
+  "team.augustine.focus": {
+    text: "Electromagnetic FEA, structural and thermal analysis, prototype testing",
+    status: "approved",
+    source: "Current site; split from the role line 2026-11-19",
   },
   "team.infantraj.name": {
     text: "A. Infantraj, M.Tech., Ph.D.",
@@ -337,9 +345,14 @@ export const claims = {
     source: "Current site; degree conflicts between text and alt (C3)",
   },
   "team.infantraj.role": {
-    text: "Founder — embedded systems: motor control, health monitoring, DSP firmware, inverter hardware",
+    text: "Embedded systems",
     status: "approved",
     source: "Current site",
+  },
+  "team.infantraj.focus": {
+    text: "Motor control, health monitoring, DSP firmware, inverter hardware",
+    status: "approved",
+    source: "Current site; split from the role line 2026-11-19",
   },
   "team.chandrasekhar.name": {
     text: "P. Chandrasekhar, M.E.",
@@ -347,37 +360,7 @@ export const claims = {
     source: "Current site",
   },
   "team.chandrasekhar.role": {
-    text: "Founder — manufacturing and operations",
-    status: "approved",
-    source: "Current site",
-  },
-  "team.anbalagan.name": {
-    text: "Karthik Anbalagan",
-    status: "approved",
-    source: "Current site",
-  },
-  "team.anbalagan.role": {
-    text: "Consultant — brand and go-to-market",
-    status: "approved",
-    source: "Current site",
-  },
-  "team.senthilkumaran.name": {
-    text: "M. Senthilkumaran, Ph.D.",
-    status: "approved",
-    source: "Current site; M.E. appears in alt text only (C3)",
-  },
-  "team.senthilkumaran.role": {
-    text: "Consultant — controls and feedback",
-    status: "approved",
-    source: "Current site",
-  },
-  "team.kennedy.name": {
-    text: "Wg. Cdr. E. J. Kennedy (Retd)",
-    status: "approved",
-    source: "Current site; alt text gives 'Edward Jeyaseelan Kennedy' (C3)",
-  },
-  "team.kennedy.role": {
-    text: "Consultant — production and quality, 23 years in the Indian Air Force",
+    text: "Manufacturing and operations",
     status: "approved",
     source: "Current site",
   },
@@ -407,6 +390,49 @@ export const claims = {
     text: "ITEL Foundation grant",
     status: "approved",
     source: "PRD §8.6",
+  },
+
+  // ------------------------------------------------------------ Events
+  "event.etm-2026.name": {
+    text: "ETM 2026, Goa",
+    status: "approved",
+    source: "Client event list, 18 Nov 2026",
+  },
+  "event.etm-2026.caption": {
+    text: "Showcased our energy-efficient fan coil unit motor at the 29th Energy Technology & Innovation Meet.",
+    status: "approved",
+    source: "Client event list, 18 Nov 2026",
+  },
+  "event.electric-motor-expo-2026.name": {
+    text: "Electric Motor Expo 2026, Pune",
+    status: "approved",
+    source: "Client event list, 18 Nov 2026",
+  },
+  "event.electric-motor-expo-2026.caption": {
+    text: "Showed our first prototype in public, 15\u2060–\u206017\u00a0October.",
+    status: "approved",
+    source:
+      "Client event list, 18 Nov 2026 ('response beyond what we hoped' left out: not a checkable fact)",
+  },
+  "event.rata-conclave-2026.name": {
+    text: "RATA Conclave 2026",
+    status: "approved",
+    source: "Client event list, 18 Nov 2026",
+  },
+  "event.rata-conclave-2026.caption": {
+    text: "Took part in the conclave.",
+    status: "approved",
+    source: "Client event list, 18 Nov 2026",
+  },
+  "event.pitchx-2026.name": {
+    text: "PitchX 2026",
+    status: "approved",
+    source: "Client event list, 18 Nov 2026",
+  },
+  "event.pitchx-2026.caption": {
+    text: "Recognised as a winner at PitchX, hosted by AIC – Anna Incubator.",
+    status: "approved",
+    source: "Client event list, 18 Nov 2026",
   },
 
   // ------------------------------------------------------------ Contact
