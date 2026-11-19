@@ -23,8 +23,6 @@ import type { PartName } from "./partNames";
 
 const MODE_NAMES = {
   shaded: "Shaded",
-  drawing: "Drawing",
-  xray: "X-ray",
 } as const;
 
 /** What changed between two states, as a short phrase for the live region. */
@@ -52,11 +50,6 @@ function describeChange(
 
 const SHORTCUTS: Record<string, (s: ExplorerState) => ExplorerAction> = {
   e: (s) => ({ type: s.exploded ? "ASSEMBLE" : "EXPLODE" }),
-  x: (s) => ({ type: "SET_MODE", mode: s.mode === "xray" ? "shaded" : "xray" }),
-  d: (s) => ({
-    type: "SET_MODE",
-    mode: s.mode === "drawing" ? "shaded" : "drawing",
-  }),
   s: () => ({ type: "TOGGLE_SECTION" }),
   escape: (s) => ({ type: s.isolated ? "CLEAR" : "RESET" }),
 };
