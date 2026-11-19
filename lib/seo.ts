@@ -53,6 +53,7 @@ export function organizationJsonLd(): string {
     name: company.name,
     alternateName: company.shortName,
     url: siteUrl.href,
+    logo: new URL("/brand/infintin-logo.png", siteUrl).href,
     description: claimString(company.positioning) ?? undefined,
     email: email ?? undefined,
     telephone: telephone ?? undefined,
