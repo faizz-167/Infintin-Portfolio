@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { Reveal } from "@/components/motion/Reveal";
 import { ScrollScene } from "@/components/motion/ScrollScene";
 import { SplitHeadline } from "@/components/motion/SplitHeadline";
@@ -48,45 +49,85 @@ export function TechnicalEdge() {
 
       {rows.length > 0 && (
         <Reveal>
-          <table className="w-full border-collapse text-left">
-            <caption className="mb-3 text-left type-display-m">
-              Against typical imported supply
-            </caption>
-            <thead>
-              <tr className="type-annotation text-ink-muted">
-                <td className="w-1/4 pb-1" />
-                <th scope="col" className="w-3/8 pb-1 font-[inherit]">
-                  Typical imported EC motor supply
-                </th>
-                <th scope="col" className="w-3/8 pb-1 font-[inherit]">
-                  Infintin approach
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map((row) => (
-                <tr key={row.topic} className="rule-hairline align-baseline">
-                  <th
-                    scope="row"
-                    className="py-2 pr-gutter type-annotation font-[inherit] text-ink-muted"
-                  >
-                    {row.topic}
-                  </th>
-                  <td className="py-2 pr-gutter type-body text-ink-muted">
-                    <ClaimText id={row.typical} />
-                  </td>
-                  <td className="py-2 type-body text-ink">
-                    <ClaimText id={row.infintin} />
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <h3 className="mb-4 type-display-m">
+            Against typical imported supply
+          </h3>
+          {/* Two cards whose rows run in step. On md+ the grid owns the row
+              heights and each card takes them through a subgrid, so a long
+              claim on one side stretches the same row on the other. Below
+              md the cards simply stack. */}
+          <div
+            style={{ "--rows": rows.length + 1 } as CSSProperties}
+            className="grid gap-gutter md:grid-cols-2 md:grid-rows-[repeat(var(--rows),auto)]"
+          >
+            <ComparisonCard
+              title="Typical imported EC motor supply"
+              tone="typical"
+              rows={rows.map((r) => ({ topic: r.topic, text: r.typical }))}
+            />
+            <ComparisonCard
+              title="Infintin approach"
+              tone="infintin"
+              rows={rows.map((r) => ({ topic: r.topic, text: r.infintin }))}
+            />
+          </div>
         </Reveal>
       )}
 
       <CapabilityCells listed={listed} />
     </ScrollScene>
+  );
+}
+
+type Claim = Parameters<typeof claimString>[0];
+
+/**
+ * One side of the comparison. The Infintin card carries a heavy ink rule on
+ * top; the typical card is quieter. Topics repeat on both cards so each
+ * reads alone, and the subgrid keeps the rows level across the pair.
+ */
+function ComparisonCard({
+  title,
+  tone,
+  rows,
+}: {
+  title: string;
+  tone: "typical" | "infintin";
+  rows: { topic: string; text: Claim }[];
+}) {
+  const infintin = tone === "infintin";
+  return (
+    <section
+      aria-label={title}
+      className={`grid border border-rule md:row-[span_var(--rows)] md:grid-rows-subgrid ${
+        infintin
+          ? "border-t-[length:var(--rule-object)] border-t-ink"
+          : "bg-paper-deep/40"
+      }`}
+    >
+      <h4
+        className={`p-3 type-annotation lg:p-4 ${
+          infintin ? "text-ink" : "text-ink-muted"
+        }`}
+      >
+        {title}
+      </h4>
+      {rows.map((row) => (
+        <div
+          key={row.topic}
+          className="rule-hairline flex flex-col gap-1 p-3 lg:p-4"
+        >
+          <span className="type-annotation text-ink-muted">{row.topic}</span>
+          <p
+            className={
+              infintin ? "type-lede text-ink" : "type-body text-ink-muted"
+            }
+          >
+            <ClaimText id={row.text} />
+          </p>
+        </div>
+      ))}
+    </section>
   );
 }
 
@@ -121,7 +162,9 @@ function CapabilityCells({ listed }: { listed: readonly Listed[] }) {
           has a clear head. Its own tokens, not a Lab data-env, so its edges
           keep the Sheet's hairline. */}
       <div
-        className={`flex flex-col justify-between gap-4 border-rule border-r border-b bg-ink p-3 text-ground lg:p-4 ${MD_SPAN[mdSpan - 1]} ${LG_SPAN[lgSpan - 1]}`}
+        className={`flex flex-col justify-between gap-4 border-rule border-r border-b bg-ink p-3 text-ground lg:p-4 ${
+          MD_SPAN[mdSpan - 1]
+        } ${LG_SPAN[lgSpan - 1]}`}
       >
         <h3 id="capabilities-heading" className="type-display-m">
           Capabilities
