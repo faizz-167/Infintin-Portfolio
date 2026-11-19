@@ -13,6 +13,31 @@ const KIND_LABEL: Record<RecognitionKind, string> = {
   grant: "Grant",
 };
 
+// Static class names, one per slot, repeating every four events: widths and
+// vertical offsets that make the zigzag.
+const MOSAIC = [
+  {
+    item: "lg:col-span-7",
+    aspect: "aspect-[3/2]",
+    sizes: "(min-width: 1024px) 58vw, 100vw",
+  },
+  {
+    item: "lg:col-span-5 lg:mt-9",
+    aspect: "aspect-square",
+    sizes: "(min-width: 1024px) 42vw, 100vw",
+  },
+  {
+    item: "lg:col-span-5 lg:-mt-6",
+    aspect: "aspect-square",
+    sizes: "(min-width: 1024px) 42vw, 100vw",
+  },
+  {
+    item: "lg:col-span-7 lg:mt-5",
+    aspect: "aspect-[3/2]",
+    sizes: "(min-width: 1024px) 58vw, 100vw",
+  },
+] as const;
+
 function listed(): Recognition[] {
   return recognition.filter((entry) => claimString(entry.title) !== null);
 }
@@ -49,32 +74,48 @@ export function Ecosystem() {
       className="flex flex-col gap-6 px-margin py-scene"
     >
       <SplitHeadline className="type-display-l lg:w-2/3">
-        Recognition and support
+        Awards, events and industry support
       </SplitHeadline>
       {shown.length > 0 && (
         <section
           aria-labelledby="events-heading"
-          className="flex flex-col gap-3"
+          className="flex flex-col gap-4"
         >
-          <h3 id="events-heading" className="type-annotation text-ink-muted">
+          <h3 id="events-heading" className="type-annotation text-accent">
             Events
           </h3>
-          <ul className="grid gap-x-gutter gap-y-5 md:grid-cols-2 lg:grid-cols-4">
-            {shown.map((event) => (
-              <li key={event.id}>
-                <Reveal className="flex flex-col gap-2">
-                  <Photo
-                    photo={event.photo}
-                    label={<ClaimText id={event.name} />}
-                    aspect="aspect-[4/3]"
-                    sizes="(min-width: 1024px) 25vw, (min-width: 768px) 50vw, 100vw"
-                  />
-                  <p className="type-body text-ink-muted">
-                    <ClaimText id={event.caption} />
-                  </p>
-                </Reveal>
-              </li>
-            ))}
+          {/* An offset mosaic instead of a row of equal cards: photos change
+              width and drop in steps down the grid, each with a large copper
+              numeral, so the eye zigzags through the events. Below lg they
+              stack in order. */}
+          <ul className="grid gap-x-gutter gap-y-6 lg:grid-cols-12 lg:gap-y-0">
+            {shown.map((event, index) => {
+              const layout = MOSAIC[index % MOSAIC.length];
+              return (
+                <li key={event.id} className={layout.item}>
+                  <Reveal className="flex flex-col gap-2">
+                    <div className="flex items-end gap-2">
+                      <span
+                        aria-hidden="true"
+                        className="type-display-l leading-none text-accent"
+                      >
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+                      <span className="mb-1 h-px flex-1 bg-accent/50" />
+                    </div>
+                    <Photo
+                      photo={event.photo}
+                      label={<ClaimText id={event.name} />}
+                      aspect={layout.aspect}
+                      sizes={layout.sizes}
+                    />
+                    <p className="measure type-body text-ink-muted">
+                      <ClaimText id={event.caption} />
+                    </p>
+                  </Reveal>
+                </li>
+              );
+            })}
           </ul>
         </section>
       )}
@@ -83,35 +124,30 @@ export function Ecosystem() {
           aria-labelledby="register-heading"
           className="flex flex-col gap-3"
         >
-          <h3 id="register-heading" className="type-annotation text-ink-muted">
+          <h3 id="register-heading" className="type-annotation text-accent">
             Awards and support
           </h3>
-          <Reveal>
-            <table className="w-full border-collapse text-left">
-              <thead className="sr-only">
-                <tr>
-                  <th scope="col">Year</th>
-                  <th scope="col">Programme</th>
-                  <th scope="col">Kind</th>
-                </tr>
-              </thead>
-              <tbody>
-                {entries.map((entry) => (
-                  <tr key={entry.id} className="rule-hairline align-baseline">
-                    <td className="w-[5rem] py-2 type-data text-ink-muted md:w-[8rem]">
-                      {entry.year ?? <span className="sr-only">No year</span>}
-                    </td>
-                    <td className="py-2 pr-gutter type-body text-ink">
-                      <ClaimText id={entry.title} />
-                    </td>
-                    <td className="py-2 text-right type-annotation text-ink-muted">
+          {/* Each recognition as a plaque: the year large in copper, the
+              programme set as a lede, its kind as an outlined tag. */}
+          <ul className="grid gap-gutter md:grid-cols-2">
+            {entries.map((entry) => (
+              <li key={entry.id}>
+                <Reveal className="flex h-full flex-col justify-between gap-4 border border-rule border-t-[length:var(--rule-object)] border-t-accent p-3 lg:p-4">
+                  <p className="type-display-l leading-none text-accent">
+                    {entry.year ?? <span className="sr-only">No year</span>}
+                  </p>
+                  <p className="type-lede text-ink">
+                    <ClaimText id={entry.title} />
+                  </p>
+                  <p>
+                    <span className="inline-block border border-accent px-1 py-[0.125rem] type-annotation text-accent">
                       {KIND_LABEL[entry.kind]}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </Reveal>
+                    </span>
+                  </p>
+                </Reveal>
+              </li>
+            ))}
+          </ul>
         </section>
       )}
     </ScrollScene>

@@ -38,7 +38,7 @@ export function Leadership() {
     >
       <div className="grid gap-x-gutter gap-y-3 lg:grid-cols-12 lg:items-end">
         <SplitHeadline className="type-display-l lg:col-span-8">
-          The engineers behind it
+          Founders and engineering team
         </SplitHeadline>
         <p className="measure type-body text-ink-muted lg:col-span-4">
           The founders between them cover the motor, the electronics that drive

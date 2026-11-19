@@ -1,8 +1,8 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { useRef } from "react";
-import { LetterSwap } from "@/components/motion/LetterSwap";
+import { type MouseEvent, useRef } from "react";
+import { useLenis } from "@/components/motion/SmoothScroll";
 import { Button } from "@/components/ui/Button";
 import { Logo } from "@/components/ui/Logo";
 import { RouteLink } from "@/components/ui/RouteLink";
@@ -23,6 +23,23 @@ export function SiteHeader() {
   const env = useEnvUnder(ref, 0.5, 1);
   const pathname = usePathname();
   const sheet = useActiveSheet();
+  const lenis = useLenis();
+
+  // On the home page the logo has nowhere to navigate to, so it scrolls to
+  // the top instead (through Lenis, so the glide matches the rest of the
+  // site) and drops any #section from the address.
+  function onLogoClick(event: MouseEvent<HTMLAnchorElement>) {
+    if (pathname !== "/") return;
+    event.preventDefault();
+    if (window.location.hash) {
+      history.replaceState(null, "", window.location.pathname);
+    }
+    const instant = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    if (lenis) lenis.scrollTo(0, { immediate: instant });
+    else window.scrollTo({ top: 0, behavior: instant ? "auto" : "smooth" });
+  }
 
   return (
     <header
@@ -36,6 +53,7 @@ export function SiteHeader() {
       <div className="mx-auto flex h-full max-w-page items-center justify-between gap-3 px-margin">
         <RouteLink
           href="/"
+          onClick={onLogoClick}
           className="flex min-h-target shrink-0 items-center text-ink"
         >
           <Logo className="h-[1.75rem] lg:h-[2rem]" />
@@ -59,7 +77,7 @@ export function SiteHeader() {
                   }
                   className="group relative flex min-h-target items-center type-annotation text-ink"
                 >
-                  <LetterSwap label={item.label} />
+                  {item.label}
                   <span
                     aria-hidden="true"
                     className="wipe-x absolute inset-x-0 bottom-2 h-px bg-accent group-hover:wipe-on group-aria-[current=page]:wipe-on"

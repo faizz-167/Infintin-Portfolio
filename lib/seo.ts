@@ -62,3 +62,35 @@ export function organizationJsonLd(): string {
   // `<` escaped so claim text can never close the script tag.
   return JSON.stringify(data).replace(/</g, "\\u003c");
 }
+
+/**
+ * schema.org FAQPage from the same items the page shows. Only questions whose
+ * answer claim is approved are included, so the markup never says more than
+ * the visible page does.
+ */
+export function faqJsonLd(
+  items: readonly {
+    question: string;
+    answer: Parameters<typeof claimString>[0];
+  }[],
+): string | null {
+  const entities = items.flatMap((item) => {
+    const text = claimString(item.answer);
+    return text === null
+      ? []
+      : [
+          {
+            "@type": "Question",
+            name: item.question,
+            acceptedAnswer: { "@type": "Answer", text },
+          },
+        ];
+  });
+  if (entities.length === 0) return null;
+  const data = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: entities,
+  };
+  return JSON.stringify(data).replace(/</g, "\\u003c");
+}

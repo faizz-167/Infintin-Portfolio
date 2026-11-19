@@ -222,7 +222,7 @@ export function ProcessStage({ showOwners }: { showOwners: boolean }) {
     >
       <div className="flex flex-col gap-3 px-margin lg:flex-row lg:items-end lg:justify-between">
         <SplitHeadline className="type-display-l lg:w-1/2">
-          From requirement to production
+          Our motor development process
         </SplitHeadline>
         <ul
           aria-label="Key"

@@ -40,7 +40,7 @@ export function Photo({
         fill
         sizes={sizes}
         style={photo.position ? { objectPosition: photo.position } : undefined}
-        className="object-cover grayscale transition-[filter] duration-(--duration-base) ease-settle hover:grayscale-0 motion-reduce:transition-none"
+        className="object-cover"
       />
       {label && (
         <span className="absolute top-0 left-0 border-rule border-r border-b bg-ground px-1 py-[0.125rem] type-caption text-ink">

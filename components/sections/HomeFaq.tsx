@@ -4,21 +4,23 @@ import { Disclosure } from "@/components/ui/Disclosure";
 import { TextLink } from "@/components/ui/TextLink";
 import { primaryAction } from "@/data/navigation";
 import { products } from "@/data/products";
+import type { Product } from "@/data/types";
 
 // The product's own FAQ, so home and product page can't drift apart and no
 // extra claims need approving. Only items whose answer may be shown.
-const product = products[0];
-const items = () =>
+const defaultProduct = products[0];
+const items = (product: Product) =>
   product.faq.filter((item) => claimString(item.answer) !== null);
 
-export const homeFaqShown = () => items().length > 0;
+export const homeFaqShown = () => items(defaultProduct).length > 0;
 
 /**
- * The Questions sheet, just before Inquiry. The left column is a framed
+ * The Questions sheet, just before Inquiry; the product page reuses it with
+ * its own product. The left column is a framed
  * block with a hatched edge that stays in view while the questions scroll
  * past on desktop, so the column is never an empty half of the sheet.
  */
-export function HomeFaq() {
+export function HomeFaq({ product = defaultProduct }: { product?: Product }) {
   return (
     <ScrollScene
       id="questions"
@@ -32,7 +34,7 @@ export function HomeFaq() {
           className="w-2 shrink-0 border-rule border-r hatch-rule"
         />
         <div className="flex flex-col gap-3 p-3 lg:p-4">
-          <h2 className="type-display-l">Questions</h2>
+          <h2 className="type-display-l">Questions about our motors</h2>
           <p className="measure type-body text-ink-muted">
             Where the motor stands, and how an evaluation starts. Anything not
             covered here, ask our engineers.
@@ -45,7 +47,7 @@ export function HomeFaq() {
         </div>
       </div>
       <div className="flex flex-col border-rule border-b lg:col-span-7 lg:col-start-6">
-        {items().map((item) => (
+        {items(product).map((item) => (
           <Disclosure
             key={item.answer}
             summary={<span className="type-lede">{item.question}</span>}
