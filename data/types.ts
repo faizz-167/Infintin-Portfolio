@@ -178,7 +178,7 @@ export interface Capability {
   value: Copy;
 }
 
-export type StageOwner = "internal" | "external" | "shared" | "unconfirmed";
+export type StageOwner = "internal" | "external" | "shared" | "unconfirmed" | "outsourced";
 export type StageState = "complete" | "current" | "upcoming";
 
 export interface ProcessStage {

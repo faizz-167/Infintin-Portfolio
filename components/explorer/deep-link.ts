@@ -13,7 +13,7 @@ import type {
  * `?view=exploded&part=rotor&mode=xray`. Defaults are left out, so the
  * plain product URL is the plain explorer. The section plane isn't encoded.
  */
-const MODES: readonly RenderMode[] = ["shaded", "drawing", "xray"];
+const MODES: readonly RenderMode[] = ["shaded"];
 
 /** Actions that bring a fresh explorer to the state in `params`. Unknown values are ignored. */
 export function readExplorerParams(

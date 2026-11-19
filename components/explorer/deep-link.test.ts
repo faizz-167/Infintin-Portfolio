@@ -13,11 +13,11 @@ const restore = (query: string) =>
   );
 
 describe("explorer deep links", () => {
-  it("restores view, part and mode", () => {
+  it("restores view and part (mode is ignored if not shaded)", () => {
     const state = restore("view=exploded&part=rotor&mode=xray");
     assert.equal(state.exploded, true);
     assert.equal(state.isolated, "rotor");
-    assert.equal(state.mode, "xray");
+    assert.equal(state.mode, "shaded"); // xray is no longer a valid mode
   });
 
   it("ignores unknown values", () => {
@@ -28,7 +28,7 @@ describe("explorer deep links", () => {
   });
 
   it("round-trips a state and leaves other params alone", () => {
-    const state = restore("part=stator&mode=drawing");
+    const state = restore("part=stator");
     const params = writeExplorerParams(
       state,
       new URLSearchParams("utm_source=mail&view=exploded"),

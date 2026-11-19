@@ -3,7 +3,7 @@ import type { PartId } from "@/data/types";
 // Pure reducer, no runtime imports: `node --test` runs this file directly,
 // and Node doesn't resolve the `@/` alias (type imports are erased).
 
-export type RenderMode = "shaded" | "drawing" | "xray";
+export type RenderMode = "shaded";
 
 /**
  * Explorer state (architecture.md §5.4). Explode and isolate are independent:

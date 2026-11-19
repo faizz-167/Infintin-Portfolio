@@ -7,8 +7,6 @@ import { initialExplorerState, type RenderMode } from "./explorer-machine";
 const MODES: readonly { mode: RenderMode; label: string; shortcut?: string }[] =
   [
     { mode: "shaded", label: "Shaded" },
-    { mode: "drawing", label: "Drawing", shortcut: "D" },
-    { mode: "xray", label: "X-ray", shortcut: "X" },
   ];
 
 /**

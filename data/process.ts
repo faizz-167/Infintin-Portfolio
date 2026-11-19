@@ -15,12 +15,12 @@ export const processStages = [
     owner: "internal",
     state: "complete",
   },
-  { id: "cad", name: "CAD design", owner: "internal", state: "complete" },
+  { id: "cad", name: "CAD design", owner: "external", state: "complete" },
   // The PRD lists this stage as both internal and external.
   {
     id: "modelling",
     name: "3D modelling & simulation",
-    owner: "unconfirmed",
+    owner: "outsourced",
     state: "complete",
   },
   {
