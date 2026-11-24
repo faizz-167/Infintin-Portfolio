@@ -1,11 +1,18 @@
+import Image from "next/image";
 import { Reveal } from "@/components/motion/Reveal";
 import { ScrollScene } from "@/components/motion/ScrollScene";
 import { SplitHeadline } from "@/components/motion/SplitHeadline";
 import { ClaimText, claimString } from "@/components/ui/ClaimText";
 import { Photo } from "@/components/ui/Photo";
+import { certificates } from "@/data/certificates";
 import { events } from "@/data/events";
 import { recognition } from "@/data/recognition";
-import type { CompanyEvent, Recognition, RecognitionKind } from "@/data/types";
+import type {
+  Certificate,
+  CompanyEvent,
+  Recognition,
+  RecognitionKind,
+} from "@/data/types";
 
 const KIND_LABEL: Record<RecognitionKind, string> = {
   award: "Award",
@@ -50,8 +57,20 @@ function shownEvents(): CompanyEvent[] {
   );
 }
 
+/** A certificate shows only with its title and detail both approved. */
+function shownCertificates(): Certificate[] {
+  return certificates.filter(
+    (cert) =>
+      claimString(cert.title) !== null && claimString(cert.detail) !== null,
+  );
+}
+
 export function ecosystemShown(): boolean {
-  return listed().length > 0 || shownEvents().length > 0;
+  return (
+    listed().length > 0 ||
+    shownEvents().length > 0 ||
+    shownCertificates().length > 0
+  );
 }
 
 /**
@@ -64,7 +83,9 @@ export function ecosystemShown(): boolean {
 export function Ecosystem() {
   const entries = listed();
   const shown = shownEvents();
-  if (entries.length === 0 && shown.length === 0) return null;
+  const certs = shownCertificates();
+  if (entries.length === 0 && shown.length === 0 && certs.length === 0)
+    return null;
 
   return (
     <ScrollScene
@@ -116,6 +137,53 @@ export function Ecosystem() {
                 </li>
               );
             })}
+          </ul>
+        </section>
+      )}
+      {certs.length > 0 && (
+        <section
+          aria-labelledby="registrations-heading"
+          className="flex flex-col gap-3"
+        >
+          <h3
+            id="registrations-heading"
+            className="type-annotation text-accent"
+          >
+            Registrations
+          </h3>
+          {/* The documents themselves, uncropped, each opening full size in a
+              new tab so the numbers can be read and checked. */}
+          <ul className="grid gap-gutter md:grid-cols-2">
+            {certs.map((cert) => (
+              <li key={cert.id}>
+                <Reveal className="flex h-full flex-col gap-2">
+                  <a
+                    href={cert.src}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block border border-rule bg-ground-raised"
+                  >
+                    <Image
+                      src={cert.src}
+                      alt={cert.alt}
+                      width={cert.width}
+                      height={cert.height}
+                      sizes="(min-width: 768px) 46vw, 100vw"
+                      className="h-auto w-full"
+                    />
+                    <span className="sr-only">
+                      (opens full size in a new tab)
+                    </span>
+                  </a>
+                  <p className="type-lede text-ink">
+                    <ClaimText id={cert.title} />
+                  </p>
+                  <p className="measure type-body text-ink-muted">
+                    <ClaimText id={cert.detail} />
+                  </p>
+                </Reveal>
+              </li>
+            ))}
           </ul>
         </section>
       )}

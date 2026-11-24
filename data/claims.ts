@@ -393,6 +393,29 @@ export const claims = {
     source: "PRD §8.6",
   },
 
+  // ------------------------------------------------------------ Certificates
+  // Read straight off the certificate images in public/certificate/.
+  "certificate.dpiit.title": {
+    text: "Recognised as a startup by DPIIT, Government of India",
+    status: "approved",
+    source: "Certificate of Recognition DIPP155855, issued 02-02-2024",
+  },
+  "certificate.dpiit.detail": {
+    text: "Startup India certificate no. DIPP155855, issued 2 February 2024. Technology hardware, manufacturing.",
+    status: "approved",
+    source: "Certificate of Recognition DIPP155855",
+  },
+  "certificate.udyam.title": {
+    text: "Udyam registered micro enterprise, manufacturing",
+    status: "approved",
+    source: "Udyam Registration Certificate UDYAM-TN-02-0256869",
+  },
+  "certificate.udyam.detail": {
+    text: "Ministry of MSME registration no. UDYAM-TN-02-0256869, classified 27 November 2023.",
+    status: "approved",
+    source: "Udyam Registration Certificate UDYAM-TN-02-0256869",
+  },
+
   // ------------------------------------------------------------ Events
   "event.etm-2026.name": {
     text: "ETM 2026, Goa",
