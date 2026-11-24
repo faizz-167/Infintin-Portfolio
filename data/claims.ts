@@ -367,13 +367,25 @@ export const claims = {
   },
 
   // ------------------------------------------------------------ Recognition
+  // Award titles split at the dash into what was won and who hosted it
+  // (Phase 21); the approved words are unchanged.
   "recognition.pitch-x-2026": {
-    text: "Winner, Pitch X 2026 — hosted by AIC Anna Incubator and CADFEM",
+    text: "Winner, Pitch X 2026",
     status: "approved",
     source: "PRD §8.6; confirm wording and logo permission",
   },
+  "recognition.pitch-x-2026.host": {
+    text: "Hosted by AIC Anna Incubator and CADFEM",
+    status: "approved",
+    source: "PRD §8.6",
+  },
   "recognition.autohackathon-2023": {
-    text: "Top 5, Autohackathon 2023 — hosted by AIC Anna Incubator and Ashok Leyland",
+    text: "Top 5, Autohackathon 2023",
+    status: "approved",
+    source: "PRD §8.6",
+  },
+  "recognition.autohackathon-2023.host": {
+    text: "Hosted by AIC Anna Incubator and Ashok Leyland",
     status: "approved",
     source: "PRD §8.6",
   },
@@ -445,16 +457,6 @@ export const claims = {
   },
   "event.rata-conclave-2026.caption": {
     text: "Took part in the conclave.",
-    status: "approved",
-    source: "Client event list, 18 Nov 2026",
-  },
-  "event.pitchx-2026.name": {
-    text: "PitchX 2026",
-    status: "approved",
-    source: "Client event list, 18 Nov 2026",
-  },
-  "event.pitchx-2026.caption": {
-    text: "Recognised as a winner at PitchX, hosted by AIC – Anna Incubator.",
     status: "approved",
     source: "Client event list, 18 Nov 2026",
   },

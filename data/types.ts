@@ -222,7 +222,12 @@ export interface Recognition {
   id: string;
   kind: RecognitionKind;
   year?: number;
+  /** What was won or given, e.g. "Winner, Pitch X 2026". */
   title: ClaimId;
+  /** Who hosted or gave it, when that is a separate line. */
+  host?: ClaimId;
+  /** The photograph of the award itself, when there is one. */
+  photo?: Photo;
   /** Text placeholder until a logo is supplied with permission to use it. */
   initials: string;
   logoPermission: boolean;

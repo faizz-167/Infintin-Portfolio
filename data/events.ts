@@ -1,6 +1,7 @@
 import type { CompanyEvent } from "./types";
 
-// Client event list and photos, 18 Nov 2026, in the client's order.
+// Client event list and photos, 18 Nov 2026, in the client's order. PitchX
+// is shown once, as the award it was (see recognition.ts), not as an event.
 export const events = [
   {
     id: "etm-2026",
@@ -28,15 +29,6 @@ export const events = [
     photo: {
       src: "/images/events/rata-conclave-2026.jpg",
       alt: "Three members of the Infintin team in front of the RATA Conclave 2026 backdrop.",
-    },
-  },
-  {
-    id: "pitchx-2026",
-    name: "event.pitchx-2026.name",
-    caption: "event.pitchx-2026.caption",
-    photo: {
-      src: "/images/events/pitchx-2026.jpg",
-      alt: "Collage from the PitchX 2026 award presentation hosted by Anna Incubator and CADFEM, with the Infintin team receiving the award.",
     },
   },
 ] as const satisfies readonly CompanyEvent[];
