@@ -54,7 +54,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           dangerouslySetInnerHTML={{ __html: preloadDecisionScript }}
         />
       </head>
-      <body>
+      <body suppressHydrationWarning>
         <a
           href="#content"
           className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-toast focus:bg-ink focus:px-2 focus:py-1 focus:text-ground focus:type-annotation"

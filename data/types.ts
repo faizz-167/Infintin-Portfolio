@@ -208,6 +208,8 @@ export interface TeamMember {
   focus?: ClaimId;
   /** Path under `public/`, only once a cleared photo exists. */
   photo?: string;
+  /** LinkedIn profile URL; name becomes a clickable link when present. */
+  linkedin?: string;
 }
 
 /** Support and recognition only. There is deliberately no "partner" kind. */
