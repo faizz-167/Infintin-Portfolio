@@ -178,7 +178,12 @@ export interface Capability {
   value: Copy;
 }
 
-export type StageOwner = "internal" | "external" | "shared" | "unconfirmed" | "outsourced";
+export type StageOwner =
+  | "internal"
+  | "external"
+  | "shared"
+  | "unconfirmed"
+  | "outsourced";
 export type StageState = "complete" | "current" | "upcoming";
 
 export interface ProcessStage {
@@ -217,10 +222,27 @@ export interface Recognition {
   id: string;
   kind: RecognitionKind;
   year?: number;
+  /** What was won or given, e.g. "Winner, Pitch X 2026". */
   title: ClaimId;
+  /** Who hosted or gave it, when that is a separate line. */
+  host?: ClaimId;
+  /** The photograph of the award itself, when there is one. */
+  photo?: Photo;
   /** Text placeholder until a logo is supplied with permission to use it. */
   initials: string;
   logoPermission: boolean;
+}
+
+/** A government registration, shown as the certificate itself. */
+export interface Certificate {
+  id: string;
+  title: ClaimId;
+  detail: ClaimId;
+  /** Path under `public/`; the full document, never cropped. */
+  src: string;
+  width: number;
+  height: number;
+  alt: string;
 }
 
 /** A show, conclave or pitch event the company took part in, with a photo. */

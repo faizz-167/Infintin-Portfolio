@@ -409,7 +409,7 @@
  * Route transitions (React <ViewTransition>, see PageTransition). The new
  * page wipes in along the shaft axis over the old one, which holds still:
  * from the right going forward (home → product → contact), from the left
- * going back. Header, sheet frame and the 3D canvas are named and frozen so
+ * going back. Header and the 3D canvas are named and frozen so
  * they are never snapshotted into the wipe.
  */
 ::view-transition {
@@ -418,7 +418,6 @@
 }
 
 ::view-transition-group(site-header),
-::view-transition-group(site-frame),
 ::view-transition-group(site-canvas) {
   animation: none;
 }
@@ -433,16 +432,13 @@
 }
 /* Stacking during a wipe: old page, new page (1), morphing name (2), then
    the fixed chrome on top (3). */
-::view-transition-group(site-header),
-::view-transition-group(site-frame) {
+::view-transition-group(site-header) {
   z-index: 3;
 }
-::view-transition-old(site-header),
-::view-transition-old(site-frame) {
+::view-transition-old(site-header) {
   display: none;
 }
-::view-transition-new(site-header),
-::view-transition-new(site-frame) {
+::view-transition-new(site-header) {
   animation: none;
 }
 

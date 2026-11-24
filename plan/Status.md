@@ -1,6 +1,6 @@
 # Infintin Redesign — Status
 
-**Last updated:** 2026-11-05
+**Last updated:** 2026-11-25
 **Current phase:** 11 in progress (built; blocked on the JS budget / first-load LCP decision, client copy, and device, screen-reader and browser passes). Phases 13–17 (client requests, run before 11) are built and committed; 13–16 still have open checks, as do 05 and 06.
 **Overall:** 10 / 17 active phases completed (Phase 12 deferred)
 
@@ -35,6 +35,7 @@
 | 16 | Micro-interactions | [phase-16-micro-interactions.md](phase-16-micro-interactions.md) | 15 | IN_PROGRESS | — (reduced motion, touch, CLS open) |
 | 17 | Direction-aware button hover | [phase-17-button-hover.md](phase-17-button-hover.md) | 16 | COMPLETED | — |
 | 20 | Client photography and logo | [phase-20-photography-and-brand.md](phase-20-photography-and-brand.md) | 19 | IN_PROGRESS | — (awaiting review) |
+| 21 | Recognition redesign | [phase-21-recognition-redesign.md](phase-21-recognition-redesign.md) | 20 | IN_PROGRESS | — (awaiting review) |
 
 Phases 13–17 are client requests inserted before 11. Most of their open checks are real-browser or real-device passes that fold naturally into Phase 11.
 

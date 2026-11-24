@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Archivo, Source_Serif_4 } from "next/font/google";
 import { Preloader } from "@/components/layout/Preloader";
-import { SheetFrame } from "@/components/layout/SheetFrame";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { MotionFeatures } from "@/components/motion/MotionFeatures";
@@ -71,7 +70,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
               {children}
             </main>
             <SiteFooter />
-            <SheetFrame />
           </SmoothScroll>
           <SiteCanvas />
         </MotionFeatures>
