@@ -15,8 +15,8 @@ import { useEnvUnder } from "./useEnvUnder";
 /**
  * Wordmark, three destinations and the one action. Fixed, solid, and inked
  * for whatever environment is passing under its bottom edge. Below `lg` the
- * sheet frame is hidden, so the header carries the current scene name and
- * the destinations move into the menu.
+ * header carries the current scene name and the destinations move into the
+ * menu.
  */
 export function SiteHeader() {
   const ref = useRef<HTMLElement>(null);
