@@ -34,15 +34,87 @@ export interface EnquiryTransport {
 }
 
 /**
- * Delivery hasn't been decided (recipient, storage and retention are open
- * with the client), so every submission reports that honestly instead of
- * pretending it was sent.
+ * Fallback when no key is configured: tells the user honestly that online
+ * submission is not available.
  */
 const notConnected: EnquiryTransport = {
   submit: async () => ({ ok: false, reason: "not-connected" }),
 };
 
-export const enquiryTransport: EnquiryTransport = notConnected;
+/**
+ * Web3Forms transport. Maps every field in EnquiryData to a labelled line so
+ * the inbox entry is readable without extra tooling.
+ * The honeypot field (`website`) is excluded from the payload.
+ */
+const web3forms: EnquiryTransport = {
+  submit: async (data) => {
+    const key = process.env.NEXT_PUBLIC_WEB3FORMS_KEY;
+    if (!key) return { ok: false, reason: "not-connected" };
+
+    // Spam guard: bots fill the honeypot, humans never see it.
+    if (data.website.trim() !== "") return { ok: true };
+
+    const typeLabel =
+      enquiryTypes.find((t) => t.id === data.type)?.label ?? data.type;
+
+    // Readable plain-text body so the inbox entry needs no decoding.
+    const lines: [string, string][] = [
+      ["Name", data.name],
+      ["Work email", data.email],
+      ["Company", data.company],
+      ["Role", data.role],
+      ["Phone", data.phone],
+      ["Enquiry type", typeLabel],
+      ["Application", data.application],
+      ["Power range", data.power],
+      ["Quantity", data.quantity],
+      ["City / state", data.location],
+      ["Timeline", data.timeline],
+    ];
+    const body = [
+      ...lines
+        .filter(([, v]) => v.trim() !== "")
+        .map(([label, v]) => `${label}: ${v.trim()}`),
+      "",
+      data.requirement.trim(),
+    ].join("\n");
+
+    try {
+      const res = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          access_key: key,
+          subject: `Enquiry from ${data.company.trim() || data.name.trim()}`,
+          from_name: data.name,
+          email: data.email,
+          message: body,
+          // Extra fields visible in the Web3Forms dashboard.
+          company: data.company,
+          role: data.role,
+          phone: data.phone,
+          enquiry_type: typeLabel,
+          application: data.application,
+          power_range: data.power,
+          quantity: data.quantity,
+          location: data.location,
+          timeline: data.timeline,
+          requirement: data.requirement,
+        }),
+      });
+      const json = (await res.json()) as { success: boolean };
+      return json.success ? { ok: true } : { ok: false, reason: "failed" };
+    } catch {
+      return { ok: false, reason: "failed" };
+    }
+  },
+};
+
+export const enquiryTransport: EnquiryTransport =
+  process.env.NEXT_PUBLIC_WEB3FORMS_KEY ? web3forms : notConnected;
 
 // ---------------------------------------------------------------- Rules
 
