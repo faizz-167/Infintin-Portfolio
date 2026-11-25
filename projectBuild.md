@@ -48,10 +48,12 @@ rotate, take apart and inspect, not a stock photo.
 - **Say each thing once.** PitchX is shown as the award it was, not also as
   an event; the footer has no second "Talk to engineering" block. Why: the
   client review flagged repeated information.
-- **Footer as a title block.** Like the corner block on an engineering
-  drawing: company, contacts, pages and the government registration numbers
-  (DPIIT, Udyam) in one ruled grid. Why: it finishes the drawing-set idea
-  and gives buyers the registration details they check.
+- **Footer with one big quiet mark.** The round Infintin glyph, large and
+  pressed into a raised graphite panel (darker than the panel, no outline,
+  since the logo is a picture, not a drawing), with pages, contact and
+  profiles in three columns beside it and the registration numbers (DPIIT,
+  Udyam) in a strip below. Why: the earlier ruled grid gave every cell the
+  same weight; one big brand element gives the eye somewhere to land.
 
 ## Stack
 
