@@ -198,6 +198,12 @@
     outline-offset: 3px;
   }
 
+  /* Route focus (lib/routeFocus.ts) lands on the page h1 so screen readers
+     announce arrival. A heading isn't a control, so it shows no ring. */
+  h1[tabindex="-1"]:focus-visible {
+    outline: none;
+  }
+
   /*
    * One press for every control: it sinks 1 px while held. `translate` is
    * its own property, so it stacks on whatever `transform` a control already

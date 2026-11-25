@@ -193,12 +193,6 @@ function Tile({ index, state }: { index: number; state: StageState }) {
         className="absolute bg-ink opacity-15 blur-[0.375rem]"
         style={{ inset: u(-0.2), transform: "translateZ(1px)" }}
       />
-      {state === "current" && (
-        <div
-          className="process-bloom absolute bg-[radial-gradient(closest-side,var(--accent),transparent)] opacity-35"
-          style={{ inset: u(-4.5), transform: "translateZ(1px)" }}
-        />
-      )}
       <div
         className="absolute [transform-style:preserve-3d]"
         style={{ inset: u(-0.5) }}
@@ -356,7 +350,7 @@ export function ProcessBoard({ showOwners }: { showOwners: boolean }) {
             return (
               <path
                 key={stage.id}
-                className={`process-trace ${solid ? "drop-shadow-[0_0_3px_var(--accent)]" : ""}`}
+                className="process-trace"
                 d={segment(index)}
                 mask={`url(#process-run-${index})`}
                 fill="none"
@@ -374,7 +368,7 @@ export function ProcessBoard({ showOwners }: { showOwners: boolean }) {
             );
           })}
           <circle
-            className="process-head drop-shadow-[0_0_4px_var(--accent)]"
+            className="process-head"
             cx={head[0]}
             cy={head[1]}
             r={0.45}

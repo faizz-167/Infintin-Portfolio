@@ -12,8 +12,6 @@ const RUN = 1;
 const LIGHT = 0.3;
 /** Scroll held on the finished board before the pin lets go. */
 const HOLD = 0.8;
-/** Floor bloom under the current tile, as drawn (`opacity-35`). */
-const BLOOM = 0.35;
 
 /**
  * Desktop: scroll draws the trace run by run while the board travels right
@@ -100,14 +98,6 @@ function buildBoard(tl: gsap.core.Timeline, root: HTMLElement) {
         lit,
         { opacity: 0 },
         { opacity: 1, duration: LIGHT, ease: "none" },
-        lands,
-      );
-    const bloom = tile.querySelector(".process-bloom");
-    if (bloom)
-      tl.fromTo(
-        bloom,
-        { opacity: 0 },
-        { opacity: BLOOM, duration: LIGHT * 2, ease: "none" },
         lands,
       );
 
