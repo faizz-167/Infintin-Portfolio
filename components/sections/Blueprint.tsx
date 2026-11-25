@@ -15,7 +15,7 @@ export function Blueprint() {
       id="blueprint"
       sheet="Blueprint"
       env="sheet"
-      className="px-margin pt-6 pb-scene motion-reduce:pt-scene"
+      className="px-margin pt-6 pb-8 motion-reduce:pt-scene"
     >
       <figure className="mb-8 hidden motion-reduce:block">
         <FcuElevation fit="tight" className="h-auto w-full text-ink" />
