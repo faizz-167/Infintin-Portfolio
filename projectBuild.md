@@ -49,7 +49,7 @@ rotate, take apart and inspect, not a stock photo.
   an event; the footer has no second "Talk to engineering" block. Why: the
   client review flagged repeated information.
 - **Footer with one big quiet mark.** The round Infintin glyph, large and
-  in paper white on a light grey panel, the page ending light (no outline,
+  in paper white on a dark graphite panel, on the light page (no outline,
   since the logo is a picture, not a drawing) and the vision line under
   it, with pages, contact and
   profiles in three columns beside it and the registration numbers (DPIIT,
