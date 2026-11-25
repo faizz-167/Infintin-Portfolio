@@ -11,6 +11,7 @@ export const team = [
     role: "team.augustine.role",
     focus: "team.augustine.focus",
     photo: "/images/team/augustine.jpg",
+    linkedin: "https://www.linkedin.com/in/mg-augustine/",
   },
   {
     id: "infantraj",
@@ -19,6 +20,7 @@ export const team = [
     role: "team.infantraj.role",
     focus: "team.infantraj.focus",
     photo: "/images/team/infantraj.jpg",
+    linkedin: "https://www.linkedin.com/in/ainfantraj/",
   },
   {
     id: "chandrasekhar",
@@ -26,5 +28,6 @@ export const team = [
     name: "team.chandrasekhar.name",
     role: "team.chandrasekhar.role",
     photo: "/images/team/chandrasekhar.jpg",
+    linkedin: "https://www.linkedin.com/in/chandrasekhar-p-5a9a82227/",
   },
 ] as const satisfies readonly TeamMember[];

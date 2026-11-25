@@ -74,13 +74,19 @@ export function Leadership() {
                   <ClaimText id={member.role} />
                 </p>
                 <h3 className="type-lede text-ink">
-                  <ClaimText id={member.name} />
+                  {member.linkedin ? (
+                    <a
+                      href={member.linkedin}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:text-accent transition-colors"
+                    >
+                      <ClaimText id={member.name} />
+                    </a>
+                  ) : (
+                    <ClaimText id={member.name} />
+                  )}
                 </h3>
-                {member.focus && (
-                  <p className="type-body text-ink-muted">
-                    <ClaimText id={member.focus} />
-                  </p>
-                )}
               </div>
             </Reveal>
           </li>
