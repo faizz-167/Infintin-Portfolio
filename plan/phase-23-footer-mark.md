@@ -18,8 +18,8 @@ our own materials.
 - **Panel:** light page, dark panel, light mark (owner, 25 Nov 2026). The
   footer sits on the paper ground; inside the page margin, one graphite
   panel (Lab) with square corners, since our sheet has none.
-- **Mark:** the round Infintin glyph from the logo, large, in paper white,
-  the same as the page around the panel. Flat silhouette: the logo is a
+- **Mark:** the round Infintin glyph from the logo, large, in paper at 25%,
+  a soft light grey on the panel. Flat silhouette: the logo is a
   raster, so it can't be outlined. It is decorative (hidden from assistive
   tech; the company name is in the strip).
 - **Links:** three columns beside the mark, each with a small label: Pages
@@ -42,6 +42,6 @@ our own materials.
 1. At 1440 × 900 the footer shows the mark on the left with the vision line
    under it, three link columns
    on the right, and a strip with the copyright and both registration numbers.
-2. The page around the footer is paper, the panel graphite, the mark paper white, with no glow or gradient.
+2. The page around the footer is paper, the panel graphite, the mark a soft light grey, with no glow or gradient.
 3. At 390 px it stacks with no horizontal overflow.
 4. Typecheck, lint on touched files and claims:check pass.

@@ -32,13 +32,13 @@ export function SiteFooter() {
         <div data-env="lab" className="bg-ground p-3 md:p-5">
           <div className="grid gap-x-gutter gap-y-5 lg:grid-cols-12">
             <div className="flex flex-col gap-4 lg:col-span-5">
-              {/* Paper white, the same as the page around the panel, so the
-                  light ground shows through the dark panel as the mark. The
+              {/* Paper at a quarter strength: light against the panel, but
+                  soft enough that the links still read first. The
                   logo is a raster, so a mask gives a flat silhouette; an
                   outline isn't possible. */}
               <span
                 aria-hidden="true"
-                className="block aspect-square w-[min(100%,12rem)] bg-paper md:w-[16rem] lg:w-[min(100%,22rem)]"
+                className="block aspect-square w-[min(100%,12rem)] bg-paper/25 md:w-[16rem] lg:w-[min(100%,22rem)]"
                 style={{
                   maskImage: "url(/brand/infintin-glyph.png)",
                   maskSize: "contain",
