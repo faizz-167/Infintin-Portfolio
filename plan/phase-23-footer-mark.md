@@ -29,8 +29,8 @@ our own materials.
   address) and Profiles (LinkedIn).
 - **Closing strip:** under a hairline, the copyright on the left and the
   registrations (DPIIT recognition and Udyam numbers) on the right.
-- **Removed:** the vision line. The mark now carries the brand, and the
-  reference has no text block there. Restore it on request.
+- **Vision line:** the approved vision line sits under the mark, in the
+  muted lede style (owner asked for it back, 25 Nov 2026).
 - **Phones:** the mark comes first at a smaller size, the columns run two
   wide, and the strip stacks.
 
@@ -41,7 +41,8 @@ our own materials.
 
 ## Acceptance check
 
-1. At 1440 × 900 the footer shows the mark on the left, three link columns
+1. At 1440 × 900 the footer shows the mark on the left with the vision line
+   under it, three link columns
    on the right, and a strip with the copyright and both registration numbers.
 2. The mark reads as a lighter shape on the grey panel, with no glow or gradient.
 3. At 390 px it stacks with no horizontal overflow.

@@ -14,8 +14,8 @@ const LIST = "flex flex-col gap-1 type-body";
  * Closes every page: one raised panel holding the brand glyph, large and
  * recessed, beside three calm link columns, then a strip with the
  * copyright and registrations. The glyph is the footer's one big element,
- * so nothing else competes: no call to action (the header carries it), no
- * product status, no vision line. Always Sheet, so the page ends on paper
+ * with the approved vision line under it; nothing else competes: no call
+ * to action (the header carries it), no product status. Always Sheet, so the page ends on paper
  * (owner request, 25 Nov 2026).
  */
 export function SiteFooter() {
@@ -24,24 +24,33 @@ export function SiteFooter() {
     (cert) => claimString(cert.number) !== null,
   );
   const pages = [...navigation, primaryAction];
+  const vision = claimString(company.vision) !== null;
 
   return (
     <footer data-env="sheet" className="relative z-content">
       <Container className="py-8">
         <div className="border border-rule bg-ground-raised p-3 md:p-5">
           <div className="grid gap-x-gutter gap-y-5 lg:grid-cols-12">
-            {/* Filled in the page ground: paper white on the raised grey
-                panel, a light mark set into it rather than printed on it. The logo is a raster, so a
-                mask gives a flat silhouette; an outline isn't possible. */}
-            <span
-              aria-hidden="true"
-              className="block aspect-square w-[min(100%,12rem)] bg-ground md:w-[16rem] lg:col-span-5 lg:w-[min(100%,22rem)]"
-              style={{
-                maskImage: "url(/brand/infintin-glyph.png)",
-                maskSize: "contain",
-                maskRepeat: "no-repeat",
-              }}
-            />
+            <div className="flex flex-col gap-4 lg:col-span-5">
+              {/* Filled in the page ground: paper white on the raised grey
+                  panel, a light mark set into it rather than printed on it. The
+                  logo is a raster, so a mask gives a flat silhouette; an
+                  outline isn't possible. */}
+              <span
+                aria-hidden="true"
+                className="block aspect-square w-[min(100%,12rem)] bg-ground md:w-[16rem] lg:w-[min(100%,22rem)]"
+                style={{
+                  maskImage: "url(/brand/infintin-glyph.png)",
+                  maskSize: "contain",
+                  maskRepeat: "no-repeat",
+                }}
+              />
+              {vision && (
+                <p className="measure type-lede text-ink-muted">
+                  <ClaimText id={company.vision} />
+                </p>
+              )}
+            </div>
 
             <div className="grid grid-cols-2 gap-x-gutter gap-y-4 md:grid-cols-3 lg:col-span-7">
               <nav
