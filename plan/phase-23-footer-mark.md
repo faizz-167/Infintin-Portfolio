@@ -15,11 +15,13 @@ our own materials.
 
 ## Behaviour
 
-- **Panel:** one raised graphite panel (the Lab's raised ground) inside the
-  page margin, with a hairline frame and square corners. Our sheet has no
+- **Panel:** one raised panel (the Sheet's raised grey ground, on paper)
+  inside the page margin. The footer is light: the owner asked for a light
+  background and mark (25 Nov 2026), replacing the earlier dark Lab footer.
+  The panel has a hairline frame and square corners. Our sheet has no
   rounded corners, so neither does this.
 - **Mark:** the round Infintin glyph from the logo, large, filled in the
-  Lab ground so it sits slightly *below* the panel (recessed, tone on tone).
+  paper ground, so it reads as a light mark set into the grey panel.
   Flat silhouette: the logo is a raster, so it can't be outlined. It is
   decorative (hidden from assistive tech; the company name is in the strip).
 - **Links:** three columns beside the mark, each with a small label: Pages
@@ -41,6 +43,6 @@ our own materials.
 
 1. At 1440 × 900 the footer shows the mark on the left, three link columns
    on the right, and a strip with the copyright and both registration numbers.
-2. The mark reads as a darker shape on the raised panel, with no glow or gradient.
+2. The mark reads as a lighter shape on the grey panel, with no glow or gradient.
 3. At 390 px it stacks with no horizontal overflow.
 4. Typecheck, lint on touched files and claims:check pass.

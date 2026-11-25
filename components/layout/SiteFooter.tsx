@@ -15,7 +15,8 @@ const LIST = "flex flex-col gap-1 type-body";
  * recessed, beside three calm link columns, then a strip with the
  * copyright and registrations. The glyph is the footer's one big element,
  * so nothing else competes: no call to action (the header carries it), no
- * product status, no vision line. Always Lab, so the page ends dark.
+ * product status, no vision line. Always Sheet, so the page ends on paper
+ * (owner request, 25 Nov 2026).
  */
 export function SiteFooter() {
   const channels = shownChannels();
@@ -25,12 +26,12 @@ export function SiteFooter() {
   const pages = [...navigation, primaryAction];
 
   return (
-    <footer data-env="lab" className="relative z-content">
+    <footer data-env="sheet" className="relative z-content">
       <Container className="py-8">
         <div className="border border-rule bg-ground-raised p-3 md:p-5">
           <div className="grid gap-x-gutter gap-y-5 lg:grid-cols-12">
-            {/* Filled in the Lab ground, so it reads as pressed into the
-                panel rather than printed on it. The logo is a raster, so a
+            {/* Filled in the page ground: paper white on the raised grey
+                panel, a light mark set into it rather than printed on it. The logo is a raster, so a
                 mask gives a flat silhouette; an outline isn't possible. */}
             <span
               aria-hidden="true"
