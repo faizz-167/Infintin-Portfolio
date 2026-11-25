@@ -296,7 +296,36 @@ export function HeroStage({
             {headline}
           </SplitHeadline>
 
-          <div className="flex flex-col gap-3 lg:ml-[calc((100%+var(--spacing-gutter))/12*6)]">
+          <div className="relative flex flex-col gap-3 lg:ml-[calc((100%+var(--spacing-gutter))/12*6)]">
+            {/* Hangs off the top of the text block, not the hero's midline:
+                on a short window the bottom-anchored lede rose into it. */}
+            {live && assembled && (
+              <div
+                aria-hidden="true"
+                className={`pointer-events-none absolute right-0 bottom-full mb-5 flex flex-col items-end gap-1 transition-opacity duration-(--duration-base) ease-settle ${
+                  interacted ? "opacity-0" : "opacity-100"
+                }`}
+              >
+                <svg
+                  className="h-px w-8 overflow-visible text-accent"
+                  aria-hidden="true"
+                >
+                  <line
+                    x1="0"
+                    y1="0"
+                    x2="100%"
+                    y2="0"
+                    stroke="currentColor"
+                    strokeDasharray="24 6 4 6"
+                  />
+                </svg>
+                <p className="type-annotation text-ink-muted">Drag to rotate</p>
+                {/* Phones have the "Look inside" button instead. */}
+                <p className="hidden type-annotation text-ink-muted lg:block">
+                  Hold, or press E, to look inside
+                </p>
+              </div>
+            )}
             <p className="max-w-[60ch] type-lede text-ink">{lede}</p>
             <div>{status}</div>
             <div className="pointer-events-auto flex flex-wrap items-center gap-2">
@@ -314,33 +343,6 @@ export function HeroStage({
           </div>
         </div>
 
-        {live && assembled && (
-          <div
-            aria-hidden="true"
-            className={`pointer-events-none absolute top-1/2 right-margin flex translate-y-[2rem] flex-col items-end gap-1 transition-opacity duration-(--duration-base) ease-settle lg:translate-y-[6rem] ${
-              interacted ? "opacity-0" : "opacity-100"
-            }`}
-          >
-            <svg
-              className="h-px w-8 overflow-visible text-accent"
-              aria-hidden="true"
-            >
-              <line
-                x1="0"
-                y1="0"
-                x2="100%"
-                y2="0"
-                stroke="currentColor"
-                strokeDasharray="24 6 4 6"
-              />
-            </svg>
-            <p className="type-annotation text-ink-muted">Drag to rotate</p>
-            {/* Phones have the "Look inside" button instead. */}
-            <p className="hidden type-annotation text-ink-muted lg:block">
-              Hold, or press E, to look inside
-            </p>
-          </div>
-        )}
       </div>
 
       {/* The Sheet side of the cut. Hit-testable on purpose: the header
