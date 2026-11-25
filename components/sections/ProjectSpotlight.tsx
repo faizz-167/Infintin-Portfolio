@@ -1,7 +1,7 @@
 import { Reveal } from "@/components/motion/Reveal";
 import { ScrollScene } from "@/components/motion/ScrollScene";
 import { SplitHeadline } from "@/components/motion/SplitHeadline";
-import { CentreLine } from "@/components/ui/CentreLine";
+import { Arrowhead, CentreLine } from "@/components/ui/CentreLine";
 import { ClaimText, claimString } from "@/components/ui/ClaimText";
 import { project } from "@/data/project";
 
@@ -104,18 +104,5 @@ function CentreMark() {
     >
       <span className="size-[5px] rounded-full bg-accent" />
     </span>
-  );
-}
-
-function Arrowhead() {
-  return (
-    <svg
-      aria-hidden="true"
-      viewBox="0 0 8 10"
-      className="-ml-px h-[10px] w-2 shrink-0"
-      fill="currentColor"
-    >
-      <path d="M0 0l8 5-8 5z" />
-    </svg>
   );
 }

@@ -33,3 +33,17 @@ export function CentreLine({
     </svg>
   );
 }
+
+/** Closed arrowhead that ends a centre line or leader, pointing right. */
+export function Arrowhead() {
+  return (
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 8 10"
+      className="-ml-px h-[10px] w-2 shrink-0"
+      fill="currentColor"
+    >
+      <path d="M0 0l8 5-8 5z" />
+    </svg>
+  );
+}
