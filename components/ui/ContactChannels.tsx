@@ -16,38 +16,61 @@ function channelHref(channel: ContactChannel): string | null {
 }
 
 /**
- * Email, phone and address as a definition list. Production shows approved
- * channels only (nothing at all when none are); development shows pending
- * ones marked, through ClaimText, so layouts can be judged with real copy.
+ * The channels that may show: approved ones in production; in development
+ * pending ones too, marked through ClaimText, so layouts can be judged with
+ * real copy.
  */
-export function ContactChannels({ className }: { className?: string }) {
-  const channels = contactChannels.filter(
+export function shownChannels(
+  only?: readonly ContactChannel["kind"][],
+): ContactChannel[] {
+  return contactChannels.filter(
     (channel) =>
-      getClaim(channel.value).status === "approved" ||
-      process.env.NODE_ENV === "development",
+      (!only || only.includes(channel.kind)) &&
+      (getClaim(channel.value).status === "approved" ||
+        process.env.NODE_ENV === "development"),
   );
+}
+
+/** One channel's value: a link for email and phone once approved. */
+export function ChannelValue({ channel }: { channel: ContactChannel }) {
+  const approved = getClaim(channel.value).status === "approved";
+  const href = approved ? channelHref(channel) : null;
+  return href ? (
+    <TextLink href={href} external={false} arrow>
+      <ClaimText id={channel.value} />
+    </TextLink>
+  ) : (
+    <ClaimText id={channel.value} />
+  );
+}
+
+/**
+ * Channels as a definition list (nothing at all when none can show).
+ * `only` picks some of them; `size="lede"` sets the values large, for a
+ * place where they are the main way in.
+ */
+export function ContactChannels({
+  only,
+  size = "body",
+  className,
+}: {
+  only?: readonly ContactChannel["kind"][];
+  size?: "body" | "lede";
+  className?: string;
+}) {
+  const channels = shownChannels(only);
   if (channels.length === 0) return null;
 
   return (
     <dl className={`flex flex-col gap-2 ${className ?? ""}`}>
-      {channels.map((channel) => {
-        const approved = getClaim(channel.value).status === "approved";
-        const href = approved ? channelHref(channel) : null;
-        return (
-          <div key={channel.kind}>
-            <dt className="type-annotation text-ink-muted">{channel.label}</dt>
-            <dd className="type-body">
-              {href ? (
-                <TextLink href={href} external={false} arrow>
-                  <ClaimText id={channel.value} />
-                </TextLink>
-              ) : (
-                <ClaimText id={channel.value} />
-              )}
-            </dd>
-          </div>
-        );
-      })}
+      {channels.map((channel) => (
+        <div key={channel.kind}>
+          <dt className="type-annotation text-ink-muted">{channel.label}</dt>
+          <dd className={size === "lede" ? "type-lede" : "type-body"}>
+            <ChannelValue channel={channel} />
+          </dd>
+        </div>
+      ))}
     </dl>
   );
 }

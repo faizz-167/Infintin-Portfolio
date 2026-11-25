@@ -36,6 +36,7 @@
 | 17 | Direction-aware button hover | [phase-17-button-hover.md](phase-17-button-hover.md) | 16 | COMPLETED | — |
 | 20 | Client photography and logo | [phase-20-photography-and-brand.md](phase-20-photography-and-brand.md) | 19 | IN_PROGRESS | — (awaiting review) |
 | 21 | Recognition redesign | [phase-21-recognition-redesign.md](phase-21-recognition-redesign.md) | 20 | IN_PROGRESS | — (awaiting review) |
+| 22 | Contact page and footer redesign | [phase-22-contact-and-footer.md](phase-22-contact-and-footer.md) | 21 | IN_PROGRESS | — (awaiting review) |
 
 Phases 13–17 are client requests inserted before 11. Most of their open checks are real-browser or real-device passes that fold naturally into Phase 11.
 

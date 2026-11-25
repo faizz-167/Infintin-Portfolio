@@ -240,6 +240,10 @@ export interface Certificate {
   id: string;
   title: ClaimId;
   detail: ClaimId;
+  /** What the number is, for the footer's registrations, e.g. "Udyam". */
+  register: string;
+  /** The registration number alone. */
+  number: ClaimId;
   /** Path under `public/`; the full document, never cropped. */
   src: string;
   width: number;

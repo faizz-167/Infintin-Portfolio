@@ -427,8 +427,18 @@ export const claims = {
     status: "approved",
     source: "Certificate of Recognition DIPP155855",
   },
+  "certificate.dpiit.number": {
+    text: "DIPP155855",
+    status: "approved",
+    source: "Certificate of Recognition DIPP155855",
+  },
   "certificate.udyam.title": {
     text: "Udyam registered micro enterprise, manufacturing",
+    status: "approved",
+    source: "Udyam Registration Certificate UDYAM-TN-02-0256869",
+  },
+  "certificate.udyam.number": {
+    text: "UDYAM-TN-02-0256869",
     status: "approved",
     source: "Udyam Registration Certificate UDYAM-TN-02-0256869",
   },

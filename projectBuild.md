@@ -41,6 +41,17 @@ rotate, take apart and inspect, not a stock photo.
   and strips location data from them.
 - **Contact form without a backend yet.** The form never pretends to have
   sent; delivery is a later phase.
+- **Short form, optional extras tucked away.** Only the five fields needed
+  to reply are required and shown; phone, role and technical details sit in
+  a closed, visibly separate panel with an example in every field. Why: the
+  client found the form long, and buyers fill in what they know.
+- **Say each thing once.** PitchX is shown as the award it was, not also as
+  an event; the footer has no second "Talk to engineering" block. Why: the
+  client review flagged repeated information.
+- **Footer as a title block.** Like the corner block on an engineering
+  drawing: company, contacts, pages and the government registration numbers
+  (DPIIT, Udyam) in one ruled grid. Why: it finishes the drawing-set idea
+  and gives buyers the registration details they check.
 
 ## Stack
 

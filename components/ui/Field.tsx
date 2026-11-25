@@ -13,6 +13,8 @@ type FieldProps = {
   autoComplete?: string;
   defaultValue?: string;
   help?: string;
+  /** An example answer, shown in the empty control; never the label. */
+  placeholder?: string;
   /** Returns an error message, or null when the value is valid. */
   validate?: Validate;
   /** Error supplied by the form, e.g. after a failed submit. */
@@ -23,7 +25,7 @@ type FieldProps = {
 };
 
 const controlClasses =
-  "peer block w-full rounded-xs border border-ink-muted bg-ground px-2 type-data text-ink aria-invalid:border-accent";
+  "peer block w-full rounded-xs border border-ink-muted bg-ground px-2 type-data text-ink placeholder:text-ink-muted aria-invalid:border-accent";
 
 /** Text input with an always-visible label, help text and inline validation. */
 export function Field({
@@ -35,6 +37,7 @@ export function Field({
   autoComplete,
   defaultValue,
   help,
+  placeholder,
   validate,
   error: formError,
   id,
@@ -47,6 +50,7 @@ export function Field({
     required,
     autoComplete,
     defaultValue,
+    placeholder,
     "aria-invalid": v.error ? true : undefined,
     "aria-describedby": describedBy(v.helpId, v.errorId, help, v.error),
   };
