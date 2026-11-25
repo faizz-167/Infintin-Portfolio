@@ -9,6 +9,8 @@ export const events = [
     caption: "event.etm-2026.caption",
     photo: {
       src: "/images/events/etm-2026.jpg",
+      width: 1280,
+      height: 590,
       alt: "Delegates gathered on the exhibition floor at ETM 2026 in Goa.",
     },
   },
@@ -18,8 +20,9 @@ export const events = [
     caption: "event.electric-motor-expo-2026.caption",
     photo: {
       src: "/images/events/electric-motor-expo-2026.jpg",
+      width: 1280,
+      height: 1280,
       alt: "Visitors looking at the prototype on the table of the Infintin Mobility booth at the Electric Motor Expo 2026.",
-      position: "50% 70%",
     },
   },
   {
@@ -28,6 +31,8 @@ export const events = [
     caption: "event.rata-conclave-2026.caption",
     photo: {
       src: "/images/events/rata-conclave-2026.jpg",
+      width: 1600,
+      height: 900,
       alt: "Three members of the Infintin team in front of the RATA Conclave 2026 backdrop.",
     },
   },

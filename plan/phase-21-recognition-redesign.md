@@ -17,23 +17,25 @@ a label strip, corner labels on photos).
 ## Behaviour
 
 - **Order:** Awards, then Events, then Support and registrations.
-- **Awards** lead the sheet as one framed panel. The PitchX award sits
-  beside its photograph (the award collage, uncropped); Autohackathon sits
-  under it. Each award cell has a strip ("Award" and the year), then what
-  was won at display size and who hosted it below. PitchX is no longer
-  listed among the events.
-- **Events:** the remaining events as framed cells edge to edge (3 / 1
-  columns), each with its photo (event name as the corner label) and one
-  line on what we did. No sequence numerals: the events aren't a sequence.
+- **Awards** (revised after review, 25 Nov 2026) lead the sheet as a
+  typeset record under a 2 px copper line, one row per award. The placing
+  ("Winner", "Top 5") is set in the hero's expanded display; a copper centre
+  line with an arrowhead runs from it to the competition name. Who hosted it
+  sits under the name, and for PitchX the photo of the award cheque (cropped
+  from the collage, without the hosts' logos) sits under that. PitchX is no
+  longer listed among the events. The leaders draw in once on entry.
+- **Events** (revised after review): a contact sheet. The photos hang at one
+  height, each at its own ratio so none is cropped, with the event name and
+  what we did below. Stacked on phones. No sequence numerals: the events
+  aren't a sequence.
 - **Support and registrations:** one framed panel. The programme support
   and grant entries as a list with their kind, then the two certificates
   as uncropped thumbnails that open full size, each with its title and
   registration detail.
-- Award titles are split into what was won and who hosted it. Same
-  approved words, nothing new.
+- Award titles are split into placing, competition and host. Same approved
+  words, nothing new.
 - The awards plaques' large copper year is dropped (design direction §2:
-  no big number + small label). Copper stays as the 2 px top edge of the
-  Awards panel (the only panel with one) and the labels.
+  no big number + small label).
 - The approval gating stays: an entry shows only once its claims are
   approved, and a sheet with nothing approved doesn't render.
 
@@ -45,9 +47,10 @@ a label strip, corner labels on photos).
 
 ## Acceptance check
 
-1. At 1440 × 900 the first thing under the headline is the Awards panel,
-   with PitchX beside its photo; PitchX appears once on the sheet.
-2. The sheet is clearly shorter than before (was ≈3,800 px at 1440).
-3. 390 px: everything stacks in the same order, with no horizontal overflow.
-4. Certificates open full size in a new tab.
-5. Typecheck, build and claims:check pass; lint is clean on the files touched.
+1. At 1440 × 900 the first thing under the headline is the Awards record,
+   "Winner" leading to Pitch X 2026; PitchX appears once on the sheet.
+2. The three event photos share one height and none is cropped.
+3. The sheet is clearly shorter than before (was ≈3,800 px at 1440).
+4. 390 px: everything stacks in the same order, with no horizontal overflow.
+5. Certificates open full size in a new tab.
+6. Typecheck, build and claims:check pass; lint is clean on the files touched.

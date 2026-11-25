@@ -39,9 +39,9 @@ const CHECKED = [
   "name",
   "email",
   "company",
-  "phone",
   "type",
   "requirement",
+  "phone",
   "consent",
 ] as const;
 type Checked = (typeof CHECKED)[number];
@@ -226,8 +226,15 @@ export function EnquiryForm({
                   onClick={(e) => {
                     e.preventDefault();
                     const field = document.getElementById(fieldId(name));
-                    field?.focus();
-                    field?.scrollIntoView({ block: "center" });
+                    // Phone sits in the optional panel: open it first, or
+                    // the control can't take focus. Its toggle event runs
+                    // the panel's own open animation.
+                    const panel = field?.closest("details");
+                    if (panel && !panel.open) panel.open = true;
+                    requestAnimationFrame(() => {
+                      field?.focus();
+                      field?.scrollIntoView({ block: "center" });
+                    });
                   }}
                   className="type-body text-ink underline decoration-accent underline-offset-4"
                 >
@@ -239,6 +246,7 @@ export function EnquiryForm({
         </section>
       )}
 
+      {/* Required first, and only what we need to reply: five fields. */}
       <div className="grid gap-x-gutter gap-y-2 md:grid-cols-2">
         <Field
           id={fieldId("name")}
@@ -268,21 +276,6 @@ export function EnquiryForm({
           validate={RULES.company}
           error={errors.company}
         />
-        <Field
-          id={fieldId("role")}
-          label="Role or department"
-          name="role"
-          autoComplete="organization-title"
-        />
-        <Field
-          id={fieldId("phone")}
-          label="Phone"
-          name="phone"
-          type="tel"
-          autoComplete="tel"
-          validate={RULES.phone}
-          error={errors.phone}
-        />
         <Select
           id={fieldId("type")}
           label="Enquiry type"
@@ -300,6 +293,7 @@ export function EnquiryForm({
           name="requirement"
           multiline
           required
+          placeholder="For example: a ceiling fan coil unit around 1.5 TR on 230 V. We want to evaluate a more efficient motor for our next model."
           help="A few lines on your unit, its duty and what you need from us."
           validate={RULES.requirement}
           error={errors.requirement}
@@ -307,32 +301,76 @@ export function EnquiryForm({
         />
       </div>
 
-      <Disclosure summary="Add technical details (optional)">
-        <div className="grid gap-x-gutter gap-y-2 pt-2 md:grid-cols-2">
-          <Select
-            label="Application type"
-            name="application"
-            placeholder="Choose one"
-            options={applicationOptions}
-          />
-          <Field
-            label="Motor power range"
-            name="power"
-            help="In watts, if you know it."
-          />
-          <Field label="Approximate quantity or scale" name="quantity" />
-          <Field
-            label="City and state"
-            name="location"
-            autoComplete="address-level2"
-          />
-          <Field
-            label="Desired evaluation timeline"
-            name="timeline"
-            className="md:col-span-2"
-          />
-        </div>
-      </Disclosure>
+      {/* Everything optional in one panel, set apart by the raised ground
+          and a hatched edge, and closed by default so the form stays short.
+          Each field carries an example answer. */}
+      <div className="flex bg-ground-raised">
+        <span
+          aria-hidden="true"
+          className="w-2 shrink-0 border-rule border-r hatch-rule"
+        />
+        <Disclosure
+          className="min-w-0 flex-1 px-3"
+          summary={
+            <span className="flex flex-col gap-[0.125rem] py-1">
+              <span>Add optional details</span>
+              <span className="type-caption text-ink-muted">
+                Phone, role and your application. They help us reply with
+                specifics.
+              </span>
+            </span>
+          }
+        >
+          <div className="grid gap-x-gutter gap-y-2 pt-2 md:grid-cols-2">
+            <Field
+              id={fieldId("phone")}
+              label="Phone"
+              name="phone"
+              type="tel"
+              autoComplete="tel"
+              placeholder="e.g. +91 98765 43210"
+              validate={RULES.phone}
+              error={errors.phone}
+            />
+            <Field
+              id={fieldId("role")}
+              label="Role or department"
+              name="role"
+              autoComplete="organization-title"
+              placeholder="e.g. Design engineer, Procurement"
+            />
+            <Select
+              label="Application type"
+              name="application"
+              placeholder="Choose one"
+              options={applicationOptions}
+            />
+            <Field
+              label="Motor power range"
+              name="power"
+              placeholder="e.g. 75 W, or 50 to 120 W"
+              help="In watts, if you know it."
+            />
+            <Field
+              label="Approximate quantity or scale"
+              name="quantity"
+              placeholder="e.g. 500 units a year, or a 20-unit pilot"
+            />
+            <Field
+              label="City and state"
+              name="location"
+              autoComplete="address-level2"
+              placeholder="e.g. Chennai, Tamil Nadu"
+            />
+            <Field
+              label="Desired evaluation timeline"
+              name="timeline"
+              placeholder="e.g. Samples by March 2027"
+              className="md:col-span-2"
+            />
+          </div>
+        </Disclosure>
+      </div>
 
       {/* Honeypot: off-screen and out of the tab order, so only bots fill it. */}
       <div

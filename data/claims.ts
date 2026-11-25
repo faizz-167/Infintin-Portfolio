@@ -367,10 +367,15 @@ export const claims = {
   },
 
   // ------------------------------------------------------------ Recognition
-  // Award titles split at the dash into what was won and who hosted it
-  // (Phase 21); the approved words are unchanged.
+  // Each award split into result, competition and host (Phase 21); the
+  // approved words are unchanged.
+  "recognition.pitch-x-2026.result": {
+    text: "Winner",
+    status: "approved",
+    source: "PRD §8.6",
+  },
   "recognition.pitch-x-2026": {
-    text: "Winner, Pitch X 2026",
+    text: "Pitch X 2026",
     status: "approved",
     source: "PRD §8.6; confirm wording and logo permission",
   },
@@ -379,8 +384,13 @@ export const claims = {
     status: "approved",
     source: "PRD §8.6",
   },
+  "recognition.autohackathon-2023.result": {
+    text: "Top 5",
+    status: "approved",
+    source: "PRD §8.6",
+  },
   "recognition.autohackathon-2023": {
-    text: "Top 5, Autohackathon 2023",
+    text: "Autohackathon 2023",
     status: "approved",
     source: "PRD §8.6",
   },
@@ -417,8 +427,18 @@ export const claims = {
     status: "approved",
     source: "Certificate of Recognition DIPP155855",
   },
+  "certificate.dpiit.number": {
+    text: "DIPP155855",
+    status: "approved",
+    source: "Certificate of Recognition DIPP155855",
+  },
   "certificate.udyam.title": {
     text: "Udyam registered micro enterprise, manufacturing",
+    status: "approved",
+    source: "Udyam Registration Certificate UDYAM-TN-02-0256869",
+  },
+  "certificate.udyam.number": {
+    text: "UDYAM-TN-02-0256869",
     status: "approved",
     source: "Udyam Registration Certificate UDYAM-TN-02-0256869",
   },

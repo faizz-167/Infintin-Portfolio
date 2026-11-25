@@ -8,11 +8,15 @@ import {
 } from "@/components/sections/EnquiryForm";
 import { claimString } from "@/components/ui/ClaimText";
 import { ContactChannels } from "@/components/ui/ContactChannels";
-import { TextLink } from "@/components/ui/TextLink";
-import { enquiryTypes, socials } from "@/data/contact";
 import { siteOpenGraph } from "@/lib/seo";
 
 export const ensureStatic = "navigation";
+
+const NEXT_STEPS = [
+  "Your enquiry reaches our engineering team.",
+  "If there's a fit, we arrange a call about your unit.",
+  "Where it makes sense, we plan an evaluation with you.",
+] as const;
 
 const DESCRIPTION =
   "Talk to Infintin's engineers about a fan coil unit programme, an OEM integration or a pilot.";
@@ -30,9 +34,11 @@ export const metadata: Metadata = {
 };
 
 /**
- * One sheet: how to reach us and what happens next on the left, the
- * enquiry form on the right. Direct channels stay visible beside the form,
- * since online submission isn't connected yet (Phase 12).
+ * One sheet. The heading and intro across the top; below, the form, with
+ * the direct channels and what happens next beside it, in view while the
+ * form scrolls. Email and phone stay beside the form since online
+ * submission isn't connected yet (Phase 12). The enquiry types live in the
+ * form's own field, not in a second list.
  */
 export default function ContactPage() {
   const email = claimString("contact.email");
@@ -43,67 +49,73 @@ export default function ContactPage() {
         id="contact"
         sheet="Contact"
         env="sheet"
-        className="grid gap-x-gutter gap-y-6 px-margin pt-[calc(var(--spacing-header)+var(--spacing-6))] pb-scene lg:grid-cols-12"
+        // The form is the end of the page: a shorter close than a scene's.
+        className="flex flex-col gap-6 px-margin pt-[calc(var(--spacing-header)+var(--spacing-6))] pb-9"
       >
-        <div className="flex flex-col gap-5 lg:col-span-4">
-          <div className="flex flex-col gap-3">
-            <h1 className="type-display-l">Talk to our engineers</h1>
-            <p className="measure type-lede">
-              Tell us about your unit, its duty and what you need. We'll talk
-              through technical fit and what an evaluation would involve.
-            </p>
-          </div>
-
-          <ContactChannels />
-          {socials.length > 0 && (
-            <ul aria-label="Social profiles" className="type-body">
-              {socials.map((social) => (
-                <li key={social.href}>
-                  <TextLink href={social.href} arrow>
-                    {social.label}
-                  </TextLink>
-                </li>
-              ))}
-            </ul>
-          )}
-
-          <section
-            aria-labelledby="topics-heading"
-            className="flex flex-col gap-2"
-          >
-            <h2 id="topics-heading" className="type-annotation text-ink-muted">
-              What you can write to us about
-            </h2>
-            <ul className="flex flex-col">
-              {enquiryTypes.map((type) => (
-                <li key={type.id} className="rule-hairline py-1 type-body">
-                  {type.label}
-                </li>
-              ))}
-            </ul>
-          </section>
-
-          <section
-            aria-labelledby="next-heading"
-            className="flex flex-col gap-2"
-          >
-            <h2 id="next-heading" className="type-annotation text-ink-muted">
-              What happens next
-            </h2>
-            <p className="measure type-body">
-              Your enquiry goes to our engineering team. If there's a fit, the
-              next step is usually a call about your unit and, where it makes
-              sense, an evaluation.
-            </p>
-          </section>
+        <div className="grid gap-x-gutter gap-y-3 lg:grid-cols-12 lg:items-end">
+          <h1 className="type-display-l lg:col-span-7">
+            Talk to our engineers
+          </h1>
+          <p className="measure type-lede lg:col-span-5">
+            Tell us about your unit, its duty and what you need. We'll talk
+            through technical fit and what an evaluation would involve.
+          </p>
         </div>
 
-        <div className="lg:col-span-7 lg:col-start-6">
-          {/* The fallback is the same form without a type chosen, so the
-              prerendered page has a working form before the params resolve. */}
-          <Suspense fallback={<EnquiryForm email={email} />}>
-            <EnquiryFormFromLink email={email} />
-          </Suspense>
+        <div className="grid gap-x-gutter gap-y-7 border-rule border-t pt-5 lg:grid-cols-12">
+          <div className="lg:col-span-8">
+            {/* The fallback is the same form without a type chosen, so the
+                prerendered page has a working form before the params resolve. */}
+            <Suspense fallback={<EnquiryForm email={email} />}>
+              <EnquiryFormFromLink email={email} />
+            </Suspense>
+          </div>
+
+          <aside
+            aria-label="Other ways to reach us"
+            className="lg:col-span-3 lg:col-start-10"
+          >
+            <div className="flex flex-col gap-6 lg:sticky lg:top-[calc(var(--spacing-header)+var(--spacing-4))]">
+              <section
+                aria-labelledby="direct-heading"
+                className="flex flex-col gap-2"
+              >
+                <h2
+                  id="direct-heading"
+                  className="type-annotation text-ink-muted"
+                >
+                  Or write or call directly
+                </h2>
+                <ContactChannels only={["email", "phone"]} size="lede" />
+              </section>
+
+              <section
+                aria-labelledby="next-heading"
+                className="flex flex-col gap-2"
+              >
+                <h2
+                  id="next-heading"
+                  className="type-annotation text-ink-muted"
+                >
+                  What happens next
+                </h2>
+                {/* Numbered because it is a sequence. */}
+                <ol className="flex flex-col">
+                  {NEXT_STEPS.map((step, index) => (
+                    <li
+                      key={step}
+                      className="grid grid-cols-[2rem_1fr] gap-x-1 border-rule border-t py-2 type-body"
+                    >
+                      <span className="type-data text-ink-muted">
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+                      {step}
+                    </li>
+                  ))}
+                </ol>
+              </section>
+            </div>
+          </aside>
         </div>
       </ScrollScene>
     </PageTransition>

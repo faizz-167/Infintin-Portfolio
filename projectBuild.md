@@ -41,6 +41,20 @@ rotate, take apart and inspect, not a stock photo.
   and strips location data from them.
 - **Contact form without a backend yet.** The form never pretends to have
   sent; delivery is a later phase.
+- **Short form, optional extras tucked away.** Only the five fields needed
+  to reply are required and shown; phone, role and technical details sit in
+  a closed, visibly separate panel with an example in every field. Why: the
+  client found the form long, and buyers fill in what they know.
+- **Say each thing once.** PitchX is shown as the award it was, not also as
+  an event; the footer has no second "Talk to engineering" block. Why: the
+  client review flagged repeated information.
+- **Footer with one big quiet mark.** The round Infintin glyph, large and
+  in soft light grey on a dark graphite panel, on the light page (no outline,
+  since the logo is a picture, not a drawing) and the vision line under
+  it, with pages, contact and
+  profiles in three columns beside it and the registration numbers (DPIIT,
+  Udyam) in a strip below. Why: the earlier ruled grid gave every cell the
+  same weight; one big brand element gives the eye somewhere to land.
 
 ## Stack
 

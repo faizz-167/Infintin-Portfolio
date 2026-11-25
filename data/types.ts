@@ -222,7 +222,9 @@ export interface Recognition {
   id: string;
   kind: RecognitionKind;
   year?: number;
-  /** What was won or given, e.g. "Winner, Pitch X 2026". */
+  /** The placing, for awards, e.g. "Winner". */
+  result?: ClaimId;
+  /** The competition or programme, e.g. "Pitch X 2026". */
   title: ClaimId;
   /** Who hosted or gave it, when that is a separate line. */
   host?: ClaimId;
@@ -238,6 +240,10 @@ export interface Certificate {
   id: string;
   title: ClaimId;
   detail: ClaimId;
+  /** What the number is, for the footer's registrations, e.g. "Udyam". */
+  register: string;
+  /** The registration number alone. */
+  number: ClaimId;
   /** Path under `public/`; the full document, never cropped. */
   src: string;
   width: number;
@@ -245,14 +251,20 @@ export interface Certificate {
   alt: string;
 }
 
+/** A photo shown uncropped at its own ratio, so its pixel size is known. */
+export interface SizedPhoto extends Photo {
+  width: number;
+  height: number;
+}
+
 /** A show, conclave or pitch event the company took part in, with a photo. */
 export interface CompanyEvent {
   id: string;
-  /** Event name, place and year, as the frame's corner label. */
+  /** Event name, place and year. */
   name: ClaimId;
   /** What the company did there. */
   caption: ClaimId;
-  photo: Photo;
+  photo: SizedPhoto;
 }
 
 export interface ContactChannel {

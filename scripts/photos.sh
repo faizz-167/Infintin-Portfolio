@@ -38,11 +38,13 @@ magick "$src/founders/Chandrasekhar.jpg" "${jpeg[@]}" "$out/chandrasekhar.jpg"
 # ---------------------------------------------------------------- Events
 out=public/images/events
 mkdir -p "$out"
-event() { magick "$src/events/$1" -auto-orient -resize '1600x1600>' "${jpeg[@]}" "$out/$2"; }
+event() { magick "$src/events/$1" -auto-orient "${@:3}" -resize '1600x1600>' "${jpeg[@]}" "$out/$2"; }
 event 1_ETM2026.jpeg etm-2026.jpg
 event 2_MotorExpo.jpeg electric-motor-expo-2026.jpg
 event "3_RATA Conclave 2026.jpeg" rata-conclave-2026.jpg
-event "4_PitchX event.jpeg" pitchx-2026.jpg
+# PitchX: only the award handover panel of the collage (top right), where
+# the cheque made out to Infintin is the proof. Drops the hosts' logos.
+event "4_PitchX event.jpeg" pitchx-2026-award.jpg -crop 864x648+1002+248 +repage
 
 # ---------------------------------------------------------------- Logo
 # The lockup is used as a CSS mask, so only its alpha matters; the emblem

@@ -1,7 +1,9 @@
 import Image from "next/image";
+import { DrawLine } from "@/components/motion/DrawLine";
 import { Reveal } from "@/components/motion/Reveal";
 import { ScrollScene } from "@/components/motion/ScrollScene";
 import { SplitHeadline } from "@/components/motion/SplitHeadline";
+import { Arrowhead, CentreLine } from "@/components/ui/CentreLine";
 import { ClaimText, claimString } from "@/components/ui/ClaimText";
 import { Photo } from "@/components/ui/Photo";
 import { certificates } from "@/data/certificates";
@@ -54,10 +56,12 @@ export function ecosystemShown(): boolean {
  * events, then programme support and the company's registrations. Each fact
  * shows once: PitchX is the award with its photograph, not also an event.
  *
- * Every panel is framed cells edge to edge, the Founders vocabulary: the
- * grid draws the top and left edges, each cell its right and bottom, so
- * shared edges stay one hairline. Nobody here is called a partner, and no
- * third-party logo appears without permission (none has been given).
+ * Type size carries the weight. Awards are a record set large: the placing
+ * in the hero's expanded display, a copper leader (the drawings' centre line
+ * and arrowhead) running from it to the competition. Events are a quieter
+ * hairline register with the photo as proof. Support and registrations are
+ * framed cells. Nobody here is called a partner, and no third-party logo
+ * appears without permission (none has been given).
  */
 export function Ecosystem() {
   const entries = listed();
@@ -67,9 +71,6 @@ export function Ecosystem() {
   const certs = shownCertificates();
   if (entries.length === 0 && shown.length === 0 && certs.length === 0)
     return null;
-
-  // The first award with a photograph leads the panel beside it.
-  const featured = awards.find((award) => award.photo);
 
   return (
     <ScrollScene
@@ -90,52 +91,55 @@ export function Ecosystem() {
           <h3 id="awards-heading" className="type-annotation text-accent">
             Awards
           </h3>
-          {/* The one panel with a 2 px object line on top: the awards are
-              the sheet's emphasis. */}
-          <div className="grid border-accent border-t-[length:var(--rule-object)] border-l border-l-rule lg:grid-cols-12">
-            {featured?.photo && (
-              <Reveal className="border-rule border-r border-b lg:col-span-7">
-                {/* 5:4 is the collage's own ratio, so nothing is cropped. */}
-                <Photo
-                  photo={featured.photo}
-                  framed={false}
-                  aspect="aspect-[5/4]"
-                  sizes="(min-width: 1024px) 55vw, 100vw"
-                />
-              </Reveal>
-            )}
-            <ul
-              className={`flex flex-col ${featured ? "lg:col-span-5" : "md:flex-row lg:col-span-12"}`}
-            >
-              {awards.map((award) => (
-                <li
-                  key={award.id}
-                  className="flex flex-1 flex-col border-rule border-r border-b"
-                >
-                  <Reveal className="flex h-full flex-col">
-                    <p className="flex items-baseline justify-between border-rule border-b px-3 py-1">
-                      <span className="type-annotation text-accent">
-                        {KIND_LABEL[award.kind]}
+          {/* The sheet's emphasis: a 2 px copper object line opens the list. */}
+          <ul className="border-accent border-t-[length:var(--rule-object)]">
+            {awards.map((award) => (
+              <li
+                key={award.id}
+                className="grid gap-y-3 border-rule border-b py-5 lg:grid-cols-12 lg:gap-x-gutter lg:gap-y-0 lg:py-6"
+              >
+                {/* One heading, read as "Winner Pitch X 2026". From lg it
+                    joins the row's columns (subgrid): placing and leader
+                    across seven, the competition in the last five, centred
+                    on the leader it receives. */}
+                <h4 className="flex flex-col gap-2 lg:col-span-12 lg:grid lg:grid-cols-subgrid lg:items-center">
+                  {award.result && (
+                    <span className="flex items-center gap-3 lg:col-span-7">
+                      <span className="type-display-xl text-ink">
+                        <ClaimText id={award.result} />
                       </span>
-                      {award.year && (
-                        <span className="type-data text-ink">{award.year}</span>
-                      )}
-                    </p>
-                    <div className="flex flex-1 flex-col justify-end gap-2 p-3 lg:p-4">
-                      <h4 className="type-display-m text-ink">
-                        <ClaimText id={award.title} />
-                      </h4>
-                      {award.host && (
-                        <p className="type-body text-ink-muted">
-                          <ClaimText id={award.host} />
-                        </p>
-                      )}
-                    </div>
-                  </Reveal>
-                </li>
-              ))}
-            </ul>
-          </div>
+                      <DrawLine className="hidden min-w-8 flex-1 items-center text-accent lg:flex">
+                        <CentreLine accent className="flex-1" />
+                        <Arrowhead />
+                      </DrawLine>
+                    </span>
+                  )}
+                  <span className="type-display-m text-ink lg:col-span-5">
+                    <ClaimText id={award.title} />
+                  </span>
+                </h4>
+                {/* Two columns with one job each: the placing on the left
+                    with air under it, everything about the competition (who
+                    hosted it, the photo that proves it) on the right. */}
+                {(award.host || award.photo) && (
+                  <div className="flex flex-col gap-4 lg:col-span-5 lg:col-start-8">
+                    {award.host && (
+                      <p className="type-body text-ink-muted">
+                        <ClaimText id={award.host} />
+                      </p>
+                    )}
+                    {award.photo && (
+                      <Photo
+                        photo={award.photo}
+                        aspect="aspect-[4/3]"
+                        sizes="(min-width: 1024px) 40vw, 100vw"
+                      />
+                    )}
+                  </div>
+                )}
+              </li>
+            ))}
+          </ul>
         </section>
       )}
 
@@ -147,22 +151,34 @@ export function Ecosystem() {
           <h3 id="events-heading" className="type-annotation text-accent">
             Events
           </h3>
-          {/* One row of equal cells: the events aren't a sequence, so no
-              numerals and no order implied beyond the client's list. 3:2 is
-              the middle ground for photos from 2.2:1 to square. */}
-          <ul className="grid border-rule border-t border-l md:grid-cols-3">
+          {/* A contact sheet: the photos hang at one height, each at its
+              own width, so none is cropped (they run from 2.2:1 to square).
+              Each item grows by its photo's ratio from a zero basis, which
+              makes the heights come out equal whatever the row width. No
+              numerals: the events aren't a sequence. */}
+          <ul className="flex flex-col gap-5 md:flex-row md:gap-gutter">
             {shown.map((event) => (
-              <li key={event.id} className="border-rule border-r border-b">
-                <Reveal className="flex h-full flex-col">
-                  <Photo
-                    photo={event.photo}
-                    label={<ClaimText id={event.name} />}
-                    framed={false}
-                    aspect="aspect-[3/2]"
-                    sizes="(min-width: 768px) 33vw, 100vw"
-                    className="border-rule border-b"
+              <li
+                key={event.id}
+                style={{ flexGrow: event.photo.width / event.photo.height }}
+                className="md:basis-0"
+              >
+                <Reveal className="flex flex-col gap-2">
+                  <Image
+                    src={event.photo.src}
+                    alt={event.photo.alt}
+                    width={event.photo.width}
+                    height={event.photo.height}
+                    sizes="(min-width: 768px) 45vw, 100vw"
+                    // Hairline as an inset outline, not a border: a border
+                    // adds the same 2 px to photos of different ratios and
+                    // their bottoms stop lining up.
+                    className="h-auto w-full outline outline-rule -outline-offset-1"
                   />
-                  <p className="p-3 type-body text-ink-muted lg:p-4">
+                  <h4 className="pt-1 type-lede text-ink">
+                    <ClaimText id={event.name} />
+                  </h4>
+                  <p className="measure type-body text-ink-muted">
                     <ClaimText id={event.caption} />
                   </p>
                 </Reveal>
